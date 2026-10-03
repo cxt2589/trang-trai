@@ -165,7 +165,7 @@ export function ProfitSimulator({
         </div>
         <div className="flex justify-between items-center font-bold text-slate-900">
           <span>Lợi nhuận ròng kinh tế:</span>
-          <span className="text-emerald-700 font-extrabold">+{formatCurrencyVND(data.totalNetProfit, 1)} (ROI {roi.toFixed(1)}%)</span>
+          <span className="text-emerald-700 font-extrabold">+{formatCurrencyVND(data.totalNetProfit, 1)} (ROI {data.roi.toFixed(1)}%)</span>
         </div>
         <div className="text-[10px] text-slate-500 pt-1 border-t border-emerald-200/60">
           Tiết kiệm được <strong>{formatCurrencyVND(data.feedSavings, 1)}</strong> nhờ ủ chua thân chuối vườn và thóc ngâm mầm.
