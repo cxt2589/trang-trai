@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { FileSpreadsheet, ChevronDown, ChevronUp, Info, CheckCircle2, TrendingUp, Layers } from "lucide-react";
+import { FileSpreadsheet, ChevronDown, ChevronUp, Info, CheckCircle2, TrendingUp, Layers, Sparkles, ArrowRight } from "lucide-react";
 import { formatCurrencyVND, formatVNDRaw, formatPercent } from "../utils/calculator";
 
-export function PLReport({ data }) {
+export function PLReport({ data, onOpenLivingCostTab }) {
   const [showFullTable, setShowFullTable] = useState(false);
 
   // List of cost breakdown items for immediate mobile reading
@@ -143,6 +143,32 @@ export function PLReport({ data }) {
           <span className="text-base sm:text-lg font-black text-emerald-300 whitespace-nowrap ml-2">
             {formatCurrencyVND(data.totalCapital, 1)}
           </span>
+        </div>
+
+        {/* Contextual Link to Living Costs Tab */}
+        <div className="bg-amber-50/80 border border-amber-200/90 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="flex items-start gap-2">
+            <div className="p-1 rounded-lg bg-amber-100 text-amber-800 flex-shrink-0 mt-0.5">
+              <Sparkles className="w-4 h-4 text-amber-700" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-amber-950">
+                Chưa tính tiền ăn ở 4–5 người và lương trực 5 ngày Tết?
+              </div>
+              <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
+                Nhờ mô hình tự cung tự cấp rau xanh, đàn gà trứng và bếp củi, chi phí giảm từ 30M xuống chỉ còn ~14M (tiết kiệm ~15M).
+              </p>
+            </div>
+          </div>
+          {onOpenLivingCostTab && (
+            <button
+              onClick={onOpenLivingCostTab}
+              className="self-start sm:self-auto px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs"
+            >
+              <span>Xem Dự Toán Bếp Ăn & Trực Tết</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
