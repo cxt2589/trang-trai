@@ -1409,93 +1409,225 @@
                 {/* Sub-day for Phase 1 */}
                 {actionPhase === 1 && (
                   <div className="bg-slate-50 rounded-xl p-3.5 sm:p-4 border border-slate-200 space-y-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                       <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                         <i data-lucide="clock" className="w-3.5 h-3.5 text-red-600"></i>
-                        Kế Hoạch Tác Chiến Chi Tiết Từng Ngày (14 Ngày Vàng):
+                        Lộ Trình Tác Chiến 14 Ngày Vàng (Chia 5 Chặng Thứ Tự Ưu Tiên):
                       </h4>
-                      <span className="text-[11px] text-slate-400">Nhấp chọn để xem từng chặng</span>
+                      <span className="text-[11px] text-slate-400">Nhấp chọn chặng để xem chi tiết & tick việc</span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
                       {[
-                        { id: 1, name: "Ngày 1 – 3", title: "Hạ Tầng Nước & Sát Trùng Chuồng" },
-                        { id: 2, name: "Ngày 4 – 7", title: "Bếp Ăn 0đ & Đón Gà 3T, Lợn F1" },
-                        { id: 3, name: "Ngày 8 – 14", title: "Ủ Chuối Men & Đón Gà 1T (12k)" }
+                        { id: 1, name: "Ngày 1 – 3", title: "Máy Xúc Mở Đường & San Nền", badge: "Ưu Tiên 1", badgeColor: "bg-red-100 text-red-800" },
+                        { id: 2, name: "Ngày 4 – 6", title: "Điện, 2 Điều Hòa, Chỗ Ở & Nước Mó", badge: "An Cư", badgeColor: "bg-blue-100 text-blue-800" },
+                        { id: 3, name: "Ngày 7 – 9", title: "Thuê Người Chặt Tre Chuồng & Khử Trùng", badge: "Hạ Tầng", badgeColor: "bg-amber-100 text-amber-800" },
+                        { id: 4, name: "Ngày 10 – 12", title: "Bếp Ăn 0Đ, Rau Củ & Gà Trứng", badge: "Tự Cấp", badgeColor: "bg-emerald-100 text-emerald-800" },
+                        { id: 5, name: "Ngày 13 – 14", title: "Đón Giống Đợt 1 (Gà 3T & Lợn F1)", badge: "Vào Giống", badgeColor: "bg-purple-100 text-purple-800" }
                       ].map(sub => {
                         const isSubSel = actionSubDay === sub.id;
                         return (
                           <button
                             key={sub.id}
                             onClick={() => setActionSubDay(sub.id)}
-                            className={`p-2.5 rounded-xl border text-left transition cursor-pointer flex items-center justify-between ${
-                              isSubSel ? "bg-white border-emerald-600 shadow-sm ring-2 ring-emerald-500/20" : "bg-slate-100/70 border-slate-200 text-slate-600"
+                            className={`p-2.5 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between ${
+                              isSubSel ? "bg-white border-emerald-600 shadow-sm ring-2 ring-emerald-500/20" : "bg-slate-100/70 border-slate-200 text-slate-600 hover:bg-slate-100"
                             }`}
                           >
                             <div>
-                              <span className="text-[10px] font-black bg-red-100 text-red-800 px-1.5 py-0.2 rounded border border-red-200">{sub.name}</span>
-                              <div className="text-xs font-bold text-slate-900 mt-1">{sub.title}</div>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-[10px] font-black bg-slate-800 text-white px-1.5 py-0.2 rounded">{sub.name}</span>
+                                <span className={`text-[9px] font-bold px-1 py-0.2 rounded ${sub.badgeColor}`}>{sub.badge}</span>
+                              </div>
+                              <div className="text-xs font-bold text-slate-900 leading-snug">{sub.title}</div>
                             </div>
-                            <i data-lucide="chevron-right" className={`w-4 h-4 ${isSubSel ? "text-emerald-600" : "text-slate-400"}`}></i>
+                            <span className={`text-[10px] mt-1.5 pt-1 border-t border-slate-200/50 flex items-center justify-between ${isSubSel ? "text-emerald-700 font-bold" : "text-slate-400"}`}>
+                              <span>{isSubSel ? "Đang xem" : "Xem chi tiết"}</span>
+                              <i data-lucide="chevron-right" className="w-3 h-3"></i>
+                            </span>
                           </button>
                         );
                       })}
                     </div>
 
                     {/* Sub-day task lists */}
-                    <div className="bg-white rounded-xl p-3 border border-slate-200 space-y-2">
+                    <div className="bg-white rounded-xl p-3 sm:p-4 border border-slate-200 space-y-3 shadow-xs">
                       {actionSubDay === 1 && (
-                        <div className="space-y-2">
+                        <div className="space-y-2.5">
+                          <div className="text-xs font-bold text-slate-900 border-b border-slate-100 pb-1.5 flex items-center justify-between">
+                            <span>Chặng 1 (Ngày 1 – 3): Máy Xúc Mở Đường & Khai Hoang Mặt Bằng</span>
+                            <span className="text-[11px] text-slate-400 font-normal">Nhấp vào ô để đánh dấu xong việc</span>
+                          </div>
                           {[
-                            { id: "1-1", role: "Người 2, 3 (Cơ điện)", text: "Kéo 2km ống PE phi 25 từ mó nước suối về bể lắng. Lắp phao tự động và chạy thử máy bơm." },
-                            { id: "1-2", role: "Người 4, 5 (Lán trại)", text: "Dọn dẹp lán nghỉ, mắc màn chống muỗi, kê giường bạt, dựng bếp củi che mưa nấu nước sôi." },
-                            { id: "1-3", role: "Người 1 (Kỹ thuật)", text: "Rải vôi bột khử trùng nền chuồng gà + bán kính 20m. Phun thuốc sát trùng Benkocid, để trống 48-72h." },
-                            { id: "1-4", role: "Người 1, 2", text: "Rải lớp trấu đệm lót sinh học dày 12cm, trộn men vi sinh khử mùi hôi chuồng." }
-                          ].map(t => (
-                            <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-100">
-                              <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
-                              <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
-                            </div>
-                          ))}
-                          <div className="bg-red-50 border border-red-200 rounded p-2 text-[11px] text-red-800">
-                            <strong>Lưu ý sống còn:</strong> Tuyệt đối chưa đón gà giống về trong 3 ngày đầu nếu đường nước chưa thông hoặc chuồng chưa khô vôi sát trùng.
+                            { id: "1-1", role: "Máy xúc & Trưởng trại", text: "Thuê 1 máy xúc làm việc 3 ngày: Mở rộng, bạt taluy, san phẳng đường giao thông từ ngoài vào trại để xe tải chở vật tư vào tận nơi." },
+                            { id: "1-2", role: "Máy xúc", text: "San ủi tạo mặt bằng phẳng phiu cho 2 khu chuồng gà (ô gà 3T và ô gà 1T) cùng khu vực dựng lán trại ăn nghỉ." },
+                            { id: "1-3", role: "Máy xúc & Cơ điện", text: "Múc rãnh thoát nước dọc sườn đồi chống lũ quét/ngập úng mùa đông, tạo vũng bùn tự nhiên ở thung lũng 2 cho đàn lợn." },
+                            { id: "1-4", role: "Người 2, 3 (Dọn cỏ)", text: "Chạy máy cắt cỏ dọn sạch cỏ dại hai bên đường đi huyết mạch và toàn bộ khuôn viên khu lán trại." }
+                          ].map(t => {
+                            const isDone = !!actionTasks[t.id];
+                            return (
+                              <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-slate-50/70 border-slate-200 hover:bg-slate-100/90"}`}>
+                                <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                                  {isDone && (
+                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                      <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                  )}
+                                </div>
+                                <div className="text-xs leading-relaxed flex-1">
+                                  <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                                  <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <div className="bg-amber-50/80 border border-amber-200 rounded-lg p-2.5 text-[11px] text-amber-900 flex items-start gap-2">
+                            <i data-lucide="alert-triangle" className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+                            <div><strong>Lưu ý kỹ thuật:</strong> Đường đi chưa thông thì tuyệt đối không chở vật tư hay con giống vào vì sẽ bị kẹt xe và hư hỏng thiết bị.</div>
                           </div>
                         </div>
                       )}
 
                       {actionSubDay === 2 && (
-                        <div className="space-y-2">
+                        <div className="space-y-2.5">
+                          <div className="text-xs font-bold text-slate-900 border-b border-slate-100 pb-1.5 flex items-center justify-between">
+                            <span>Chặng 2 (Ngày 4 – 6): Kéo Điện, Lắp 2 Điều Hòa, Giường Chiếu & Nước Mó</span>
+                            <span className="text-[11px] text-slate-400 font-normal">Nhấp vào ô để đánh dấu xong việc</span>
+                          </div>
                           {[
-                            { id: "2-1", role: "Người 4, 5 (Bếp 0đ)", text: "Cuốc 4 luống đất cạnh chuồng gà. Gieo hạt rau cải ngọt, rau dền, mồng tơi. Cắm cọc rào tra hạt bí đao, mướp." },
-                            { id: "2-2", role: "Người 4 (Gà trứng)", text: "Mua 12-15 con gà/vịt hậu bị đẻ thải (~50k/con = 750k). Quây góc vườn cho ăn thóc ngâm và cơm thừa." },
-                            { id: "2-3", role: "Người 1 (Đón gà 3T)", text: "Đón 200 - 400 gà 3 tháng tuổi về chuồng. Pha ngay nước đường Gluco-K-C + Điện giải uống 2h đầu chống sốc di chuyển." },
-                            { id: "2-4", role: "Người 1, 3 (Đón lợn)", text: "Đón lợn bản F1 (12 - 15kg/con) vào khu thung lũng 2. Bữa đầu cho ăn cháo loãng men vi sinh ấm bụng." }
-                          ].map(t => (
-                            <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-100">
-                              <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
-                              <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
-                            </div>
-                          ))}
-                          <div className="bg-amber-50 border border-amber-200 rounded p-2 text-[11px] text-amber-800">
-                            <strong>Lưu ý kỹ thuật:</strong> Gà 3T mới về phải giữ ấm trong chuồng 3-5 ngày đầu để quen cám và đệm lót trước khi thả ra sân đồi.
+                            { id: "2-1", role: "Người 2, 3 (Cơ điện)", text: "Kéo đường dây điện từ công tơ vào lán; đấu nối tủ điện an toàn có aptomat chống giật; lắp ổ cắm cho máy móc." },
+                            { id: "2-2", role: "Người 2 & Thợ điều hòa", text: "Lắp đặt 2 điều hòa 2 chiều cho khu lán sinh hoạt của nhóm 4–5 người (sưởi ấm mùa đông rét mướt vùng cao)." },
+                            { id: "2-3", role: "Người 4, 5 (Chỗ ở)", text: "Kê giường gấp, phản nằm, trải chiếu, mắc màn chống muỗi vắt; lắp 2 đèn LED năng lượng mặt trời và thiết bị phát 4G." },
+                            { id: "2-4", role: "Người 2, 3 (Đường nước)", text: "Kéo 2km ống PE phi 25 từ mó suối về bể lắng lọc; lắp phao cơ tự động, lọc cát sỏi sinh thái và máy bơm tăng áp." }
+                          ].map(t => {
+                            const isDone = !!actionTasks[t.id];
+                            return (
+                              <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-slate-50/70 border-slate-200 hover:bg-slate-100/90"}`}>
+                                <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                                  {isDone && (
+                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                      <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                  )}
+                                </div>
+                                <div className="text-xs leading-relaxed flex-1">
+                                  <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                                  <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <div className="bg-amber-50/80 border border-amber-200 rounded-lg p-2.5 text-[11px] text-amber-900 flex items-start gap-2">
+                            <i data-lucide="alert-triangle" className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+                            <div><strong>Lưu ý kỹ thuật:</strong> Kiểm tra kỹ nguồn nước mó suối và hệ thống aptomat điện trước khi đóng điện sinh hoạt.</div>
                           </div>
                         </div>
                       )}
 
                       {actionSubDay === 3 && (
-                        <div className="space-y-2">
+                        <div className="space-y-2.5">
+                          <div className="text-xs font-bold text-slate-900 border-b border-slate-100 pb-1.5 flex items-center justify-between">
+                            <span>Chặng 3 (Ngày 7 – 9): Chặt Tre Làm Chuồng (Thuê 2-3 Người Thời Vụ) & Sát Trùng</span>
+                            <span className="text-[11px] text-slate-400 font-normal">Nhấp vào ô để đánh dấu xong việc</span>
+                          </div>
                           {[
-                            { id: "3-1", role: "Người 4, 5 (Ủ chuối men)", text: "Chặt cây chuối vườn, băm nhỏ trộn cám ngô + men vi sinh + chút muối. Ủ kín bao 48h. Cho lợn và gà tập ăn dặm." },
-                            { id: "3-2", role: "Người 1 (Đón gà 1T)", text: "Đón đàn gà giống 1 tháng (giá tối ưu 12k/con). Bật bóng sưởi hồng ngoại kiểm soát nhiệt độ 28-30°C trong chuồng úm chắn gió." },
-                            { id: "3-3", role: "Người 1, 2 (Kết nối bản địa)", text: "Giao lưu với các hộ dân sống gần trại, nhắm trước 1 người đứng đắn, thật thà để đặt vấn đề phụ việc và trực 5 ngày Tết." }
-                          ].map(t => (
-                            <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-100">
-                              <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
-                              <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
-                            </div>
-                          ))}
-                          <div className="bg-blue-50 border border-blue-200 rounded p-2 text-[11px] text-blue-800">
-                            <strong>Lưu ý giống gà 12k:</strong> Gà giống 1T giá 12k cần được giữ ấm tuyệt đối ban đêm, tránh gió lùa khe cửa khiến gà bị lạnh chân.
+                            { id: "3-1", role: "Thuê 2–3 người thời vụ", text: "Thuê 2–3 lao động bản địa trong 3 ngày: cùng anh em chặt tre nứa trên đồi, vót cọc, chôn cột dựng khung chuồng tự nhiên (tiết kiệm 100% sắt thép)." },
+                            { id: "3-2", role: "Người 2, 3 + Nhân công", text: "Căng lưới cước B40 quây 2.000m² sườn đồi; lợp mái bạt dứa 2 lớp chống mưa rét; ngăn riêng 2 ô chuồng (ô gà 3T và ô gà 1T)." },
+                            { id: "3-3", role: "Người 1 (Kỹ thuật)", text: "Rải vôi bột khử trùng toàn bộ nền chuồng và bán kính 20m xung quanh; phun thuốc sát trùng Benkocid, để trống 48–72h." },
+                            { id: "3-4", role: "Người 1, 4", text: "Rải lớp trấu đệm lót sinh học dày 12cm, rắc men ủ vi sinh Balasa khử mùi hôi và giữ ấm chân gà." }
+                          ].map(t => {
+                            const isDone = !!actionTasks[t.id];
+                            return (
+                              <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-slate-50/70 border-slate-200 hover:bg-slate-100/90"}`}>
+                                <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                                  {isDone && (
+                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                      <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                  )}
+                                </div>
+                                <div className="text-xs leading-relaxed flex-1">
+                                  <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                                  <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <div className="bg-amber-50/80 border border-amber-200 rounded-lg p-2.5 text-[11px] text-amber-900 flex items-start gap-2">
+                            <i data-lucide="alert-triangle" className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+                            <div><strong>Lưu ý kỹ thuật:</strong> Chuồng tre phải lợp bạt dốc thoát nước tốt, quây bạt chắn hướng gió bấc để tránh gà bị cảm lạnh.</div>
+                          </div>
+                        </div>
+                      )}
+
+                      {actionSubDay === 4 && (
+                        <div className="space-y-2.5">
+                          <div className="text-xs font-bold text-slate-900 border-b border-slate-100 pb-1.5 flex items-center justify-between">
+                            <span>Chặng 4 (Ngày 10 – 12): Kích Hoạt Bếp Ăn 0Đ Siêu Tốc & Đàn Vật Nuôi Tự Cấp</span>
+                            <span className="text-[11px] text-slate-400 font-normal">Nhấp vào ô để đánh dấu xong việc</span>
+                          </div>
+                          {[
+                            { id: "4-1", role: "Người 4, 5 (Vườn rau)", text: "Cuốc 4 luống đất cạnh chuồng gà. Gieo hạt rau ăn lá ngắn ngày (cải mơ, cải ngọt tỉa non, rau dền, muống cạn - 15–20 ngày có ăn)." },
+                            { id: "4-2", role: "Người 4 (Giàn quả bờ rào)", text: "Cắm cọc tre dọc rào lưới B40, tra hạt bí đao (bí chanh), mướp hương, đỗ cove (ngọn làm rau xào, quả để dành ăn Tết)." },
+                            { id: "4-3", role: "Người 4 (Đàn gà đẻ trứng)", text: "Mua 12–15 con gà/vịt hậu bị đẻ trứng thải (~50k/con = 750k). Quây góc vườn cho ăn thóc ngâm và cơm thừa -> thu 8–10 trứng/ngày." },
+                            { id: "4-4", role: "Người 4, 5 (Bếp củi & Chuối)", text: "Thu gom củi khô đồi rừng nhóm bếp củi đun nước, kho hầm thức ăn (giảm 75% tiền gas). Hái bắp hoa chuối làm nộm và canh chua." }
+                          ].map(t => {
+                            const isDone = !!actionTasks[t.id];
+                            return (
+                              <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-slate-50/70 border-slate-200 hover:bg-slate-100/90"}`}>
+                                <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                                  {isDone && (
+                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                      <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                  )}
+                                </div>
+                                <div className="text-xs leading-relaxed flex-1">
+                                  <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                                  <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <div className="bg-amber-50/80 border border-amber-200 rounded-lg p-2.5 text-[11px] text-amber-900 flex items-start gap-2">
+                            <i data-lucide="alert-triangle" className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+                            <div><strong>Lưu ý kỹ thuật:</strong> Bón lót luống rau bằng phân trấu hoai mục và tưới nước giữ ẩm ngày 2 lần để hạt nảy mầm đều.</div>
+                          </div>
+                        </div>
+                      )}
+
+                      {actionSubDay === 5 && (
+                        <div className="space-y-2.5">
+                          <div className="text-xs font-bold text-slate-900 border-b border-slate-100 pb-1.5 flex items-center justify-between">
+                            <span>Chặng 5 (Ngày 13 – 14): Đón Giống Đợt 1 (Gà 3T & Lợn F1) & Chạy Máy Băm Chuối</span>
+                            <span className="text-[11px] text-slate-400 font-normal">Nhấp vào ô để đánh dấu xong việc</span>
+                          </div>
+                          {[
+                            { id: "5-1", role: "Người 1 (Đón gà 3T)", text: "Đón 200–400 gà Lạc Sơn 3 tháng tuổi về chuồng. Pha ngay nước đường Glucozo + Vitamin C + Điện giải uống 2h đầu chống sốc di chuyển." },
+                            { id: "5-2", role: "Người 1, 3 (Đón lợn F1)", text: "Đón lợn bản F1 (12–15kg/con) vào khu thung lũng 2 có vũng tắm bùn. Bữa đầu cho ăn cháo loãng men vi sinh ấm bụng." },
+                            { id: "5-3", role: "Người 4, 5 (Băm chuối men)", text: "Chạy thử máy băm chuối: băm thân chuối vườn trộn cám ngô + men ủ vi sinh + chút muối, đóng bao ủ kín 48h tập ăn dặm." },
+                            { id: "5-4", role: "Người 1 (Chuẩn bị chuồng úm)", text: "Kiểm tra chuồng úm sưởi nhiệt, sẵn sàng đón tiếp đàn gà giống 1 tháng tuổi (giá 12.000đ/con) vào đầu tuần 3." }
+                          ].map(t => {
+                            const isDone = !!actionTasks[t.id];
+                            return (
+                              <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-slate-50/70 border-slate-200 hover:bg-slate-100/90"}`}>
+                                <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                                  {isDone && (
+                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                      <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                  )}
+                                </div>
+                                <div className="text-xs leading-relaxed flex-1">
+                                  <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                                  <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                          <div className="bg-amber-50/80 border border-amber-200 rounded-lg p-2.5 text-[11px] text-amber-900 flex items-start gap-2">
+                            <i data-lucide="alert-triangle" className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+                            <div><strong>Lưu ý kỹ thuật:</strong> Gà 3T mới về phải nhốt ấm trong chuồng 3–5 ngày đầu để quen đệm lót và cám trước khi thả ra sân đồi.</div>
                           </div>
                         </div>
                       )}
@@ -1506,53 +1638,106 @@
                 {/* Other Phases 2-5 */}
                 {actionPhase > 1 && (
                   <div className="bg-slate-50 rounded-xl p-3.5 sm:p-4 border border-slate-200 space-y-3">
-                    <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                      Checklist Nhiệm Vụ Giai Đoạn {actionPhase}:
-                    </h4>
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                      <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                        Checklist Nhiệm Vụ Giai Đoạn {actionPhase}:
+                      </h4>
+                      <span className="text-[11px] text-slate-400">Bấm vào ô để đánh dấu hoàn thành</span>
+                    </div>
+
                     <div className="space-y-2">
                       {actionPhase === 2 && [
-                        { id: "p2-1", role: "Người 1", text: "Thả gà 3T leo dốc sườn đồi từ 9h sáng sau khi tan sương mù. Kiểm tra phân gà hàng ngày." },
-                        { id: "p2-2", role: "Người 4, 5", text: "Băm 200kg thân chuối/tuần trộn men vi sinh ủ kín 48h cho lợn và gà ăn thay thế 40% cám mua." },
-                        { id: "p2-3", role: "Người 4", text: "Thu hoạch lứa rau cải, dền đầu tiên sau 20 ngày. Đàn gà đẻ đạt 8-10 trứng/ngày." }
-                      ].map(t => (
-                        <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-white border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-50">
-                          <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
-                          <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
-                        </div>
-                      ))}
+                        { id: "p2-1", role: "Người 1 (Kỹ thuật)", text: "Đón đàn gà giống 1T (12.000đ/con), bật bóng hồng ngoại sưởi ấm 28–30°C trong chuồng úm chắn gió mùa đông bắc." },
+                        { id: "p2-2", role: "Người 1 (Thả đồi)", text: "Mở cửa chuồng thả đàn gà 3T ra sườn đồi từ 9h sáng sau khi tan sương mù. Gà leo dốc bới tìm sâu bọ giúp thịt săn chắc." },
+                        { id: "p2-3", role: "Người 4, 5 (Chuối men)", text: "Băm 200kg thân chuối/tuần trộn cám ngô + men vi sinh ủ kín 48h, cho lợn và đàn gà 3T ăn thay thế 40% cám công nghiệp." },
+                        { id: "p2-4", role: "Người 4 (Rau & Trứng)", text: "Thu hoạch lứa rau cải, dền đầu tiên sau 18–20 ngày; thu 8–10 quả trứng gà ta mỗi ngày cho bếp ăn nhóm." }
+                      ].map(t => {
+                        const isDone = !!actionTasks[t.id];
+                        return (
+                          <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-white border-slate-200 hover:bg-slate-100/90"}`}>
+                            <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                              {isDone && (
+                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                              )}
+                            </div>
+                            <div className="text-xs leading-relaxed flex-1">
+                              <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                              <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
 
                       {actionPhase === 3 && [
-                        { id: "p3-1", role: "Người 1", text: "Pha tỏi giã ngâm giấm + rượu vào máng nước 2 lần/tuần phòng hen khẹc mùa rét." },
-                        { id: "p3-2", role: "Người 1, 4", text: "Ngâm 4 thùng phuy thóc mầm gối đầu, buổi chiều cho gà ăn 100% thóc mầm để thịt săn chắc, da vàng giòn." },
-                        { id: "p3-3", role: "Tất cả nhóm", text: "Tỉa 1-2 con gà trống choai hoặc gà còi/tuần bồi dưỡng bữa ăn tươi cho anh em cắm trại." }
-                      ].map(t => (
-                        <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-white border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-50">
-                          <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
-                          <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
-                        </div>
-                      ))}
+                        { id: "p3-1", role: "Người 1 (Phòng hen)", text: "Pha tỏi giã ngâm giấm + rượu vào máng nước 2 lần/tuần phòng hen khẹc mùa rét." },
+                        { id: "p3-2", role: "Người 1, 4 (Thóc mầm)", text: "Ngâm 4 thùng phuy thóc mầm gối đầu, buổi chiều cho gà ăn 100% thóc mầm để thịt săn chắc, da vàng giòn." },
+                        { id: "p3-3", role: "Tất cả nhóm (Ăn tươi)", text: "Tỉa 1-2 con gà trống choai hoặc gà còi/tuần bồi dưỡng bữa ăn tươi cho anh em cắm trại." }
+                      ].map(t => {
+                        const isDone = !!actionTasks[t.id];
+                        return (
+                          <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-white border-slate-200 hover:bg-slate-100/90"}`}>
+                            <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                              {isDone && (
+                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                              )}
+                            </div>
+                            <div className="text-xs leading-relaxed flex-1">
+                              <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                              <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
 
                       {actionPhase === 4 && [
-                        { id: "p4-1", role: "Người 1, 2", text: "Phân loại gà trống đẹp mã bán cúng Tết (220k-250k/kg) và gà thịt thương phẩm (180k-200k/kg). Buộc chân đóng lồng giao khách." },
-                        { id: "p4-2", role: "Người 3, 4", text: "Xuất bán lợn F1 đạt chuẩn 28-32kg cho các gia đình chung đụng thịt ăn Tết (giá 130k-140k/kg hơi)." },
+                        { id: "p4-1", role: "Người 1, 2 (Gà Tết)", text: "Phân loại gà trống đẹp mã bán cúng Tết (220k-250k/kg) và gà thịt thương phẩm (180k-200k/kg). Buộc chân đóng lồng giao khách." },
+                        { id: "p4-2", role: "Người 3, 4 (Lợn Tết)", text: "Xuất bán lợn F1 đạt chuẩn 28-32kg cho các gia đình chung đụng thịt ăn Tết (giá 130k-140k/kg hơi)." },
                         { id: "p4-3", role: "Thủ quỹ", text: "Thu trọn tiền mặt, hoàn trả 100% vốn đầu tư ban đầu vào tài khoản nhóm sáng lập trước 28 Tết." }
-                      ].map(t => (
-                        <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-white border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-50">
-                          <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
-                          <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
-                        </div>
-                      ))}
+                      ].map(t => {
+                        const isDone = !!actionTasks[t.id];
+                        return (
+                          <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-white border-slate-200 hover:bg-slate-100/90"}`}>
+                            <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                              {isDone && (
+                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                              )}
+                            </div>
+                            <div className="text-xs leading-relaxed flex-1">
+                              <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                              <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
 
                       {actionPhase === 5 && [
                         { id: "p5-1", role: "Người trực Tết", text: "Thực hiện 4 cữ trực: 7h cho ăn thả gà, 12h kiểm tra nước, 17h30 lùa gà vào chuồng đóng chốt, đêm bật đèn pha sưởi ấm." },
                         { id: "p5-2", role: "Nhóm sáng lập", text: "Trao thù lao 3.2M + tặng cặp gà trống đồi + giỏ quà Tết cho người trực để động viên tinh thần." },
                         { id: "p5-3", role: "Rằm Tháng Giêng", text: "Xuất bán đàn gà 1T (lên giò 4.5 tháng) đón sóng lễ hội Thượng Nguyên, thu về thêm 37M - 50M lợi nhuận ròng." }
-                      ].map(t => (
-                        <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-white border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-50">
-                          <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
-                          <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
-                        </div>
-                      ))}
+                      ].map(t => {
+                        const isDone = !!actionTasks[t.id];
+                        return (
+                          <div key={t.id} onClick={() => toggleActionTask(t.id)} className={`p-2.5 rounded-xl border transition flex items-start gap-3 cursor-pointer select-none ${isDone ? "bg-emerald-50/60 border-emerald-300" : "bg-white border-slate-200 hover:bg-slate-100/90"}`}>
+                            <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${isDone ? "bg-emerald-600 text-white shadow-xs" : "border-2 border-slate-300 bg-white hover:border-emerald-500"}`}>
+                              {isDone && (
+                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                              )}
+                            </div>
+                            <div className="text-xs leading-relaxed flex-1">
+                              <span className="font-bold text-slate-900 mr-1.5 bg-slate-200/80 px-1.5 py-0.2 rounded text-[10px]">{t.role}:</span>
+                              <span className={isDone ? "line-through text-slate-400" : "text-slate-800 font-medium"}>{t.text}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
