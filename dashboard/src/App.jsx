@@ -12,11 +12,12 @@ import { ExecutiveSummary } from "./components/ExecutiveSummary";
 import { GlossaryModal } from "./components/GlossaryModal";
 import { Footer } from "./components/Footer";
 import { LivingCostTab } from "./components/LivingCostTab";
+import { ActionPlanTab } from "./components/ActionPlanTab";
 import { PRESET_SCENARIOS } from "./data/farmData";
 import { calculateFinancials } from "./utils/calculator";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("financial"); // "financial" or "living_cost"
+  const [activeTab, setActiveTab] = useState("financial"); // "financial", "action_plan", "living_cost"
   const [scenarioId, setScenarioId] = useState(130);
   const [chickenPrice, setChickenPrice] = useState(200000);
   const [pigPrice, setPigPrice] = useState(130000);
@@ -76,32 +77,50 @@ export default function App() {
         onOpenGlossary={() => setIsGlossaryOpen(true)}
       />
 
-      {/* Main Navigation Tabs */}
-      <nav aria-label="Chuyển đổi phân hệ" className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print">
+      {/* Main Navigation Tabs - Sticky On Top When Scrolling */}
+      <nav aria-label="Chuyển đổi phân hệ" className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm no-print">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 overflow-x-auto py-2">
           <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Tab 1 */}
             <button
               onClick={() => setActiveTab("financial")}
-              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
                 activeTab === "financial"
                   ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <span className={`w-2 h-2 rounded-full ${activeTab === "financial" ? "bg-emerald-300 animate-pulse" : "bg-slate-400"}`}></span>
-              <span>1. Kế Hoạch Đầu Tư & P&L (5 Bước)</span>
+              <span>1. Kế Hoạch Đầu Tư & P&L</span>
             </button>
 
+            {/* Tab 2: Action Plan */}
+            <button
+              onClick={() => setActiveTab("action_plan")}
+              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                activeTab === "action_plan"
+                  ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${activeTab === "action_plan" ? "bg-blue-300 animate-pulse" : "bg-slate-400"}`}></span>
+              <span>2. Kế Hoạch Hành Động (Từng Ngày/Tuần)</span>
+              <span className="bg-blue-500 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full ml-0.5">
+                Chi tiết
+              </span>
+            </button>
+
+            {/* Tab 3: Living Cost */}
             <button
               onClick={() => setActiveTab("living_cost")}
-              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
                 activeTab === "living_cost"
                   ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <span className={`w-2 h-2 rounded-full ${activeTab === "living_cost" ? "bg-amber-300 animate-pulse" : "bg-slate-400"}`}></span>
-              <span>2. Bếp Ăn & Trực Tết (Tự Cấp)</span>
+              <span>3. Bếp Ăn & Trực Tết (Tự Cấp)</span>
               <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.2 rounded-full ml-0.5">
                 Tiết kiệm ~15M
               </span>
@@ -109,14 +128,20 @@ export default function App() {
           </div>
 
           <div className="hidden sm:flex items-center text-xs text-slate-400 font-medium">
-            <span>{activeTab === "financial" ? "Kịch bản vốn: Gói " + scenarioId + "M" : "4–5 Người cắm trại • 100 ngày"}</span>
+            <span>
+              {activeTab === "financial"
+                ? "Gói " + scenarioId + "M"
+                : activeTab === "action_plan"
+                ? "5 Giai đoạn • 14 Ngày vàng"
+                : "4–5 Người • 100 ngày"}
+            </span>
           </div>
         </div>
       </nav>
 
       {/* Main Content Dashboard */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-6">
-        {activeTab === "financial" ? (
+        {activeTab === "financial" && (
           <>
             {/* Ưu tiên 1: Chọn Kịch Bản Vốn Ban Đầu */}
             <ScenarioSelector
@@ -136,7 +161,9 @@ export default function App() {
             />
 
             {/* Ưu tiên 4: Lộ trình triển khai */}
-            <OperationalRoadmap />
+            <OperationalRoadmap
+              onOpenActionPlanTab={() => setActiveTab("action_plan")}
+            />
 
             {/* Ưu tiên 5: Mô phỏng và phân tích biểu đồ (đặt phía dưới) */}
             <section className="space-y-3 pt-2">
@@ -181,8 +208,18 @@ export default function App() {
               <ExecutiveSummary />
             </section>
           </>
-        ) : (
-          /* Tab 2: Hậu cần, Dự toán sinh hoạt & Lương trực Tết */
+        )}
+
+        {/* Tab 2: Kế hoạch hành động chi tiết */}
+        {activeTab === "action_plan" && (
+          <ActionPlanTab
+            onSwitchToFinancialTab={() => setActiveTab("financial")}
+            onSwitchToLivingCostTab={() => setActiveTab("living_cost")}
+          />
+        )}
+
+        {/* Tab 3: Bếp ăn, sinh hoạt & Lương trực Tết */}
+        {activeTab === "living_cost" && (
           <LivingCostTab
             onSwitchToFinancialTab={() => setActiveTab("financial")}
           />

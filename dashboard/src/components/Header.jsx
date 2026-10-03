@@ -3,7 +3,7 @@ import { Mountain, Clock, Printer, RotateCcw, HelpCircle, Sparkles } from "lucid
 
 export function Header({ onReset, onPrint, onOpenGlossary }) {
   return (
-    <header className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white shadow-md sticky top-0 z-40 border-b border-emerald-800/60 no-print">
+    <header className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white shadow-md border-b border-emerald-800/60 no-print">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           {/* Logo & Title */}

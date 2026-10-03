@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Route, Clock, CheckCircle, AlertTriangle } from "lucide-react";
+import { Route, Clock, CheckCircle, AlertTriangle, Sparkles, ArrowRight } from "lucide-react";
 import { ROADMAP_STEPS } from "../data/farmData";
 
-export function OperationalRoadmap() {
+export function OperationalRoadmap({ onOpenActionPlanTab }) {
   const [selectedStepIndex, setSelectedStepIndex] = useState(0);
 
   return (
@@ -99,6 +99,32 @@ export function OperationalRoadmap() {
           </div>
         </div>
       )}
+
+      {/* Banner linking to Action Plan Tab */}
+      <div className="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="flex items-start gap-2">
+          <div className="p-1 rounded-lg bg-emerald-100 text-emerald-800 flex-shrink-0 mt-0.5">
+            <Sparkles className="w-4 h-4 text-emerald-700" />
+          </div>
+          <div>
+            <div className="text-xs font-bold text-emerald-950">
+              Bạn muốn xem chi tiết công việc từng ngày trong 14 ngày đầu và phân công 4–5 người?
+            </div>
+            <p className="text-[11px] text-emerald-800 mt-0.5 leading-relaxed">
+              Tab Kế Hoạch Hành Động có sẵn bảng checklist chi tiết từng ngày, nhiệm vụ từng người và cẩm nang kiểm soát rủi ro.
+            </p>
+          </div>
+        </div>
+        {onOpenActionPlanTab && (
+          <button
+            onClick={onOpenActionPlanTab}
+            className="self-start sm:self-auto px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-xs"
+          >
+            <span>Xem Kế Hoạch Hành Động Chi Tiết</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
     </section>
   );
 }

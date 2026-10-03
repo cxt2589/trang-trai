@@ -197,9 +197,16 @@
       const [showGlossary, setShowGlossary] = useState(false);
       const [showFullPL, setShowFullPL] = useState(false);
       const [activeChartTab, setActiveChartTab] = useState('flow');
-      const [activeTab, setActiveTab] = useState('financial'); // 'financial' or 'living_cost'
+      const [activeTab, setActiveTab] = useState('financial'); // 'financial', 'action_plan', 'living_cost'
+      const [actionPhase, setActionPhase] = useState(1);
+      const [actionSubDay, setActionSubDay] = useState(1);
+      const [actionTasks, setActionTasks] = useState({ '1-1': true, '1-2': true });
       const [teamSize, setTeamSize] = useState(4); // 4 or 5 people
       const [livingMode, setLivingMode] = useState('self_sufficient'); // 'self_sufficient' or 'buy_all'
+
+      const toggleActionTask = (id) => {
+        setActionTasks(prev => ({ ...prev, [id]: !prev[id] }));
+      };
 
       const chartRef = useRef(null);
       const chartInstanceRef = useRef(null);
@@ -423,7 +430,7 @@
       return (
         <div className="min-h-screen flex flex-col font-sans">
           {/* Header */}
-          <header className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white shadow-md sticky top-0 z-40 border-b border-emerald-800/60 no-print">
+          <header className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white shadow-md border-b border-emerald-800/60 no-print">
             <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2">
               <div className="flex items-center gap-2.5 w-full sm:w-auto">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow ring-2 ring-emerald-400/30 flex-shrink-0">
@@ -474,32 +481,50 @@
             </div>
           </header>
 
-          {/* Main Navigation Tabs */}
-          <nav aria-label="Chuyển đổi phân hệ" className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print">
+          {/* Main Navigation Tabs - Sticky On Top When Scrolling */}
+          <nav aria-label="Chuyển đổi phân hệ" className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm no-print">
             <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-2 overflow-x-auto">
               <div className="flex items-center gap-1.5 sm:gap-2">
+                {/* Tab 1 */}
                 <button
                   onClick={() => setActiveTab('financial')}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                  className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
                     activeTab === 'financial'
                       ? 'bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
                   <span className={`w-2 h-2 rounded-full ${activeTab === 'financial' ? 'bg-emerald-300 animate-pulse' : 'bg-slate-400'}`}></span>
-                  <span>1. Kế Hoạch Đầu Tư & P&L (5 Bước)</span>
+                  <span>1. Kế Hoạch Đầu Tư & P&L</span>
                 </button>
 
+                {/* Tab 2: Kế Hoạch Hành Động */}
+                <button
+                  onClick={() => setActiveTab('action_plan')}
+                  className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                    activeTab === 'action_plan'
+                      ? 'bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <span className={`w-2 h-2 rounded-full ${activeTab === 'action_plan' ? 'bg-blue-300 animate-pulse' : 'bg-slate-400'}`}></span>
+                  <span>2. Kế Hoạch Hành Động (Từng Ngày/Tuần)</span>
+                  <span className="bg-blue-500 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full ml-0.5">
+                    Chi tiết
+                  </span>
+                </button>
+
+                {/* Tab 3: Bếp Ăn & Trực Tết */}
                 <button
                   onClick={() => setActiveTab('living_cost')}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                  className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
                     activeTab === 'living_cost'
                       ? 'bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
                   <span className={`w-2 h-2 rounded-full ${activeTab === 'living_cost' ? 'bg-amber-300 animate-pulse' : 'bg-slate-400'}`}></span>
-                  <span>2. Bếp Ăn & Trực Tết (Tự Cấp)</span>
+                  <span>3. Bếp Ăn & Trực Tết (Tự Cấp)</span>
                   <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.2 rounded-full ml-0.5">
                     Tiết kiệm ~15M
                   </span>
@@ -507,7 +532,13 @@
               </div>
 
               <div className="hidden sm:flex items-center text-xs text-slate-400 font-medium">
-                <span>{activeTab === 'financial' ? 'Kịch bản vốn: Gói ' + scenarioId + 'M' : teamSize + ' Người cắm trại • 100 ngày'}</span>
+                <span>
+                  {activeTab === 'financial'
+                    ? 'Kịch bản: Gói ' + scenarioId + 'M'
+                    : activeTab === 'action_plan'
+                    ? '5 Giai đoạn • 14 Ngày vàng'
+                    : teamSize + ' Người • 100 ngày'}
+                </span>
               </div>
             </div>
           </nav>
@@ -1244,8 +1275,290 @@
               </div>
             </div>
             </>
+          ) : activeTab === 'action_plan' ? (
+            /* TAB 2: KẾ HOẠCH HÀNH ĐỘNG CHI TIẾT TỪNG NGÀY & TUẦN */
+            <div className="space-y-4 sm:space-y-6">
+              {/* Header Banner */}
+              <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-teal-950 text-white rounded-2xl p-4 sm:p-6 shadow-md border border-emerald-800/60 relative overflow-hidden">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="space-y-1.5 max-w-2xl">
+                    <div className="flex items-center gap-2">
+                      <span className="bg-emerald-500 text-slate-950 text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow">
+                        <i data-lucide="sparkles" className="w-3.5 h-3.5"></i>
+                        Cẩm Nang Tác Chiến Thực Tế
+                      </span>
+                      <span className="text-emerald-300 text-xs font-semibold">
+                        Lộ Trình Thần Tốc 100 Ngày
+                      </span>
+                    </div>
+                    <h2 className="text-lg sm:text-2xl font-black tracking-tight text-white">
+                      Kế Hoạch Hành Động & Phân Công Tác Chiến
+                    </h2>
+                    <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+                      Tích hợp tiến độ 5 giai đoạn, kế hoạch <strong>14 ngày vàng đầu tiên</strong>, phân vai cụ thể cho 4–5 người và cẩm nang kiểm soát rủi ro thực địa.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 self-start md:self-auto flex-wrap">
+                    <button
+                      onClick={() => setActiveTab('financial')}
+                      className="px-3.5 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <span>Về Kế Hoạch Vốn & P&L</span>
+                      <i data-lucide="arrow-right" className="w-3.5 h-3.5"></i>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('living_cost')}
+                      className="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Xem Bếp Ăn & Trực Tết</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Team Roles */}
+              <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                  <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="users" className="w-4 h-4 text-emerald-600"></i>
+                    Bảng Phân Công Nhiệm Vụ Đội Ngũ 4 – 5 Người (Tránh Dẫm Chân Nhau)
+                  </h3>
+                  <span className="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold hidden sm:inline-block">
+                    Cố định trách nhiệm theo chuyên môn
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="bg-emerald-50/60 border border-emerald-200 rounded-xl p-3.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-emerald-950 uppercase">Người 1: Trưởng Trại</span>
+                      <span className="text-[10px] bg-emerald-200 text-emerald-900 font-bold px-1.5 py-0.2 rounded">Kỹ Thuật & Thú Y</span>
+                    </div>
+                    <p className="text-[11px] text-slate-700 leading-relaxed">
+                      Chịu trách nhiệm về tỷ lệ sống của đàn gà Lạc Sơn và lợn F1, lịch vắc-xin, độ ấm chuồng, kiểm soát đệm lót sinh học và phân loại xuất bán ngày Tết.
+                    </p>
+                  </div>
+
+                  <div className="bg-blue-50/60 border border-blue-200 rounded-xl p-3.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-blue-950 uppercase">Người 2 & 3: Cơ Điện</span>
+                      <span className="text-[10px] bg-blue-200 text-blue-900 font-bold px-1.5 py-0.2 rounded">Hạ Tầng & Nước</span>
+                    </div>
+                    <p className="text-[11px] text-slate-700 leading-relaxed">
+                      Kéo 2km ống nước từ mó suối, lắp máy bơm, điều hòa, quây lưới B40 sân đồi, bảo dưỡng máy cắt cỏ, kiểm tra hệ thống máng nước tự động không bị tắc.
+                    </p>
+                  </div>
+
+                  <div className="bg-amber-50/60 border border-amber-200 rounded-xl p-3.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-amber-950 uppercase">Người 4 & 5: Hậu Cần</span>
+                      <span className="text-[10px] bg-amber-200 text-amber-900 font-bold px-1.5 py-0.2 rounded">Bếp Ăn & Chuối Men</span>
+                    </div>
+                    <p className="text-[11px] text-slate-700 leading-relaxed">
+                      Lo chỗ ăn ngủ lán trại, gom củi đun bếp, cuốc 4 luống rau ăn lá siêu tốc, chăm đàn 15 gà đẻ trứng, vận hành máy băm chuối vườn ủ men vi sinh hàng tuần.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Phase Switcher */}
+              <div className="bg-white rounded-2xl p-3.5 sm:p-5 shadow-sm border border-slate-200/90 space-y-4">
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="calendar" className="w-4 h-4 text-emerald-600"></i>
+                    Chọn Giai Đoạn Để Xem Lộ Trình & Nhiệm Vụ Chi Tiết
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Bấm chọn từng giai đoạn để bung ra toàn bộ checklist công việc và mẹo kiểm soát rủi ro
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                  {[
+                    { id: 1, name: "Giai Đoạn 1", time: "Tuần 1–2", title: "14 Ngày Vàng Khởi Đầu" },
+                    { id: 2, name: "Giai Đoạn 2", time: "Tuần 3–6", title: "Ổn Định & Chuối Men" },
+                    { id: 3, name: "Giai Đoạn 3", time: "Tuần 7–10", title: "Vỗ Béo Thảo Dược" },
+                    { id: 4, name: "Giai Đoạn 4", time: "Tuần 11–13", title: "Xuất Bán Trước 28 Tết" },
+                    { id: 5, name: "Giai Đoạn 5", time: "Tuần 14+", title: "Trực Tết 5 Ngày & Gối Sóng" }
+                  ].map(p => {
+                    const isSel = actionPhase === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => setActionPhase(p.id)}
+                        className={`p-2.5 sm:p-3 rounded-xl border-2 text-left transition cursor-pointer flex flex-col justify-between ${
+                          isSel ? "border-emerald-600 bg-emerald-50/70 shadow-sm ring-2 ring-emerald-500/20" : "border-slate-200 hover:border-slate-300 bg-slate-50/40"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase">
+                            <span>{p.name}</span>
+                            <span className="text-emerald-700 bg-emerald-100 px-1 rounded">{p.time}</span>
+                          </div>
+                          <h4 className="text-xs font-bold text-slate-900 mt-1 leading-snug">{p.title}</h4>
+                        </div>
+                        <span className={`text-[10px] mt-2 pt-1 border-t border-slate-200/60 block ${isSel ? "text-emerald-700 font-bold" : "text-slate-400"}`}>
+                          {isSel ? "Đang chọn xem" : "Bấm để xem"}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Sub-day for Phase 1 */}
+                {actionPhase === 1 && (
+                  <div className="bg-slate-50 rounded-xl p-3.5 sm:p-4 border border-slate-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="clock" className="w-3.5 h-3.5 text-red-600"></i>
+                        Kế Hoạch Tác Chiến Chi Tiết Từng Ngày (14 Ngày Vàng):
+                      </h4>
+                      <span className="text-[11px] text-slate-400">Nhấp chọn để xem từng chặng</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {[
+                        { id: 1, name: "Ngày 1 – 3", title: "Hạ Tầng Nước & Sát Trùng Chuồng" },
+                        { id: 2, name: "Ngày 4 – 7", title: "Bếp Ăn 0đ & Đón Gà 3T, Lợn F1" },
+                        { id: 3, name: "Ngày 8 – 14", title: "Ủ Chuối Men & Đón Gà 1T (12k)" }
+                      ].map(sub => {
+                        const isSubSel = actionSubDay === sub.id;
+                        return (
+                          <button
+                            key={sub.id}
+                            onClick={() => setActionSubDay(sub.id)}
+                            className={`p-2.5 rounded-xl border text-left transition cursor-pointer flex items-center justify-between ${
+                              isSubSel ? "bg-white border-emerald-600 shadow-sm ring-2 ring-emerald-500/20" : "bg-slate-100/70 border-slate-200 text-slate-600"
+                            }`}
+                          >
+                            <div>
+                              <span className="text-[10px] font-black bg-red-100 text-red-800 px-1.5 py-0.2 rounded border border-red-200">{sub.name}</span>
+                              <div className="text-xs font-bold text-slate-900 mt-1">{sub.title}</div>
+                            </div>
+                            <i data-lucide="chevron-right" className={`w-4 h-4 ${isSubSel ? "text-emerald-600" : "text-slate-400"}`}></i>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Sub-day task lists */}
+                    <div className="bg-white rounded-xl p-3 border border-slate-200 space-y-2">
+                      {actionSubDay === 1 && (
+                        <div className="space-y-2">
+                          {[
+                            { id: "1-1", role: "Người 2, 3 (Cơ điện)", text: "Kéo 2km ống PE phi 25 từ mó nước suối về bể lắng. Lắp phao tự động và chạy thử máy bơm." },
+                            { id: "1-2", role: "Người 4, 5 (Lán trại)", text: "Dọn dẹp lán nghỉ, mắc màn chống muỗi, kê giường bạt, dựng bếp củi che mưa nấu nước sôi." },
+                            { id: "1-3", role: "Người 1 (Kỹ thuật)", text: "Rải vôi bột khử trùng nền chuồng gà + bán kính 20m. Phun thuốc sát trùng Benkocid, để trống 48-72h." },
+                            { id: "1-4", role: "Người 1, 2", text: "Rải lớp trấu đệm lót sinh học dày 12cm, trộn men vi sinh khử mùi hôi chuồng." }
+                          ].map(t => (
+                            <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-100">
+                              <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
+                              <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
+                            </div>
+                          ))}
+                          <div className="bg-red-50 border border-red-200 rounded p-2 text-[11px] text-red-800">
+                            <strong>Lưu ý sống còn:</strong> Tuyệt đối chưa đón gà giống về trong 3 ngày đầu nếu đường nước chưa thông hoặc chuồng chưa khô vôi sát trùng.
+                          </div>
+                        </div>
+                      )}
+
+                      {actionSubDay === 2 && (
+                        <div className="space-y-2">
+                          {[
+                            { id: "2-1", role: "Người 4, 5 (Bếp 0đ)", text: "Cuốc 4 luống đất cạnh chuồng gà. Gieo hạt rau cải ngọt, rau dền, mồng tơi. Cắm cọc rào tra hạt bí đao, mướp." },
+                            { id: "2-2", role: "Người 4 (Gà trứng)", text: "Mua 12-15 con gà/vịt hậu bị đẻ thải (~50k/con = 750k). Quây góc vườn cho ăn thóc ngâm và cơm thừa." },
+                            { id: "2-3", role: "Người 1 (Đón gà 3T)", text: "Đón 200 - 400 gà 3 tháng tuổi về chuồng. Pha ngay nước đường Gluco-K-C + Điện giải uống 2h đầu chống sốc di chuyển." },
+                            { id: "2-4", role: "Người 1, 3 (Đón lợn)", text: "Đón lợn bản F1 (12 - 15kg/con) vào khu thung lũng 2. Bữa đầu cho ăn cháo loãng men vi sinh ấm bụng." }
+                          ].map(t => (
+                            <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-100">
+                              <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
+                              <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
+                            </div>
+                          ))}
+                          <div className="bg-amber-50 border border-amber-200 rounded p-2 text-[11px] text-amber-800">
+                            <strong>Lưu ý kỹ thuật:</strong> Gà 3T mới về phải giữ ấm trong chuồng 3-5 ngày đầu để quen cám và đệm lót trước khi thả ra sân đồi.
+                          </div>
+                        </div>
+                      )}
+
+                      {actionSubDay === 3 && (
+                        <div className="space-y-2">
+                          {[
+                            { id: "3-1", role: "Người 4, 5 (Ủ chuối men)", text: "Chặt cây chuối vườn, băm nhỏ trộn cám ngô + men vi sinh + chút muối. Ủ kín bao 48h. Cho lợn và gà tập ăn dặm." },
+                            { id: "3-2", role: "Người 1 (Đón gà 1T)", text: "Đón đàn gà giống 1 tháng (giá tối ưu 12k/con). Bật bóng sưởi hồng ngoại kiểm soát nhiệt độ 28-30°C trong chuồng úm chắn gió." },
+                            { id: "3-3", role: "Người 1, 2 (Kết nối bản địa)", text: "Giao lưu với các hộ dân sống gần trại, nhắm trước 1 người đứng đắn, thật thà để đặt vấn đề phụ việc và trực 5 ngày Tết." }
+                          ].map(t => (
+                            <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-100">
+                              <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
+                              <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
+                            </div>
+                          ))}
+                          <div className="bg-blue-50 border border-blue-200 rounded p-2 text-[11px] text-blue-800">
+                            <strong>Lưu ý giống gà 12k:</strong> Gà giống 1T giá 12k cần được giữ ấm tuyệt đối ban đêm, tránh gió lùa khe cửa khiến gà bị lạnh chân.
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Other Phases 2-5 */}
+                {actionPhase > 1 && (
+                  <div className="bg-slate-50 rounded-xl p-3.5 sm:p-4 border border-slate-200 space-y-3">
+                    <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                      Checklist Nhiệm Vụ Giai Đoạn {actionPhase}:
+                    </h4>
+                    <div className="space-y-2">
+                      {actionPhase === 2 && [
+                        { id: "p2-1", role: "Người 1", text: "Thả gà 3T leo dốc sườn đồi từ 9h sáng sau khi tan sương mù. Kiểm tra phân gà hàng ngày." },
+                        { id: "p2-2", role: "Người 4, 5", text: "Băm 200kg thân chuối/tuần trộn men vi sinh ủ kín 48h cho lợn và gà ăn thay thế 40% cám mua." },
+                        { id: "p2-3", role: "Người 4", text: "Thu hoạch lứa rau cải, dền đầu tiên sau 20 ngày. Đàn gà đẻ đạt 8-10 trứng/ngày." }
+                      ].map(t => (
+                        <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-white border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-50">
+                          <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
+                          <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
+                        </div>
+                      ))}
+
+                      {actionPhase === 3 && [
+                        { id: "p3-1", role: "Người 1", text: "Pha tỏi giã ngâm giấm + rượu vào máng nước 2 lần/tuần phòng hen khẹc mùa rét." },
+                        { id: "p3-2", role: "Người 1, 4", text: "Ngâm 4 thùng phuy thóc mầm gối đầu, buổi chiều cho gà ăn 100% thóc mầm để thịt săn chắc, da vàng giòn." },
+                        { id: "p3-3", role: "Tất cả nhóm", text: "Tỉa 1-2 con gà trống choai hoặc gà còi/tuần bồi dưỡng bữa ăn tươi cho anh em cắm trại." }
+                      ].map(t => (
+                        <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-white border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-50">
+                          <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
+                          <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
+                        </div>
+                      ))}
+
+                      {actionPhase === 4 && [
+                        { id: "p4-1", role: "Người 1, 2", text: "Phân loại gà trống đẹp mã bán cúng Tết (220k-250k/kg) và gà thịt thương phẩm (180k-200k/kg). Buộc chân đóng lồng giao khách." },
+                        { id: "p4-2", role: "Người 3, 4", text: "Xuất bán lợn F1 đạt chuẩn 28-32kg cho các gia đình chung đụng thịt ăn Tết (giá 130k-140k/kg hơi)." },
+                        { id: "p4-3", role: "Thủ quỹ", text: "Thu trọn tiền mặt, hoàn trả 100% vốn đầu tư ban đầu vào tài khoản nhóm sáng lập trước 28 Tết." }
+                      ].map(t => (
+                        <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-white border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-50">
+                          <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
+                          <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
+                        </div>
+                      ))}
+
+                      {actionPhase === 5 && [
+                        { id: "p5-1", role: "Người trực Tết", text: "Thực hiện 4 cữ trực: 7h cho ăn thả gà, 12h kiểm tra nước, 17h30 lùa gà vào chuồng đóng chốt, đêm bật đèn pha sưởi ấm." },
+                        { id: "p5-2", role: "Nhóm sáng lập", text: "Trao thù lao 3.2M + tặng cặp gà trống đồi + giỏ quà Tết cho người trực để động viên tinh thần." },
+                        { id: "p5-3", role: "Rằm Tháng Giêng", text: "Xuất bán đàn gà 1T (lên giò 4.5 tháng) đón sóng lễ hội Thượng Nguyên, thu về thêm 37M - 50M lợi nhuận ròng." }
+                      ].map(t => (
+                        <div key={t.id} onClick={() => toggleActionTask(t.id)} className="p-2 rounded-lg bg-white border border-slate-200 flex items-start gap-2 cursor-pointer hover:bg-slate-50">
+                          <i data-lucide={actionTasks[t.id] ? "check-square" : "square"} className={`w-4 h-4 mt-0.5 flex-shrink-0 ${actionTasks[t.id] ? "text-emerald-600" : "text-slate-400"}`}></i>
+                          <span className={`text-xs ${actionTasks[t.id] ? "line-through text-slate-400" : "text-slate-800"}`}><strong>{t.role}:</strong> {t.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           ) : (
-            /* TAB 2: BẾP ĂN, SINH HOẠT & TRỰC TẾT */
             <div className="space-y-4 sm:space-y-6">
               {/* Banner */}
               <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-2xl p-4 sm:p-6 shadow-md border border-emerald-700/50 relative overflow-hidden">
