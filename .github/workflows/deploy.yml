@@ -35,4 +35,10 @@ jobs:
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          echo "=== Kiem tra Secrets trong moi truong GitHub Runner ==="
+          [ -n "$CLOUDFLARE_API_TOKEN" ] && echo "-> CLOUDFLARE_API_TOKEN: DA CO GIA TRI" || echo "-> CLOUDFLARE_API_TOKEN: DANG TRONG (EMPTY)!"
+          [ -n "$CLOUDFLARE_API_KEY" ] && echo "-> CLOUDFLARE_API_KEY: DA CO GIA TRI" || echo "-> CLOUDFLARE_API_KEY: DANG TRONG (EMPTY)!"
+          [ -n "$CLOUDFLARE_EMAIL" ] && echo "-> CLOUDFLARE_EMAIL: DA CO GIA TRI ($CLOUDFLARE_EMAIL)" || echo "-> CLOUDFLARE_EMAIL: DANG TRONG (EMPTY)!"
+          [ -n "$CLOUDFLARE_ACCOUNT_ID" ] && echo "-> CLOUDFLARE_ACCOUNT_ID: DA CO GIA TRI" || echo "-> CLOUDFLARE_ACCOUNT_ID: DANG TRONG (EMPTY)!"
+          echo "=========================================================="
           npx wrangler deploy
