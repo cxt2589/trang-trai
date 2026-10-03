@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kế Hoạch Khởi Động & Phân Tích Lợi Nhuận Trang Trại Vụ Tết</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,7 +11,7 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <!-- Babel for JSX -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Chart.js for high-performance interactive charts -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -22,6 +22,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: #f8fafc;
       color: #1e293b;
+      -webkit-tap-highlight-color: transparent;
     }
     @media print {
       .no-print { display: none !important; }
@@ -35,7 +36,7 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // --- DATA PRESETS ---
+    // --- DATA PRESETS (Giá gà 1T: 12.000đ) ---
     const PRESETS = {
       100: {
         id: 100,
@@ -47,10 +48,10 @@
         chicken3mCount: 400,
         chicken3mPrice: 75000,
         chicken1mCount: 200,
-        chicken1mPrice: 35000,
+        chicken1mPrice: 12000, // Giá giống 1 tháng: 12.000đ
         pigsCount: 3,
         pigPrice: 1200000,
-        baseFeedCost: 20.4,
+        baseFeedCost: 25.0, // Quỹ thức ăn & thú y 100 ngày
         chickenOutRate: 0.95,
         pigWeight: 30,
         equipmentResidual: 32.0,
@@ -60,16 +61,16 @@
         id: 130,
         name: "Gói 130 Triệu",
         badge: "Khuyên dùng - Cân bằng tối ưu",
-        tagline: "Điểm cân bằng vàng giữa vốn, công suất 4 người & độ an toàn",
+        tagline: "Điểm cân bằng vàng giữa vốn, công suất 4 người & an toàn",
         capital: 130,
         capex: 40.0,
         chicken3mCount: 650,
         chicken3mPrice: 75000,
         chicken1mCount: 300,
-        chicken1mPrice: 35000,
+        chicken1mPrice: 12000, // Giá giống 1 tháng: 12.000đ
         pigsCount: 6,
         pigPrice: 1200000,
-        baseFeedCost: 23.55,
+        baseFeedCost: 30.45,
         chickenOutRate: 0.95,
         pigWeight: 30,
         equipmentResidual: 32.0,
@@ -85,10 +86,10 @@
         chicken3mCount: 1000,
         chicken3mPrice: 75000,
         chicken1mCount: 400,
-        chicken1mPrice: 35000,
+        chicken1mPrice: 12000, // Giá giống 1 tháng: 12.000đ
         pigsCount: 10,
         pigPrice: 1200000,
-        baseFeedCost: 29.0,
+        baseFeedCost: 38.2,
         chickenOutRate: 0.95,
         pigWeight: 30,
         equipmentResidual: 32.0,
@@ -97,14 +98,14 @@
     };
 
     const INITIAL_CAPEX = [
-      { id: 1, name: "Máy cắt cỏ cầm tay 2 thì", cost: 1.4, note: "Dọn 2.000m² sườn đồi, tạo mặt bằng sạch", completed: true },
-      { id: 2, name: "2 Điều hòa lướt/cũ", cost: 9.5, note: "Lắp phòng ở + phòng kho ấm mùa đông", completed: true },
-      { id: 3, name: "Đường ống nước 2km (PE phi 25)", cost: 9.5, note: "Kéo từ mó nước tự nhiên về bể tổng", completed: true },
+      { id: 1, name: "Máy cắt cỏ cầm tay 2 thì", cost: 1.4, note: "Dọn 2.000m² sườn đồi sạch sẽ", completed: true },
+      { id: 2, name: "2 Điều hòa lướt/cũ", cost: 9.5, note: "Lắp phòng ở + phòng kho giữ ấm mùa đông", completed: true },
+      { id: 3, name: "Đường ống nước 2km (PE phi 25)", cost: 9.5, note: "Kéo từ mó nước về bể tổng", completed: true },
       { id: 4, name: "Máy bơm đẩy công suất lớn", cost: 2.5, note: "Đấu nối mó nước đẩy lên bồn áp lực", completed: true },
       { id: 5, name: "Điện sưởi úm, quạt, bếp gas", cost: 7.0, note: "Chiếu sáng + giữ ấm đàn gà 1T", completed: true },
-      { id: 6, name: "4 Thùng phuy ngâm thóc mầm", cost: 1.4, note: "Ủ mầm ngũ cốc giàu đạm thay cám viên", completed: true },
+      { id: 6, name: "4 Thùng phuy ngâm thóc mầm", cost: 1.4, note: "Ủ mầm ngũ cốc giàu đạm thay cám", completed: true },
       { id: 7, name: "Lưới cước quây 2.000m² + Bạt dứa", cost: 4.5, note: "Quây riêng 2 ô gà 3T và 1T, chắn gió bấc", completed: true },
-      { id: 8, name: "Công nhật dọn dẹp tuần đầu (2 người x 7 ngày)", cost: 4.2, note: "Phát rậm, đào hố chôn cọc tre", completed: true }
+      { id: 8, name: "Công nhật dọn dẹp tuần đầu", cost: 4.2, note: "2 công x 7 ngày phát rậm, chôn cọc", completed: true }
     ];
 
     const ROADMAP = [
@@ -119,19 +120,19 @@
           "Lắp 2 điều hòa sinh hoạt giữ ấm cho đội ngũ 4 người.",
           "Chặt tre nứa tại chỗ dựng chuồng ngủ, căng bạt dứa chắn gió bấc, chia 2 ô rào cước (ô gà 3T và ô gà 1T)."
         ],
-        tip: "Chuồng tre nứa tiết kiệm 100% tiền mua sắt thép, nhưng mái bạt dứa cần căng dốc thoát nước mưa tốt."
+        tip: "Chuồng tre nứa tiết kiệm 100% tiền mua sắt thép, mái bạt dứa cần căng dốc thoát nước mưa tốt."
       },
       {
         week: "Tuần 2",
         phase: "Vào Giống Gà",
         tag: "Trọng yếu",
-        title: "Đón Gà Giống Lạc Sơn (3T & 1T) & Ngâm Thóc Mầm",
+        title: "Đón Gà Giống Lạc Sơn (3T & 1T @ 12k) & Ngâm Thóc Mầm",
         points: [
-          "Đón gà 3 tháng và gà 1 tháng về chuồng, pha Gluco-K-C + điện giải chống sốc nhiệt ngày đầu.",
+          "Đón gà 3 tháng và gà giống 1 tháng (giá tối ưu 12k/con), pha Gluco-K-C + điện giải chống sốc nhiệt.",
           "Thắp bóng sưởi ban đêm kiểm soát nhiệt độ nghiêm ngặt cho đàn 1 tháng tuổi.",
           "Ngâm 4 thùng phuy ủ thóc mầm luân phiên làm nguồn đạm tươi giàu enzyme."
         ],
-        tip: "Mùa đông miền Bắc có sương muối: đêm phải hạ kín bạt dứa quây chuồng, rải dày trấu đệm lót sinh học."
+        tip: "Đêm rét miền Bắc cần hạ kín bạt dứa quây chuồng, rải dày trấu đệm lót sinh học ấm chân gà."
       },
       {
         week: "Tuần 3 - 4",
@@ -140,8 +141,8 @@
         title: "Đón Lợn Bản Nhỡ & Băm Thân Chuối Men Vi Sinh",
         points: [
           "Đón lợn bản giống nhỡ (12 - 15kg/con), thả khu thung lũng 2 có vũng tắm tự nhiên.",
-          "Chặt thân chuối trong vườn băm nhỏ, trộn cám ngô + chế phẩm men vi sinh ủ yếm khí 24-48h.",
-          "Cắt giảm 40 - 50% chi phí cám viên thương nghiệp nhờ thức ăn lên men giàu vi sinh."
+          "Chặt thân chuối vườn băm nhỏ, trộn cám ngô + men vi sinh ủ yếm khí 24-48h.",
+          "Cắt giảm 40 - 50% chi phí cám thương nghiệp nhờ thức ăn lên men giàu vi sinh."
         ],
         tip: "Tiêm phòng đủ vắc xin dịch tả lợn và tụ huyết trùng trước khi thả rông."
       },
@@ -159,7 +160,7 @@
       },
       {
         week: "Tháng 3 (Cận Tết)",
-        phase: "Xuất Bán & Thu Hồi Vốn",
+        phase: "Xuất Bán & Thu Tiền",
         tag: "Thu tiền mặt",
         title: "15 - 28 Chạp: Xuất Bán Thần Tốc, Vét Đàn 3T & Giữ Gà Gối Đầu",
         points: [
@@ -194,6 +195,7 @@
       const [capexItems, setCapexItems] = useState(INITIAL_CAPEX);
       const [selectedRoadmapIdx, setSelectedRoadmapIdx] = useState(0);
       const [showGlossary, setShowGlossary] = useState(false);
+      const [showFullPL, setShowFullPL] = useState(false);
       const [activeChartTab, setActiveChartTab] = useState('flow');
 
       const chartRef = useRef(null);
@@ -262,9 +264,57 @@
       };
 
       const completedCapexCount = capexItems.filter(i => i.completed).length;
-      const completedCapexCost = capexItems.filter(i => i.completed).reduce((s, i) => s + i.cost, 0);
 
-      // Re-render chart on data change
+      // Cost Breakdown Items
+      const costItems = [
+        {
+          index: 1,
+          name: "Hạ tầng, 2km ống nước, 2 điều hòa, bơm, máy cắt cỏ",
+          qty: "Gói chuẩn",
+          amount: capex,
+          note: "Tài sản máy móc dùng lâu dài nhiều vụ",
+          badge: "Cố định",
+          badgeColor: "bg-slate-100 text-slate-700"
+        },
+        {
+          index: 2,
+          name: "Giống gà Lạc Sơn 3 tháng tuổi (vỗ béo bán Tết)",
+          qty: `${chicken3mCount} con`,
+          amount: chicken3mCost,
+          note: "Vào chuồng thả đồi 100 ngày đạt xuất chuồng",
+          badge: "Xuất Tết",
+          badgeColor: "bg-emerald-100 text-emerald-800"
+        },
+        {
+          index: 3,
+          name: "Giống gà Lạc Sơn 1 tháng tuổi (gối đầu sau Tết)",
+          qty: `${chicken1mCount} con`,
+          amount: chicken1mCost,
+          note: "Giá giống tối ưu 12k/con, gối sóng Rằm tháng Giêng",
+          badge: "12.000đ/con",
+          badgeColor: "bg-blue-100 text-blue-800 font-bold"
+        },
+        {
+          index: 4,
+          name: "Giống lợn bản nhỡ F1 (12 - 15kg/con)",
+          qty: `${pigsCount} con`,
+          amount: pigCost,
+          note: "Thả thung lũng, đạt 30kg thịt thơm",
+          badge: "Xuất Tết",
+          badgeColor: "bg-emerald-100 text-emerald-800"
+        },
+        {
+          index: 5,
+          name: "Thức ăn 100 ngày + Vắc xin thú y",
+          qty: "100 ngày",
+          amount: feedCost,
+          note: `Đã giảm ${Math.round(feedSavingRate * 100)}% nhờ băm thân chuối đồi ủ men (tiết kiệm ${formatVND(feedSavings, 1)})`,
+          badge: "Ủ chuối men",
+          badgeColor: "bg-amber-100 text-amber-800"
+        }
+      ];
+
+      // Re-render Chart
       useEffect(() => {
         if (!chartRef.current) return;
         if (chartInstanceRef.current) {
@@ -299,26 +349,15 @@
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              plugins: {
-                legend: { display: false },
-                tooltip: {
-                  callbacks: {
-                    label: (ctx) => `${ctx.raw} Triệu VNĐ`
-                  }
-                }
-              },
-              scales: {
-                y: {
-                  ticks: { callback: (val) => `${val} tr` }
-                }
-              }
+              plugins: { legend: { display: false } },
+              scales: { y: { ticks: { callback: (val) => `${val} tr` } } }
             }
           });
         } else if (activeChartTab === 'costs') {
           chartInstanceRef.current = new Chart(ctx, {
             type: 'doughnut',
             data: {
-              labels: ['CAPEX Hạ tầng', 'Giống gà 3T', 'Giống gà 1T', 'Giống lợn nhỡ', 'Thức ăn & Thú y'],
+              labels: ['Hạ tầng', 'Gà 3T', 'Gà 1T (12k)', 'Lợn giống', 'Thức ăn & Thú y'],
               datasets: [{
                 data: [
                   capex.toFixed(1),
@@ -333,14 +372,7 @@
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
-                tooltip: {
-                  callbacks: {
-                    label: (ctx) => `${ctx.label}: ${ctx.raw} tr (${((ctx.raw / totalCapital) * 100).toFixed(1)}%)`
-                  }
-                }
-              }
+              plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
             }
           });
         } else if (activeChartTab === 'comparison') {
@@ -370,15 +402,8 @@
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              plugins: {
-                legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
-                tooltip: {
-                  callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.raw} tr` }
-                }
-              },
-              scales: {
-                y: { ticks: { callback: (val) => `${val} tr` } }
-              }
+              plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } },
+              scales: { y: { ticks: { callback: (val) => `${val} tr` } } }
             }
           });
         }
@@ -388,116 +413,110 @@
         };
       }, [activeChartTab, scenarioId, chickenPrice, pigPrice, feedSavingRate, chickenSurvRate]);
 
-      // Re-trigger Lucide icon replacement
       useEffect(() => {
-        if (window.lucide) {
-          window.lucide.createIcons();
-        }
+        if (window.lucide) window.lucide.createIcons();
       });
 
       return (
         <div className="min-h-screen flex flex-col font-sans">
           {/* Header */}
-          <header className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white shadow-xl sticky top-0 z-40 border-b border-emerald-800/60 no-print">
-            <div className="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row justify-between items-center gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg ring-2 ring-emerald-400/30">
-                  <i data-lucide="mountain" className="w-5 h-5 text-white"></i>
+          <header className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white shadow-md sticky top-0 z-40 border-b border-emerald-800/60 no-print">
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2">
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow ring-2 ring-emerald-400/30 flex-shrink-0">
+                  <i data-lucide="mountain" className="w-4 h-4 text-white"></i>
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-base sm:text-lg font-bold tracking-tight text-white">
-                      Kế Hoạch Khởi Động & Phân Tích Lợi Nhuận Trang Trại
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <h1 className="text-sm sm:text-base font-black tracking-tight text-white truncate">
+                      Kế Hoạch Trang Trại Vụ Tết
                     </h1>
-                    <span className="bg-amber-500/20 text-amber-300 text-[11px] px-2 py-0.5 rounded-full font-bold border border-amber-500/40">
-                      Vụ Tết
+                    <span className="bg-amber-500/25 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold border border-amber-500/40">
+                      100-120 Ngày
                     </span>
                   </div>
-                  <p className="text-xs text-emerald-200/90 mt-0.5">
-                    Mô hình tuần hoàn: Gà Lạc Sơn (1T & 3T) • Lợn bản F1 • Thân chuối men vi sinh • Thu hồi vốn 100-120 ngày
+                  <p className="text-[11px] text-emerald-200/90 truncate">
+                    Gà Lạc Sơn (1T @ 12k & 3T) • Lợn bản F1 • Chuối men vi sinh
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 flex-wrap justify-center">
-                <div className="flex items-center gap-1.5 bg-emerald-900/80 px-3 py-1.5 rounded-lg border border-emerald-700/50 text-xs">
-                  <i data-lucide="clock" className="w-4 h-4 text-amber-400"></i>
-                  <span>Đếm ngược xuất bán: <strong className="text-amber-300">100 - 120 Ngày</strong> (Trước 28 Chạp)</span>
+              <div className="flex items-center justify-between sm:justify-end gap-1.5 w-full sm:w-auto text-xs">
+                <div className="flex items-center gap-1 bg-emerald-900/80 px-2 py-1 rounded border border-emerald-700/50 text-[11px]">
+                  <i data-lucide="clock" className="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>Xuất bán: <strong className="text-amber-300">Trước 28 Chạp</strong></span>
                 </div>
 
-                <button
-                  onClick={() => setShowGlossary(true)}
-                  className="text-xs bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 px-2.5 py-1.5 rounded-lg border border-emerald-600/50 flex items-center gap-1"
-                >
-                  <i data-lucide="help-circle" className="w-3.5 h-3.5"></i>
-                  <span>Thuật ngữ</span>
-                </button>
-
-                <button
-                  onClick={resetDefaults}
-                  className="text-xs bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 px-2.5 py-1.5 rounded-lg border border-emerald-600/50 flex items-center gap-1"
-                >
-                  <i data-lucide="rotate-ccw" className="w-3.5 h-3.5"></i>
-                  <span>Đặt lại</span>
-                </button>
-
-                <button
-                  onClick={() => window.print()}
-                  className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-semibold shadow flex items-center gap-1.5"
-                >
-                  <i data-lucide="printer" className="w-3.5 h-3.5"></i>
-                  <span>In Báo Cáo</span>
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setShowGlossary(true)}
+                    className="text-[11px] bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 px-2 py-1 rounded border border-emerald-600/50"
+                  >
+                    Thuật ngữ
+                  </button>
+                  <button
+                    onClick={resetDefaults}
+                    className="text-[11px] bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 px-2 py-1 rounded border border-emerald-600/50"
+                  >
+                    Đặt lại
+                  </button>
+                  <button
+                    onClick={() => window.print()}
+                    className="text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded font-bold shadow"
+                  >
+                    In
+                  </button>
+                </div>
               </div>
             </div>
           </header>
 
-          {/* Main Dashboard */}
-          <main className="max-w-7xl mx-auto px-4 py-6 space-y-6 flex-1 w-full">
-            {/* 1. SCENARIO SELECTOR */}
-            <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+          {/* MAIN DASHBOARD: THEO ĐÚNG THỨ TỰ ƯU TIÊN YÊU CẦU */}
+          <main className="max-w-7xl mx-auto px-3 sm:px-6 py-3.5 sm:py-6 space-y-4 sm:space-y-6 flex-1 w-full">
+            {/* 1. CHỌN KỊCH BẢN VỐN BAN ĐẦU */}
+            <section className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-3.5 sm:p-5">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
                 <div>
-                  <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i data-lucide="wallet" className="w-5 h-5 text-emerald-600"></i>
-                    Chọn Kịch Bản Vốn Ban Đầu
+                  <h2 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+                    1. Chọn Kịch Bản Vốn Ban Đầu
                     {isCustomized && (
-                      <span className="text-xs bg-amber-100 text-amber-800 border border-amber-300 font-semibold px-2 py-0.5 rounded-full">
-                        Đang giả lập tùy chỉnh
+                      <span className="text-[10px] bg-amber-100 text-amber-800 border border-amber-300 font-bold px-2 py-0.5 rounded-full">
+                        Đang tùy chỉnh
                       </span>
                     )}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500">
-                    Xem ngay quy mô đàn nuôi, dòng tiền thu hồi và tổng lợi nhuận kinh tế vụ Tết
+                  <p className="text-[11px] sm:text-xs text-slate-500">
+                    Nhấp chọn quy mô vốn để xem ngay lợi nhuận và cơ cấu chi phí
                   </p>
                 </div>
 
                 {isCustomized && (
                   <button
                     onClick={resetDefaults}
-                    className="text-xs text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg font-medium"
+                    className="text-[11px] text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-lg font-semibold"
                   >
-                    Về thông số gốc của gói
+                    Về thông số gốc
                   </button>
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4">
                 {Object.values(PRESETS).map((p) => {
                   const isSelected = scenarioId === p.id;
                   return (
                     <div
                       key={p.id}
                       onClick={() => selectScenario(p.id)}
-                      className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${
+                      className={`relative cursor-pointer rounded-xl border-2 p-3 sm:p-4 transition-all touch-manipulation active:scale-[0.99] ${
                         isSelected
-                          ? "border-emerald-600 bg-emerald-50/40 shadow-sm ring-2 ring-emerald-500/20"
-                          : "border-slate-200 hover:border-slate-300 bg-white"
+                          ? "border-emerald-600 bg-emerald-50/50 shadow-md ring-2 ring-emerald-500/20"
+                          : "border-slate-200 hover:border-slate-300 bg-slate-50/40 hover:bg-white"
                       }`}
                     >
                       {p.id === 130 && (
-                        <div className="absolute -top-3 right-3">
-                          <span className="bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">
+                        <div className="absolute -top-2.5 right-3">
+                          <span className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
                             Khuyên Dùng
                           </span>
                         </div>
@@ -505,518 +524,604 @@
 
                       <div className="flex justify-between items-start">
                         <div>
-                          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
-                            Kịch bản đầu tư
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                            Gói đầu tư
                           </span>
                           <div className="flex items-baseline gap-1 mt-0.5">
-                            <span className="text-2xl font-black text-slate-900">{p.capital}</span>
-                            <span className="text-sm font-bold text-slate-600">Triệu VNĐ</span>
+                            <span className="text-2xl sm:text-3xl font-black text-slate-900">{p.capital}</span>
+                            <span className="text-xs sm:text-sm font-bold text-slate-600">Triệu VNĐ</span>
                           </div>
                         </div>
                         <div className={`w-5 h-5 rounded-full flex items-center justify-center border ${
-                          isSelected ? "bg-emerald-600 border-emerald-600 text-white" : "border-slate-300 text-transparent"
+                          isSelected ? "bg-emerald-600 border-emerald-600 text-white shadow-sm" : "border-slate-300 text-transparent"
                         }`}>
                           <i data-lucide="check" className="w-3.5 h-3.5 stroke-[3]"></i>
                         </div>
                       </div>
 
-                      <div className="mt-3 pt-3 border-t border-slate-100 space-y-1 text-xs text-slate-600">
+                      <div className="mt-2.5 pt-2 border-t border-slate-100 space-y-1 text-xs text-slate-600">
                         <div className="flex justify-between">
-                          <span>Quy mô xuất Tết:</span>
-                          <span className="font-semibold text-slate-800">{p.chicken3mCount} gà • {p.pigsCount} lợn</span>
+                          <span>Xuất bán Tết:</span>
+                          <span className="font-bold text-slate-900">{p.chicken3mCount} gà • {p.pigsCount} lợn</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Gà gối đầu (1T):</span>
-                          <span className="font-semibold text-amber-700">{p.chicken1mCount} con</span>
+                          <span>Gà gối đầu (1T @ 12k):</span>
+                          <span className="font-bold text-amber-700">{p.chicken1mCount} con</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Hạ tầng cố định:</span>
-                          <span className="font-semibold text-slate-800">{p.capex} tr</span>
+                          <span className="font-bold text-slate-900">{p.capex} tr</span>
                         </div>
                       </div>
 
-                      <p className="mt-2 text-[11px] text-slate-500 italic line-clamp-1">
-                        {p.tagline}
-                      </p>
+                      <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                        <span className="text-slate-400 truncate pr-1">{p.tagline}</span>
+                        <span className={`px-1.5 py-0.2 rounded font-bold text-[10px] ${
+                          isSelected ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"
+                        }`}>
+                          {p.badge}
+                        </span>
+                      </div>
                     </div>
                   );
                 })}
               </div>
             </section>
 
-            {/* 2. TOP METRIC CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Card 1 */}
-              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-                <div className="flex items-center justify-between text-slate-500 mb-2">
-                  <span className="text-xs font-bold uppercase tracking-wider">Vốn Đầu Tư Ban Đầu</span>
-                  <i data-lucide="landmark" className="w-4 h-4 text-slate-700"></i>
-                </div>
-                <div className="text-3xl font-black text-slate-900">{formatVND(totalCapital, 1)}</div>
-                <span className="text-xs text-slate-500 block mt-1">Đã gồm CAPEX thiết bị & thức ăn 100 ngày</span>
-                <div className="mt-3 pt-3 border-t border-slate-100 flex justify-between text-xs text-slate-600">
-                  <span>Hạ tầng: <strong>{capex} tr</strong></span>
-                  <span>•</span>
-                  <span>Giống: <strong>{totalSeedCost.toFixed(1)} tr</strong></span>
-                  <span>•</span>
-                  <span>Thức ăn: <strong>{feedCost.toFixed(1)} tr</strong></span>
-                </div>
+            {/* 2. VỚI KỊCH BẢN VỐN ĐÓ THÌ LỢI NHUẬN THẾ NÀO */}
+            <section className="space-y-2.5">
+              <div className="px-1">
+                <h2 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                  2. Với Vốn {totalCapital.toFixed(0)} Triệu: Dự Kiến Lợi Nhuận Thế Nào?
+                </h2>
+                <p className="text-[11px] sm:text-xs text-slate-500">
+                  Dòng tiền mặt cầm về ngày 28 Tết và tổng mức sinh lời kinh tế
+                </p>
               </div>
 
-              {/* Card 2 */}
-              <div className="bg-gradient-to-br from-emerald-50/60 to-white rounded-2xl p-5 border border-emerald-200 shadow-sm">
-                <div className="flex items-center justify-between text-emerald-800 mb-2">
-                  <span className="text-xs font-bold uppercase tracking-wider">Doanh Thu Thu Về Tết</span>
-                  <i data-lucide="coins" className="w-4 h-4 text-emerald-700"></i>
-                </div>
-                <div className="text-3xl font-black text-emerald-700">{formatVND(totalRevenue, 1)}</div>
-                <span className="text-xs text-emerald-800 block mt-1 font-medium">Xuất bán ngày 15 - 28 Chạp</span>
-                <div className="mt-3 pt-3 border-t border-emerald-200/60 flex justify-between text-xs text-emerald-900">
-                  <span>Gà 3T: <strong>{formatVND(chickenRevenue, 1)}</strong> ({chickenSold} con)</span>
-                  <span>•</span>
-                  <span>Lợn: <strong>{formatVND(pigRevenue, 1)}</strong> ({pigsCount} con)</span>
-                </div>
-              </div>
-
-              {/* Card 3 */}
-              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Lãi Dòng Tiền Mặt</span>
-                  <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    Cầm về ngày 28 Tết
-                  </span>
-                </div>
-                <div className={`text-3xl font-black ${cashProfit >= 0 ? "text-blue-700" : "text-amber-600"}`}>
-                  {cashProfit >= 0 ? `+${formatVND(cashProfit, 1)}` : formatVND(cashProfit, 1)}
-                </div>
-                <span className="text-xs text-slate-500 block mt-1">
-                  = Doanh thu ({formatVND(totalRevenue, 1)}) - Vốn ({formatVND(totalCapital, 1)})
-                </span>
-                <div className="mt-3 pt-3 border-t border-slate-100 flex justify-between text-xs">
-                  <span className="text-slate-500">Tỷ lệ thu hồi tiền mặt:</span>
-                  <span className="font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">
-                    {cashRecoveryRate.toFixed(1)}%
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 4 */}
-              <div className="bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 text-white rounded-2xl p-5 border-2 border-emerald-400/40 shadow-xl relative overflow-hidden">
-                <div className="flex items-center justify-between text-emerald-200 mb-2">
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-300 flex items-center gap-1">
-                    <i data-lucide="shield-check" className="w-4 h-4 text-emerald-400"></i>
-                    Lợi Nhuận Ròng Kinh Tế
-                  </span>
-                  <div className="bg-amber-400 text-slate-950 text-xs font-black px-2.5 py-0.5 rounded-full shadow flex items-center gap-0.5">
-                    <i data-lucide="trending-up" className="w-3 h-3"></i>
-                    ROI {roi.toFixed(1)}%
-                  </div>
-                </div>
-                <div className="text-3xl sm:text-4xl font-black text-amber-300 tracking-tight">
-                  +{formatVND(totalNetProfit, 1)}
-                </div>
-                <span className="text-xs text-emerald-100 block mt-1 font-medium">
-                  Gồm tiền mặt + {formatVND(totalPostTetAssets, 1)} tài sản tích lũy
-                </span>
-                <div className="mt-3 pt-3 border-t border-emerald-700/60 flex justify-between text-xs text-emerald-100">
-                  <span>Gà giò 1T: <strong>{formatVND(chicken1mValue, 1)}</strong> ({chicken1mRemaining} con)</span>
-                  <span>•</span>
-                  <span>Thiết bị: <strong>{equipmentResidual} tr</strong></span>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. SIMULATOR & CHARTS GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-              {/* Simulator Card */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-5">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+                {/* LỢI NHUẬN RÒNG KINH TẾ (Trọng tâm lớn nhất) */}
+                <div className="bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-950 text-white rounded-2xl p-4 sm:p-5 border-2 border-emerald-400/50 shadow-lg relative overflow-hidden flex flex-col justify-between">
                   <div>
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                      <i data-lucide="sliders" className="w-5 h-5 text-emerald-600"></i>
-                      Mô Phỏng Giá Bán & Độ Nhạy
-                    </h3>
-                    <p className="text-xs text-slate-500">Kéo trượt để kiểm tra mức lợi nhuận biến động theo thị trường</p>
-                  </div>
-                  <button
-                    onClick={resetDefaults}
-                    className="text-xs text-slate-600 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg flex items-center gap-1"
-                  >
-                    <i data-lucide="rotate-ccw" className="w-3.5 h-3.5"></i>
-                    Về gốc
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {/* Slider Chicken */}
-                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 space-y-1.5">
-                    <div className="flex justify-between text-xs font-semibold text-slate-700">
-                      <span>🐔 Giá bán gà Lạc Sơn / con:</span>
-                      <span className="text-emerald-700 font-bold bg-white px-2 py-0.5 rounded border border-slate-200">
-                        {formatRawVND(chickenPrice)}
+                    <div className="flex items-center justify-between text-emerald-200 mb-1">
+                      <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-emerald-300 flex items-center gap-1">
+                        <i data-lucide="shield-check" className="w-3.5 h-3.5 text-emerald-400"></i>
+                        Lợi Nhuận Ròng Kinh Tế
+                      </span>
+                      <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow">
+                        ROI {roi.toFixed(1)}%
                       </span>
                     </div>
-                    <input
-                      type="range"
-                      min={160000}
-                      max={250000}
-                      step={5000}
-                      value={chickenPrice}
-                      onChange={(e) => setChickenPrice(Number(e.target.value))}
-                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                    />
-                    <div className="flex justify-between text-[11px] text-slate-400">
-                      <span>160k (Sỉ)</span>
-                      <span className="font-semibold text-slate-600">200k (Lẻ chuẩn)</span>
-                      <span>250k (Biếu Tết)</span>
+
+                    <div className="text-3xl sm:text-4xl font-black text-amber-300 tracking-tight mt-1">
+                      +{formatVND(totalNetProfit, 1)}
                     </div>
+                    <span className="text-[11px] text-emerald-100 block mt-1 leading-relaxed">
+                      = Lãi tiền mặt ({formatVND(cashProfit, 1)}) + {formatVND(totalPostTetAssets, 1)} tài sản tồn
+                    </span>
                   </div>
 
-                  {/* Slider Pig */}
-                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 space-y-1.5">
-                    <div className="flex justify-between text-xs font-semibold text-slate-700">
-                      <span>🐷 Giá bán lợn hơi / kg:</span>
-                      <span className="text-emerald-700 font-bold bg-white px-2 py-0.5 rounded border border-slate-200">
-                        {formatRawVND(pigPrice)}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      min={100000}
-                      max={160000}
-                      step={5000}
-                      value={pigPrice}
-                      onChange={(e) => setPigPrice(Number(e.target.value))}
-                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                    />
-                    <div className="flex justify-between text-[11px] text-slate-400">
-                      <span>100k/kg (Thấp)</span>
-                      <span className="font-semibold text-slate-600">130k/kg (Trung bình)</span>
-                      <span>160k/kg (Tết sốt)</span>
-                    </div>
-                  </div>
-
-                  {/* Slider Feed Savings */}
-                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 space-y-1.5">
-                    <div className="flex justify-between text-xs font-semibold text-slate-700">
-                      <span>🌱 Tiết kiệm thức ăn từ chuối & men vi sinh:</span>
-                      <span className="text-amber-700 font-bold bg-white px-2 py-0.5 rounded border border-slate-200">
-                        {Math.round(feedSavingRate * 100)}% chi phí
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      min={0}
-                      max={0.60}
-                      step={0.05}
-                      value={feedSavingRate}
-                      onChange={(e) => setFeedSavingRate(Number(e.target.value))}
-                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-600"
-                    />
-                    <div className="flex justify-between text-[11px] text-slate-400">
-                      <span>0% (Cám 100%)</span>
-                      <span className="font-semibold text-amber-700">40% (Chuẩn men ủ)</span>
-                      <span>60% (Tối đa)</span>
-                    </div>
+                  <div className="mt-3 pt-2 border-t border-emerald-800 text-[11px] text-emerald-200 flex justify-between items-center">
+                    <span>Biên lãi ròng: <strong>{netMargin.toFixed(1)}%</strong></span>
+                    <span className="bg-emerald-800/80 px-2 py-0.5 rounded text-[10px]">100 ngày</span>
                   </div>
                 </div>
 
-                {/* Simulation Output Banner */}
-                <div className="bg-emerald-50 rounded-xl p-3.5 border border-emerald-200 text-xs space-y-2">
-                  <div className="flex justify-between font-bold text-slate-800">
-                    <span>Doanh thu thu về mô phỏng:</span>
-                    <span className="text-emerald-700 text-sm">{formatVND(totalRevenue, 1)}</span>
-                  </div>
-                  <div className="flex justify-between font-bold text-slate-800">
-                    <span>Lợi nhuận ròng kinh tế:</span>
-                    <span className="text-emerald-700 text-sm">+{formatVND(totalNetProfit, 1)} (ROI {roi.toFixed(1)}%)</span>
-                  </div>
-                  <div className="text-[11px] text-slate-500 pt-1 border-t border-emerald-200/60">
-                    Tiết kiệm được <strong>{formatVND(feedSavings, 1)}</strong> nhờ băm thân chuối vườn ủ men vi sinh.
-                  </div>
-                </div>
-              </div>
-
-              {/* Chart Card */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3 flex-wrap gap-2">
+                {/* TIỀN MẶT CẦM VỀ 28 TẾT */}
+                <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
                   <div>
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                      <i data-lucide="bar-chart-3" className="w-5 h-5 text-emerald-600"></i>
-                      Đồ Thị Tài Chính Trực Quan
-                    </h3>
-                    <p className="text-xs text-slate-500">Phân tích dòng tiền, cơ cấu chi phí và so sánh 3 gói</p>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600">
+                        Tiền Mặt Cầm Về 28 Tết
+                      </span>
+                      <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        Dòng tiền tươi
+                      </span>
+                    </div>
+
+                    <div className={`text-2xl sm:text-3xl font-black ${cashProfit >= 0 ? "text-blue-700" : "text-amber-600"}`}>
+                      {cashProfit >= 0 ? `+${formatVND(cashProfit, 1)}` : formatVND(cashProfit, 1)}
+                    </div>
+                    <span className="text-[11px] text-slate-500 block mt-1 leading-relaxed">
+                      {cashProfit >= 0
+                        ? "Đã hoàn 100% vốn gốc, dôi dư tiền mặt cầm tay"
+                        : `Thu hồi ${cashRecoveryRate.toFixed(1)}% vốn gốc bằng tiền mặt`}
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg text-xs font-semibold">
-                    <button
-                      onClick={() => setActiveChartTab('flow')}
-                      className={`px-2.5 py-1 rounded transition ${activeChartTab === 'flow' ? 'bg-white text-emerald-800 shadow-sm' : 'text-slate-600'}`}
-                    >
-                      Dòng tiền
-                    </button>
-                    <button
-                      onClick={() => setActiveChartTab('costs')}
-                      className={`px-2.5 py-1 rounded transition ${activeChartTab === 'costs' ? 'bg-white text-emerald-800 shadow-sm' : 'text-slate-600'}`}
-                    >
-                      Cơ cấu
-                    </button>
-                    <button
-                      onClick={() => setActiveChartTab('comparison')}
-                      className={`px-2.5 py-1 rounded transition ${activeChartTab === 'comparison' ? 'bg-white text-emerald-800 shadow-sm' : 'text-slate-600'}`}
-                    >
-                      So sánh 3 gói
-                    </button>
+                  <div className="mt-3 pt-2 border-t border-slate-100 text-[11px] text-slate-600 flex justify-between items-center">
+                    <span>Tỷ lệ hoàn gốc:</span>
+                    <span className="font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">
+                      {cashRecoveryRate.toFixed(1)}%
+                    </span>
                   </div>
                 </div>
 
-                <div className="relative h-64 sm:h-72 w-full">
-                  <canvas ref={chartRef}></canvas>
+                {/* DOANH THU THU VỀ TẾT */}
+                <div className="bg-gradient-to-br from-emerald-50/70 to-white rounded-2xl p-4 sm:p-5 border border-emerald-200 shadow-sm flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-emerald-800 mb-1">
+                      <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+                        Doanh Thu Bán Tết
+                      </span>
+                      <i data-lucide="coins" className="w-4 h-4 text-emerald-700"></i>
+                    </div>
+
+                    <div className="text-2xl sm:text-3xl font-black text-emerald-700">
+                      {formatVND(totalRevenue, 1)}
+                    </div>
+                    <span className="text-[11px] text-emerald-800 block mt-1 font-medium leading-relaxed">
+                      Xuất bán đợt 15 - 28 Tháng Chạp
+                    </span>
+                  </div>
+
+                  <div className="mt-3 pt-2 border-t border-emerald-200/60 text-[11px] text-emerald-900 flex justify-between items-center">
+                    <span>Gà 3T: <strong>{formatVND(chickenRevenue, 1)}</strong></span>
+                    <span>•</span>
+                    <span>Lợn: <strong>{formatVND(pigRevenue, 1)}</strong></span>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* 4. FINANCIAL P&L STATEMENT TABLE */}
-            <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i data-lucide="file-spreadsheet" className="w-5 h-5 text-emerald-600"></i>
-                    Bảng Cân Đối Lãi Lỗ Chi Tiết (P&L Financial Statement)
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-500">
-                    Minh bạch từng dòng mục doanh thu, chi phí biến đổi, CAPEX cố định và tài sản tích lũy
-                  </p>
+                {/* TÀI SẢN TỒN DƯ SAU TẾT */}
+                <div className="bg-amber-50/50 rounded-2xl p-4 sm:p-5 border border-amber-200 shadow-sm flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-amber-900 mb-1">
+                      <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+                        Tài Sản Còn Lại Sau Tết
+                      </span>
+                      <span className="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        Gối đầu
+                      </span>
+                    </div>
+
+                    <div className="text-2xl sm:text-3xl font-black text-amber-800">
+                      +{formatVND(totalPostTetAssets, 1)}
+                    </div>
+                    <span className="text-[11px] text-amber-900/80 block mt-1 font-medium leading-relaxed">
+                      Đàn gà giò 4.5 tháng + Máy móc thiết bị
+                    </span>
+                  </div>
+
+                  <div className="mt-3 pt-2 border-t border-amber-200/60 text-[11px] text-amber-950 flex justify-between items-center">
+                    <span>Gà giò: <strong>{chicken1mRemaining} con</strong></span>
+                    <span>•</span>
+                    <span>Thiết bị: <strong>{equipmentResidual} tr</strong></span>
+                  </div>
                 </div>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs sm:text-sm">
-                  <thead>
-                    <tr className="border-b-2 border-slate-200 text-slate-400 text-xs uppercase bg-slate-50">
-                      <th className="py-2.5 px-3">Hạng Mục</th>
-                      <th className="py-2.5 px-2 text-center">Số Lượng</th>
-                      <th className="py-2.5 px-3 text-right">Đơn Giá Dự Kiến</th>
-                      <th className="py-2.5 px-3 text-right">Thành Tiền (VNĐ)</th>
-                      <th className="py-2.5 px-3 text-right">Quy Đổi (Tr)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
-                    {/* A. DOANH THU */}
-                    <tr className="bg-emerald-50/70 font-bold text-emerald-900 text-xs">
-                      <td colSpan={5} className="py-2 px-3 uppercase">A. Doanh Thu Xuất Bán Cận Tết (15 - 28 Tháng Chạp)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">1. Gà Lạc Sơn 3 tháng tuổi (hao hụt 5%, tỷ lệ sống 95%)</td>
-                      <td className="py-2 px-2 text-center font-semibold">{chickenSold} con</td>
-                      <td className="py-2 px-3 text-right">{formatRawVND(chickenPrice)}</td>
-                      <td className="py-2 px-3 text-right font-medium">{(chickenRevenue * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-slate-900">{formatVND(chickenRevenue, 2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">2. Lợn bản F1 cắp nách xuất chuồng (30kg/con)</td>
-                      <td className="py-2 px-2 text-center font-semibold">{pigsCount} con ({pigTotalWeight} kg)</td>
-                      <td className="py-2 px-3 text-right">{formatRawVND(pigPrice)}/kg</td>
-                      <td className="py-2 px-3 text-right font-medium">{(pigRevenue * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-slate-900">{formatVND(pigRevenue, 2)}</td>
-                    </tr>
-                    <tr className="bg-emerald-100/60 font-bold border-t border-emerald-200">
-                      <td colSpan={4} className="py-2.5 px-3 text-emerald-950">TỔNG DOANH THU BÁN TẾT (A)</td>
-                      <td className="py-2.5 px-3 text-right text-emerald-700 font-black text-base">{formatVND(totalRevenue, 2)}</td>
-                    </tr>
-
-                    {/* B. CHI PHÍ ĐẦU TƯ */}
-                    <tr className="bg-slate-100 font-bold text-slate-800 text-xs">
-                      <td colSpan={5} className="py-2 px-3 uppercase">B. Chi Phí Đầu Tư Ban Đầu & Vận Hành 100 Ngày (CAPEX + OPEX)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">1. CAPEX: Hạ tầng, 2km nước, 2 điều hòa, bơm, máy cắt cỏ</td>
-                      <td className="py-2 px-2 text-center">Gói chuẩn</td>
-                      <td className="py-2 px-3 text-right">-</td>
-                      <td className="py-2 px-3 text-right font-medium">{(capex * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-slate-900">{formatVND(capex, 2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">2. Giống gà Lạc Sơn 3 tháng tuổi (vỗ béo Tết)</td>
-                      <td className="py-2 px-2 text-center font-semibold">{chicken3mCount} con</td>
-                      <td className="py-2 px-3 text-right">{formatRawVND(75000)}</td>
-                      <td className="py-2 px-3 text-right font-medium">{(chicken3mCost * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-slate-900">{formatVND(chicken3mCost, 2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">3. Giống gà Lạc Sơn 1 tháng tuổi (gối đầu sau Tết)</td>
-                      <td className="py-2 px-2 text-center font-semibold">{chicken1mCount} con</td>
-                      <td className="py-2 px-3 text-right">{formatRawVND(35000)}</td>
-                      <td className="py-2 px-3 text-right font-medium">{(chicken1mCost * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-slate-900">{formatVND(chicken1mCost, 2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">4. Giống lợn bản nhỡ F1 (12 - 15kg/con)</td>
-                      <td className="py-2 px-2 text-center font-semibold">{pigsCount} con</td>
-                      <td className="py-2 px-3 text-right">{formatRawVND(1200000)}</td>
-                      <td className="py-2 px-3 text-right font-medium">{(pigCost * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-slate-900">{formatVND(pigCost, 2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">
-                        5. Thức ăn 100 ngày + Vắc xin (đã tiết kiệm {Math.round(feedSavingRate * 100)}% nhờ chuối vườn và men vi sinh)
-                      </td>
-                      <td className="py-2 px-2 text-center">100 ngày</td>
-                      <td className="py-2 px-3 text-right">-</td>
-                      <td className="py-2 px-3 text-right font-medium">{(feedCost * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-slate-900">{formatVND(feedCost, 2)}</td>
-                    </tr>
-                    <tr className="bg-slate-200/70 font-bold border-t border-slate-300">
-                      <td colSpan={4} className="py-2.5 px-3 text-slate-900">TỔNG VỐN ĐẦU TƯ THỰC TẾ (B)</td>
-                      <td className="py-2.5 px-3 text-right text-slate-900 font-black text-base">{formatVND(totalCapital, 2)}</td>
-                    </tr>
-
-                    {/* C. DÒNG TIỀN MẶT */}
-                    <tr className="bg-blue-50 font-bold border-t-2 border-blue-200">
-                      <td colSpan={4} className="py-2.5 px-3 text-blue-900 pl-4">
-                        C. LÃI DÒNG TIỀN MẶT CẦM VỀ NGÀY 28 TẾT (C = A - B)
-                      </td>
-                      <td className="py-2.5 px-3 text-right font-black text-base text-blue-700">
-                        {cashProfit >= 0 ? `+${formatVND(cashProfit, 2)}` : formatVND(cashProfit, 2)}
-                      </td>
-                    </tr>
-
-                    {/* D. TÀI SẢN SAU TẾT */}
-                    <tr className="bg-amber-50 font-bold text-amber-900 text-xs">
-                      <td colSpan={5} className="py-2 px-3 uppercase">D. Giá Trị Tài Sản Tích Lũy Còn Lại Sau Tết (Asset Equity)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">1. Đàn gà 1T nuôi 100 ngày thành gà giò 4.5 tháng ({chicken1mRemaining} con)</td>
-                      <td className="py-2 px-2 text-center font-semibold">{chicken1mRemaining} con</td>
-                      <td className="py-2 px-3 text-right">{formatRawVND(130000)}</td>
-                      <td className="py-2 px-3 text-right font-medium">{(chicken1mValue * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-amber-800">{formatVND(chicken1mValue, 2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-3 pl-6 font-medium">2. Giá trị thiết bị hạ tầng còn lại (khấu hao 20% vụ đầu)</td>
-                      <td className="py-2 px-2 text-center">80% giá trị</td>
-                      <td className="py-2 px-3 text-right">-</td>
-                      <td className="py-2 px-3 text-right font-medium">{(equipmentResidual * 1000000).toLocaleString('vi-VN')} đ</td>
-                      <td className="py-2 px-3 text-right font-bold text-amber-800">{formatVND(equipmentResidual, 2)}</td>
-                    </tr>
-                    <tr className="bg-amber-100 font-bold border-t border-amber-200">
-                      <td colSpan={4} className="py-2.5 px-3 text-amber-950">TỔNG TÀI SẢN TÍCH LŨY CÒN LẠI SAU TẾT (D)</td>
-                      <td className="py-2.5 px-3 text-right text-amber-900 font-black text-base">+{formatVND(totalPostTetAssets, 2)}</td>
-                    </tr>
-
-                    {/* E. LỢI NHUẬN RÒNG KINH TẾ */}
-                    <tr className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white font-bold border-t-2 border-emerald-500">
-                      <td colSpan={4} className="py-3 px-3 pl-4">
-                        <span className="text-sm sm:text-base font-black tracking-tight text-white block">
-                          E. TỔNG LỢI NHUẬN RÒNG KINH TẾ (E = C + D)
-                        </span>
-                        <span className="text-[11px] text-emerald-200 font-normal">
-                          Tổng lãi thực tế: Dòng tiền mặt dôi dư + Đàn gà giò gối đầu + Hạ tầng thiết bị
-                        </span>
-                      </td>
-                      <td className="py-3 px-3 text-right font-black text-lg sm:text-xl text-amber-300">
-                        +{formatVND(totalNetProfit, 2)}
-                      </td>
-                    </tr>
-
-                    {/* F. CHỈ SỐ */}
-                    <tr className="bg-slate-50 font-semibold text-slate-700 text-xs">
-                      <td colSpan={2} className="py-2.5 px-3">
-                        Tỷ suất hoàn vốn ROI (E / B): <strong className="text-emerald-700 ml-1">{roi.toFixed(1)}%</strong>
-                      </td>
-                      <td colSpan={2} className="py-2.5 px-3 text-center">
-                        Biên lợi nhuận ròng: <strong className="text-emerald-700 ml-1">{netMargin.toFixed(1)}%</strong>
-                      </td>
-                      <td className="py-2.5 px-3 text-right">
-                        Tỷ lệ thu hồi tiền mặt: <strong className="text-blue-700 ml-1">{cashRecoveryRate.toFixed(1)}%</strong>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </section>
 
-            {/* 5. ROADMAP & CAPEX CHECKLIST */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-              {/* Roadmap */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
-                <div className="border-b border-slate-100 pb-3 flex justify-between items-center">
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                      <i data-lucide="route" className="w-5 h-5 text-emerald-600"></i>
-                      Lộ Trình Triển Khai Thần Tốc (3 Tháng)
-                    </h3>
-                    <p className="text-xs text-slate-500">Các mốc hành động tuần tự để kịp xuất bán trước Tết</p>
-                  </div>
+            {/* 3. VỚI VỐN ĐÓ THÌ CHI PHÍ CHO TỪNG HẠNG MỤC NHƯ THẾ NÀO */}
+            <section className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-3.5 sm:p-5 space-y-3.5">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-3">
+                <div>
+                  <h2 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+                    3. Với Vốn {totalCapital.toFixed(0)} Triệu: Chi Phí Cho Từng Hạng Mục Thế Nào?
+                  </h2>
+                  <p className="text-[11px] sm:text-xs text-slate-500">
+                    Phân bổ 5 danh mục đầu tư ban đầu rõ ràng, minh bạch
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-5 gap-1.5">
-                  {ROADMAP.map((step, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedRoadmapIdx(idx)}
-                      className={`p-2 rounded-lg border text-left text-xs transition ${
-                        selectedRoadmapIdx === idx
-                          ? "bg-emerald-800 text-white border-emerald-900"
-                          : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                      }`}
+                <button
+                  onClick={() => setShowFullPL(!showFullPL)}
+                  className="text-xs text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1"
+                >
+                  <i data-lucide="file-spreadsheet" className="w-3.5 h-3.5"></i>
+                  <span>{showFullPL ? "Thu gọn bảng P&L" : "Xem bảng P&L chuẩn"}</span>
+                </button>
+              </div>
+
+              {/* Mobile-Friendly Cost Cards */}
+              <div className="space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {costItems.map((item) => (
+                    <div
+                      key={item.index}
+                      className="bg-slate-50/70 border border-slate-200 rounded-xl p-3 flex flex-col justify-between"
                     >
-                      <div className="font-bold text-[10px] opacity-80">{step.week}</div>
-                      <div className="font-bold truncate text-[11px]">{step.phase}</div>
-                    </button>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-800 font-black text-[11px] flex items-center justify-center flex-shrink-0">
+                              {item.index}
+                            </span>
+                            <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                              {item.name}
+                            </h4>
+                          </div>
+                          <p className="text-[11px] text-slate-500 mt-1 pl-6">
+                            {item.note}
+                          </p>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <span className="text-sm sm:text-base font-black text-slate-900 block">
+                            {formatVND(item.amount, 1)}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-semibold block">
+                            ({((item.amount / totalCapital) * 100).toFixed(0)}%)
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-2 pt-1.5 border-t border-slate-200/60 flex items-center justify-between text-[11px] text-slate-600 pl-6">
+                        <span>Số lượng: <strong className="text-slate-800">{item.qty}</strong></span>
+                        <span className={`px-2 py-0.5 rounded text-[10px] ${item.badgeColor}`}>
+                          {item.badge}
+                        </span>
+                      </div>
+                    </div>
                   ))}
                 </div>
 
-                {ROADMAP[selectedRoadmapIdx] && (
-                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <span className="text-xs font-bold text-emerald-800 uppercase">{ROADMAP[selectedRoadmapIdx].week}</span>
-                        <h4 className="text-sm font-bold text-slate-900">{ROADMAP[selectedRoadmapIdx].title}</h4>
-                      </div>
-                      <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">
-                        {ROADMAP[selectedRoadmapIdx].tag}
-                      </span>
-                    </div>
-
-                    <ul className="space-y-1.5 text-xs text-slate-700">
-                      {ROADMAP[selectedRoadmapIdx].points.map((pt, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <i data-lucide="check-circle" className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5"></i>
-                          <span>{pt}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div className="p-2.5 bg-amber-50 rounded border border-amber-200 text-[11px] text-amber-900 flex items-start gap-2">
-                      <i data-lucide="alert-triangle" className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5"></i>
-                      <span><strong>Lưu ý kỹ thuật:</strong> {ROADMAP[selectedRoadmapIdx].tip}</span>
-                    </div>
+                <div className="bg-slate-900 text-white rounded-xl p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm font-bold">
+                    <i data-lucide="check-circle-2" className="w-4 h-4 text-emerald-400"></i>
+                    <span>TỔNG VỐN ĐẦU TƯ TOÀN CHU KỲ (B):</span>
                   </div>
-                )}
+                  <span className="text-base sm:text-lg font-black text-emerald-300">
+                    {formatVND(totalCapital, 1)}
+                  </span>
+                </div>
               </div>
 
-              {/* Capex Checklist */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
-                <div className="border-b border-slate-100 pb-3 flex justify-between items-center">
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                      <i data-lucide="wrench" className="w-5 h-5 text-emerald-600"></i>
-                      Checklist Hạ Tầng & Thiết Bị (~40 Triệu)
-                    </h3>
-                    <p className="text-xs text-slate-500">Nghiệm thu hoàn tất trong tuần đầu khởi động</p>
+              {/* Expandable P&L Table */}
+              {showFullPL && (
+                <div className="pt-2 overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse min-w-[500px]">
+                    <thead>
+                      <tr className="border-b border-slate-200 text-slate-500 uppercase bg-slate-100">
+                        <th className="py-2 px-2.5">Hạng Mục</th>
+                        <th className="py-2 px-2 text-center">Số Lượng</th>
+                        <th className="py-2 px-2 text-right">Đơn Giá</th>
+                        <th className="py-2 px-2.5 text-right">Thành Tiền</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-slate-700">
+                      <tr className="bg-emerald-50 font-bold text-emerald-900">
+                        <td colSpan={4} className="py-1.5 px-2.5">A. DOANH THU XUẤT BÁN CẬN TẾT</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5">Gà Lạc Sơn 3T (bán Tết)</td>
+                        <td className="py-1.5 px-2 text-center">{chickenSold} con</td>
+                        <td className="py-1.5 px-2 text-right">{formatRawVND(chickenPrice)}</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold">{formatVND(chickenRevenue, 2)}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5">Lợn bản F1 cắp nách (30kg/con)</td>
+                        <td className="py-1.5 px-2 text-center">{pigsCount} con</td>
+                        <td className="py-1.5 px-2 text-right">{formatRawVND(pigPrice)}/kg</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold">{formatVND(pigRevenue, 2)}</td>
+                      </tr>
+                      <tr className="bg-emerald-100/70 font-bold">
+                        <td colSpan={3} className="py-1.5 px-2.5 text-emerald-950">TỔNG DOANH THU (A)</td>
+                        <td className="py-1.5 px-2.5 text-right text-emerald-800 font-black">{formatVND(totalRevenue, 2)}</td>
+                      </tr>
+
+                      <tr className="bg-slate-100 font-bold text-slate-800">
+                        <td colSpan={4} className="py-1.5 px-2.5">B. CHI PHÍ ĐẦU TƯ (CAPEX + GIỐNG + THỨC ĂN)</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5">CAPEX thiết bị hạ tầng</td>
+                        <td className="py-1.5 px-2 text-center">Gói chuẩn</td>
+                        <td className="py-1.5 px-2 text-right">-</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold">{formatVND(capex, 2)}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5">Giống gà 3T</td>
+                        <td className="py-1.5 px-2 text-center">{chicken3mCount} con</td>
+                        <td className="py-1.5 px-2 text-right">75.000 đ</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold">{formatVND(chicken3mCost, 2)}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5 font-semibold text-blue-900">Giống gà 1T (12.000đ/con)</td>
+                        <td className="py-1.5 px-2 text-center">{chicken1mCount} con</td>
+                        <td className="py-1.5 px-2 text-right font-bold text-blue-700">12.000 đ</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold text-blue-900">{formatVND(chicken1mCost, 2)}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5">Giống lợn nhỡ F1</td>
+                        <td className="py-1.5 px-2 text-center">{pigsCount} con</td>
+                        <td className="py-1.5 px-2 text-right">1.200.000 đ</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold">{formatVND(pigCost, 2)}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5">Thức ăn 100 ngày + thú y</td>
+                        <td className="py-1.5 px-2 text-center">100 ngày</td>
+                        <td className="py-1.5 px-2 text-right">-</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold">{formatVND(feedCost, 2)}</td>
+                      </tr>
+                      <tr className="bg-slate-200/80 font-bold">
+                        <td colSpan={3} className="py-1.5 px-2.5">TỔNG VỐN ĐẦU TƯ (B)</td>
+                        <td className="py-1.5 px-2.5 text-right font-black">{formatVND(totalCapital, 2)}</td>
+                      </tr>
+
+                      <tr className="bg-blue-50 font-bold text-blue-900">
+                        <td colSpan={3} className="py-2 px-2.5">C. LÃI TIỀN MẶT CẦM VỀ 28 TẾT (C = A - B)</td>
+                        <td className="py-2 px-2.5 text-right font-black text-blue-700">
+                          {cashProfit >= 0 ? `+${formatVND(cashProfit, 2)}` : formatVND(cashProfit, 2)}
+                        </td>
+                      </tr>
+
+                      <tr className="bg-amber-50 font-bold text-amber-900">
+                        <td colSpan={4} className="py-1.5 px-2.5">D. TÀI SẢN TỒN DƯ SAU TẾT</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5">Đàn gà 1T lên gà giò 4.5T ({chicken1mRemaining} con)</td>
+                        <td className="py-1.5 px-2 text-center">{chicken1mRemaining} con</td>
+                        <td className="py-1.5 px-2 text-right">130.000 đ</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold text-amber-800">{formatVND(chicken1mValue, 2)}</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1.5 px-2.5 pl-5">Thiết bị còn lại (khấu hao 20%)</td>
+                        <td className="py-1.5 px-2 text-center">80% giá trị</td>
+                        <td className="py-1.5 px-2 text-right">-</td>
+                        <td className="py-1.5 px-2.5 text-right font-bold text-amber-800">{formatVND(equipmentResidual, 2)}</td>
+                      </tr>
+                      <tr className="bg-amber-100 font-bold">
+                        <td colSpan={3} className="py-1.5 px-2.5 text-amber-950">TỔNG TÀI SẢN SAU TẾT (D)</td>
+                        <td className="py-1.5 px-2.5 text-right font-black text-amber-900">+{formatVND(totalPostTetAssets, 2)}</td>
+                      </tr>
+
+                      <tr className="bg-emerald-900 text-white font-bold">
+                        <td colSpan={3} className="py-2.5 px-2.5">E. TỔNG LỢI NHUẬN RÒNG KINH TẾ (E = C + D)</td>
+                        <td className="py-2.5 px-2.5 text-right text-amber-300 font-black text-sm">+{formatVND(totalNetProfit, 2)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+
+            {/* 4. LỘ TRÌNH TRIỂN KHAI */}
+            <section className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-3.5 sm:p-5 space-y-3.5">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 border-b border-slate-100 pb-2.5">
+                <div>
+                  <h2 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+                    4. Lộ Trình Triển Khai Thần Tốc (3 Tháng - 100 Ngày)
+                  </h2>
+                  <p className="text-[11px] sm:text-xs text-slate-500">
+                    Kế hoạch hành động tuần tự theo mốc thời gian kịp xuất bán Tết
+                  </p>
+                </div>
+                <span className="text-[11px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded border border-emerald-200">
+                  5 Phân kỳ then chốt
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+                {ROADMAP.map((step, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedRoadmapIdx(idx)}
+                    className={`p-2 rounded-xl border text-left text-xs transition touch-manipulation ${
+                      selectedRoadmapIdx === idx
+                        ? "bg-emerald-800 text-white border-emerald-900 shadow"
+                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="font-bold text-[10px] opacity-80">{step.week}</div>
+                    <div className="font-bold truncate text-[11px]">{step.phase}</div>
+                  </button>
+                ))}
+              </div>
+
+              {ROADMAP[selectedRoadmapIdx] && (
+                <div className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200 space-y-2.5">
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <span className="text-[10px] font-black bg-emerald-700 text-white px-2 py-0.5 rounded-full">
+                        {ROADMAP[selectedRoadmapIdx].week}
+                      </span>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 mt-1">
+                        {ROADMAP[selectedRoadmapIdx].title}
+                      </h4>
+                    </div>
+                    <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold whitespace-nowrap">
+                      {ROADMAP[selectedRoadmapIdx].tag}
+                    </span>
                   </div>
-                  <div className="text-right text-xs">
-                    <span className="font-bold text-emerald-700">{completedCapexCount}/{capexItems.length} xong</span>
+
+                  <ul className="space-y-1.5 text-xs text-slate-700">
+                    {ROADMAP[selectedRoadmapIdx].points.map((pt, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <i data-lucide="check-circle" className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                        <span className="leading-relaxed">{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="p-2.5 bg-amber-50 rounded border border-amber-200 text-[11px] text-amber-900 flex items-start gap-2">
+                    <i data-lucide="alert-triangle" className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5"></i>
+                    <span><strong>Lưu ý kỹ thuật:</strong> {ROADMAP[selectedRoadmapIdx].tip}</span>
+                  </div>
+                </div>
+              )}
+            </section>
+
+            {/* 5. MÔ PHỎNG VÀ PHÂN TÍCH BIỂU ĐỒ (ĐỂ PHÍA DƯỚI) */}
+            <section className="space-y-3 pt-1">
+              <div className="border-t border-slate-200 pt-3 px-1">
+                <h2 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+                  5. Công Cụ Mô Phỏng Nâng Cao & Phân Tích Biểu Đồ
+                </h2>
+                <p className="text-[11px] sm:text-xs text-slate-500">
+                  Kéo trượt để thử nghiệm độ nhạy giá bán và xem đồ thị cơ cấu tài chính
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 items-start">
+                {/* Simulator */}
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-3.5 sm:p-5 space-y-3">
+                  <div className="flex justify-between items-center border-b border-slate-100 pb-2.5">
+                    <div>
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                        <i data-lucide="sliders" className="w-4 h-4 text-emerald-600"></i>
+                        Mô Phỏng Độ Nhạy Thị Trường
+                      </h3>
+                      <p className="text-[10px] text-slate-500">Thử nghiệm các mức giá bán biến động</p>
+                    </div>
+                    <button
+                      onClick={resetDefaults}
+                      className="text-[11px] text-slate-600 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded"
+                    >
+                      Về gốc
+                    </button>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {/* Slider Gà */}
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1">
+                      <div className="flex justify-between text-xs font-semibold text-slate-700">
+                        <span>🐔 Giá gà Lạc Sơn / con:</span>
+                        <span className="text-emerald-700 font-bold bg-white px-1.5 py-0.2 rounded border">
+                          {formatRawVND(chickenPrice)}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={160000}
+                        max={250000}
+                        step={5000}
+                        value={chickenPrice}
+                        onChange={(e) => setChickenPrice(Number(e.target.value))}
+                        className="w-full h-2 bg-slate-200 rounded appearance-none cursor-pointer accent-emerald-600"
+                      />
+                      <div className="flex justify-between text-[10px] text-slate-400">
+                        <span>160k (Sỉ)</span>
+                        <span className="font-semibold text-slate-600">200k (Lẻ chuẩn)</span>
+                        <span>250k (Biếu Tết)</span>
+                      </div>
+                    </div>
+
+                    {/* Slider Lợn */}
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1">
+                      <div className="flex justify-between text-xs font-semibold text-slate-700">
+                        <span>🐷 Giá lợn hơi / kg:</span>
+                        <span className="text-emerald-700 font-bold bg-white px-1.5 py-0.2 rounded border">
+                          {formatRawVND(pigPrice)}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={100000}
+                        max={160000}
+                        step={5000}
+                        value={pigPrice}
+                        onChange={(e) => setPigPrice(Number(e.target.value))}
+                        className="w-full h-2 bg-slate-200 rounded appearance-none cursor-pointer accent-emerald-600"
+                      />
+                      <div className="flex justify-between text-[10px] text-slate-400">
+                        <span>100k/kg (Thấp)</span>
+                        <span className="font-semibold text-slate-600">130k/kg (Trung bình)</span>
+                        <span>160k/kg (Sốt Tết)</span>
+                      </div>
+                    </div>
+
+                    {/* Slider Chuối Men */}
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1">
+                      <div className="flex justify-between text-xs font-semibold text-slate-700">
+                        <span>🌱 Tiết kiệm thức ăn từ chuối:</span>
+                        <span className="text-amber-700 font-bold bg-white px-1.5 py-0.2 rounded border">
+                          {Math.round(feedSavingRate * 100)}%
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={0.60}
+                        step={0.05}
+                        value={feedSavingRate}
+                        onChange={(e) => setFeedSavingRate(Number(e.target.value))}
+                        className="w-full h-2 bg-slate-200 rounded appearance-none cursor-pointer accent-amber-600"
+                      />
+                      <div className="flex justify-between text-[10px] text-slate-400">
+                        <span>0% (Cám 100%)</span>
+                        <span className="font-semibold text-amber-700">40% (Chuẩn men)</span>
+                        <span>60% (Tối đa)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-emerald-50 rounded-xl p-2.5 border border-emerald-200 text-xs space-y-1">
+                    <div className="flex justify-between font-bold text-slate-900">
+                      <span>Doanh thu mô phỏng:</span>
+                      <span className="text-emerald-700">{formatVND(totalRevenue, 1)}</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-slate-900">
+                      <span>Lợi nhuận ròng:</span>
+                      <span className="text-emerald-700">+{formatVND(totalNetProfit, 1)} (ROI {roi.toFixed(1)}%)</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+                {/* Chart */}
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-3.5 sm:p-5 space-y-3">
+                  <div className="flex justify-between items-center border-b border-slate-100 pb-2.5">
+                    <div>
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                        <i data-lucide="bar-chart-3" className="w-4 h-4 text-emerald-600"></i>
+                        Đồ Thị Phân Tích
+                      </h3>
+                      <p className="text-[10px] text-slate-500">So sánh trực quan các dòng mục</p>
+                    </div>
+
+                    <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded text-[11px] font-semibold">
+                      <button
+                        onClick={() => setActiveChartTab('flow')}
+                        className={`px-2 py-0.5 rounded ${activeChartTab === 'flow' ? 'bg-white text-emerald-800 shadow' : 'text-slate-600'}`}
+                      >
+                        Dòng tiền
+                      </button>
+                      <button
+                        onClick={() => setActiveChartTab('costs')}
+                        className={`px-2 py-0.5 rounded ${activeChartTab === 'costs' ? 'bg-white text-emerald-800 shadow' : 'text-slate-600'}`}
+                      >
+                        Cơ cấu
+                      </button>
+                      <button
+                        onClick={() => setActiveChartTab('comparison')}
+                        className={`px-2 py-0.5 rounded ${activeChartTab === 'comparison' ? 'bg-white text-emerald-800 shadow' : 'text-slate-600'}`}
+                      >
+                        So sánh
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="relative h-60 w-full">
+                    <canvas ref={chartRef}></canvas>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* 6. CHECKLIST HẠ TẦNG 40M & PHÂN TÍCH ĐIỀU HÀNH */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 items-start pt-1">
+              {/* Capex Checklist */}
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-3.5 sm:p-5 space-y-3">
+                <div className="border-b border-slate-100 pb-2 flex justify-between items-center">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                      <i data-lucide="wrench" className="w-4 h-4 text-emerald-600"></i>
+                      Checklist Hạ Tầng & Thiết Bị (~40 Triệu)
+                    </h3>
+                    <p className="text-[10px] text-slate-500">Nghiệm thu trong tuần đầu khởi động</p>
+                  </div>
+                  <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    {completedCapexCount}/{capexItems.length} xong
+                  </span>
+                </div>
+
+                <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
                   {capexItems.map((item) => (
                     <div
                       key={item.id}
                       onClick={() => toggleCapex(item.id)}
-                      className={`p-2.5 rounded-xl border flex items-start gap-2.5 cursor-pointer transition ${
+                      className={`p-2 rounded-xl border flex items-start gap-2 cursor-pointer transition touch-manipulation ${
                         item.completed ? "bg-slate-50 border-slate-200" : "bg-white border-amber-200"
                       }`}
                     >
@@ -1024,121 +1129,102 @@
                         type="checkbox"
                         checked={item.completed}
                         onChange={() => {}}
-                        className="mt-0.5 accent-emerald-600 w-4 h-4 cursor-pointer"
+                        className="mt-0.5 accent-emerald-600 w-3.5 h-3.5 cursor-pointer"
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="flex justify-between">
-                          <span className="text-xs font-bold text-slate-800">{item.name}</span>
-                          <span className="text-xs font-black text-emerald-700">{formatVND(item.cost, 1)}</span>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-bold text-slate-800 leading-tight">{item.name}</span>
+                          <span className="text-xs font-black text-emerald-700 whitespace-nowrap ml-1">{formatVND(item.cost, 1)}</span>
                         </div>
-                        <p className="text-[11px] text-slate-500 line-clamp-1">{item.note}</p>
+                        <p className="text-[10px] text-slate-500 truncate">{item.note}</p>
                       </div>
                     </div>
                   ))}
                 </div>
+              </div>
 
-                <div className="p-2.5 bg-amber-50 rounded border border-amber-200 text-xs text-amber-900 flex items-center gap-2">
-                  <i data-lucide="info" className="w-4 h-4 text-amber-600 flex-shrink-0"></i>
-                  <span><strong>Tre nứa tự nhiên:</strong> Làm chuồng ngủ 100% bằng tre tại đồi, tiết kiệm hàng chục triệu tiền sắt thép.</span>
+              {/* Strategic Insights */}
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-3.5 sm:p-5 space-y-3">
+                <div className="border-b border-slate-100 pb-2">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <i data-lucide="lightbulb" className="w-4 h-4 text-amber-600"></i>
+                    Luận Điểm Chiến Lược Vụ Tết
+                  </h3>
+                  <p className="text-[10px] text-slate-500">Giải trình điểm cân bằng vàng 130M</p>
+                </div>
+
+                <div className="space-y-2 text-xs">
+                  <div className="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200 space-y-1">
+                    <h4 className="font-bold text-emerald-900 flex items-center gap-1 text-xs">
+                      <i data-lucide="star" className="w-3.5 h-3.5 text-emerald-600"></i>
+                      Tại sao Gói 130M là Điểm Cân Bằng Vàng?
+                    </h4>
+                    <p className="text-slate-700 text-[11px] leading-relaxed">
+                      Khai thác tối đa 100% công suất của nhóm 4 người trong 100 ngày. Thu về 147 triệu tiền mặt trước 28 Tết (dôi dư 17 triệu tiền tươi sau khi hoàn 100% vốn gốc), đồng thời sở hữu nguyên vẹn 285 gà giò và 32 triệu tài sản máy móc.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-blue-50/60 border border-blue-200 space-y-1">
+                    <h4 className="font-bold text-blue-900 flex items-center gap-1 text-xs">
+                      <i data-lucide="check-circle-2" className="w-3.5 h-3.5 text-blue-600"></i>
+                      Đột phá giống gà 1 tháng chỉ 12.000đ/con
+                    </h4>
+                    <p className="text-slate-700 text-[11px] leading-relaxed">
+                      Chi phí con giống gối đầu giảm tới gần 70% (chỉ còn 2.4M - 4.8M). Khoản dôi dư được chuyển trọn vẹn vào quỹ dự phòng thức ăn và thuốc thú y, đảm bảo an toàn tuyệt đối.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-
-            {/* 6. STRATEGIC EXECUTIVE INSIGHTS */}
-            <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
-              <div className="border-b border-slate-100 pb-3">
-                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <i data-lucide="lightbulb" className="w-5 h-5 text-amber-600"></i>
-                  Phân Tích Chiến Lược & Luận Điểm Đầu Tư
-                </h3>
-                <p className="text-xs text-slate-500">Giải trình chuyên sâu dành cho nhà đầu tư</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 space-y-2">
-                  <h4 className="font-bold text-emerald-900 text-sm flex items-center gap-1.5">
-                    <i data-lucide="star" className="w-4 h-4 text-emerald-600"></i>
-                    Tại sao Gói 130M là 'Điểm Cân Bằng Vàng'?
-                  </h4>
-                  <p className="text-slate-700 leading-relaxed">
-                    Khai thác tối đa 100% công suất của nhóm 4 người trong 100 ngày. Thu về ngay 147 triệu tiền mặt trước 28 Tết (dôi dư 17 triệu tiền mặt sau khi hoàn 100% vốn gốc), đồng thời giữ nguyên vẹn 285 gà giò và 32 triệu tài sản máy móc.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                  <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                    <i data-lucide="check-circle-2" className="w-4 h-4 text-slate-600"></i>
-                    Dòng Tiền Mặt vs Lợi Nhuận Kinh Tế
-                  </h4>
-                  <p className="text-slate-700 leading-relaxed">
-                    Dòng tiền mặt chỉ tính số tiền mặt rút về tay tại ngày 28 Tết. Lợi nhuận kinh tế tính đầy đủ cả đàn gà giò gối đầu và giá trị khấu hao tài sản hạ tầng dùng nhiều năm.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                  <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                    <i data-lucide="check-circle-2" className="w-4 h-4 text-slate-600"></i>
-                    Chiến Thuật Né 'Bẫy Sụt Giá Ra Giêng'
-                  </h4>
-                  <p className="text-slate-700 leading-relaxed">
-                    Không bán tháo gà giò sau Tết khi nhu cầu sụt giảm. Đàn 1T được giữ nuôi tới Rằm tháng Giêng - lúc nhu cầu lễ thượng nguyên tăng vọt trở lại để bán với giá cao nhất.
-                  </p>
-                </div>
-              </div>
-            </section>
           </main>
 
           {/* Footer */}
-          <footer className="mt-8 border-t border-slate-200 bg-white py-6 text-slate-500 text-xs text-center">
-            <div className="max-w-7xl mx-auto px-4 space-y-2">
+          <footer className="mt-6 border-t border-slate-200 bg-white py-5 text-slate-500 text-xs text-center">
+            <div className="max-w-7xl mx-auto px-4 space-y-1">
               <div className="font-bold text-slate-800">
                 Trang Trại Hữu Cơ Bán Tự Nhiên • Kế Hoạch Tài Chính & Vận Hành Vụ Tết
               </div>
-              <p className="text-slate-400">
-                Thiết kế chuẩn Executive Financial Dashboard cho Startup Nông Nghiệp • Dòng tiền & Lợi nhuận minh bạch
+              <p className="text-[11px] text-slate-400">
+                Thiết kế tối ưu hiển thị hoàn hảo trên mọi kích thước màn hình điện thoại & máy tính
               </p>
             </div>
           </footer>
 
-          {/* GLOSSARY MODAL */}
+          {/* Glossary Modal */}
           {showGlossary && (
-            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-5 space-y-4 max-h-[90vh] overflow-y-auto">
-                <div className="flex justify-between items-center border-b pb-3">
-                  <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
-                    <i data-lucide="book-open" className="w-5 h-5 text-emerald-600"></i>
-                    Giải Thích Thuật Ngữ & Công Thức
+            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-4 space-y-3 max-h-[85vh] overflow-y-auto">
+                <div className="flex justify-between items-center border-b pb-2">
+                  <h3 className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+                    <i data-lucide="book-open" className="w-4 h-4 text-emerald-600"></i>
+                    Thuật Ngữ Tài Chính Nông Nghiệp
                   </h3>
                   <button onClick={() => setShowGlossary(false)} className="text-slate-400 hover:text-slate-700">
-                    <i data-lucide="x" className="w-5 h-5"></i>
+                    <i data-lucide="x" className="w-4 h-4"></i>
                   </button>
                 </div>
 
-                <div className="space-y-3 text-xs">
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                    <strong className="text-emerald-800 block mb-1">1. Dòng Tiền Mặt Cầm Về (Cash Profit):</strong>
-                    Doanh thu bán Tết - Tổng vốn đầu tư. Thể hiện lượng tiền mặt rút về sau khi hoàn 100% vốn gốc.
+                <div className="space-y-2 text-xs">
+                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <strong className="text-emerald-800 block mb-0.5">1. Tiền Mặt Cầm Về (Cash Profit):</strong>
+                    Doanh thu bán Tết - Tổng vốn ban đầu. Thể hiện lượng tiền mặt rút về sau khi hoàn trả 100% vốn gốc.
                   </div>
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                    <strong className="text-emerald-800 block mb-1">2. Tài Sản Tích Lũy Sau Tết:</strong>
+                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <strong className="text-emerald-800 block mb-0.5">2. Tài Sản Tích Lũy Sau Tết:</strong>
                     (Đàn gà 1T × 95% sống × 130.000đ khi lên giò 4.5 tháng) + 32 triệu thiết bị sau khấu hao 20%.
                   </div>
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                    <strong className="text-emerald-800 block mb-1">3. Lợi Nhuận Ròng Kinh Tế (Net Profit):</strong>
-                    Dòng tiền mặt thuần + Giá trị tài sản sau Tết.
-                  </div>
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                    <strong className="text-emerald-800 block mb-1">4. Tỷ Suất Hoàn Vốn ROI (%):</strong>
-                    (Lợi nhuận ròng kinh tế / Tổng vốn ban đầu) × 100%.
+                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <strong className="text-emerald-800 block mb-0.5">3. Lợi Nhuận Ròng Kinh Tế (Net Profit):</strong>
+                    Tiền mặt thuần + Giá trị tài sản sau Tết. Thước đo thực chất mức gia tăng của trang trại.
                   </div>
                 </div>
 
-                <div className="text-right pt-2 border-t">
+                <div className="text-right pt-1 border-t">
                   <button
                     onClick={() => setShowGlossary(false)}
-                    className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold"
+                    className="px-3 py-1.5 bg-emerald-700 text-white rounded-lg text-xs font-bold"
                   >
-                    Đã Hiểu & Đóng
+                    Đóng
                   </button>
                 </div>
               </div>

@@ -10,13 +10,13 @@ export const PRESET_SCENARIOS = {
     chicken3mCount: 400,
     chicken3mPrice: 75000, // đ/con
     chicken1mCount: 200,
-    chicken1mPrice: 35000, // đ/con
+    chicken1mPrice: 12000, // đ/con (Giá giống 1 tháng tuổi: 12.000đ)
     pigsCount: 3,
     pigPrice: 1200000, // đ/con
-    baseFeedCost: 20.4, // Triệu VND (ở mức tiết kiệm 40%)
+    baseFeedCost: 25.0, // Triệu VND (ở mức tiết kiệm 40% chuối ủ men)
     chickenOutRate: 0.95,
     pigWeight: 30, // kg/con
-    equipmentResidual: 32.0, // Triệu VND (giá trị còn lại của thiết bị sau vụ 1)
+    equipmentResidual: 32.0, // Triệu VND (giá trị thiết bị sau vụ 1)
     chicken1mValuation: 130000, // đ/con khi thành gà giò 4.5 tháng
   },
   130: {
@@ -24,16 +24,16 @@ export const PRESET_SCENARIOS = {
     name: "Gói 130 Triệu",
     badge: "Khuyên dùng - Cân bằng tối ưu",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-300 font-semibold ring-2 ring-emerald-500/20",
-    tagline: "Điểm cân bằng vàng giữa vốn, công suất 4 người & độ an toàn",
+    tagline: "Điểm cân bằng vàng giữa vốn, công suất 4 người & an toàn",
     capital: 130,
     capex: 40.0,
     chicken3mCount: 650,
     chicken3mPrice: 75000,
     chicken1mCount: 300,
-    chicken1mPrice: 35000,
+    chicken1mPrice: 12000, // đ/con (Giá giống 1 tháng tuổi: 12.000đ)
     pigsCount: 6,
     pigPrice: 1200000,
-    baseFeedCost: 23.55,
+    baseFeedCost: 30.45, // Triệu VND
     chickenOutRate: 0.95,
     pigWeight: 30,
     equipmentResidual: 32.0,
@@ -44,16 +44,16 @@ export const PRESET_SCENARIOS = {
     name: "Gói 170 Triệu",
     badge: "Tối đa năng suất 4 lao động",
     badgeColor: "bg-amber-100 text-amber-900 border-amber-300 font-semibold",
-    tagline: "Khai thác tối đa mặt bằng 2.000m² & nhân công, lợi nhuận khủng",
+    tagline: "Khai thác tối đa mặt bằng 2.000m² & nhân công, lợi nhuận lớn",
     capital: 170,
     capex: 40.0,
     chicken3mCount: 1000,
     chicken3mPrice: 75000,
     chicken1mCount: 400,
-    chicken1mPrice: 35000,
+    chicken1mPrice: 12000, // đ/con (Giá giống 1 tháng tuổi: 12.000đ)
     pigsCount: 10,
     pigPrice: 1200000,
-    baseFeedCost: 29.0,
+    baseFeedCost: 38.2, // Triệu VND
     chickenOutRate: 0.95,
     pigWeight: 30,
     equipmentResidual: 32.0,
@@ -81,9 +81,9 @@ export const ROADMAP_STEPS = [
     title: "Dọn Cỏ, Kéo Điện Nước & Dựng Chuồng Tre Tự Nhiên",
     highlights: [
       "Chạy máy cắt cỏ dọn phẳng 2.000 m² sườn đồi gần kho.",
-      "Kéo 2km ống PE phi 25 từ mó nước trên cao về bể, đấu máy bơm công suất lớn.",
-      "Lắp 2 điều hòa sinh hoạt đảm bảo sức khỏe ăn ở cho đội ngũ 4 người.",
-      "Chặt tre nứa tại chỗ dựng chuồng ngủ cao ráo, căng bạt dứa chắn gió bấc, chia 2 ô rào cước (ô gà 3T và ô gà 1T)."
+      "Kéo 2km ống PE phi 25 từ mó nước về bể, đấu máy bơm công suất lớn.",
+      "Lắp 2 điều hòa sinh hoạt giữ ấm cho đội ngũ 4 người.",
+      "Chặt tre nứa tại chỗ dựng chuồng ngủ, căng bạt dứa chắn gió bấc, chia 2 ô rào cước (ô gà 3T và ô gà 1T)."
     ],
     riskTip: "Nước mó phải kiểm tra độ sạch; chuồng tre tiết kiệm 100% chi phí sắt thép nhưng phải lợp mái bạt dốc tránh dột rét."
   },
@@ -92,24 +92,24 @@ export const ROADMAP_STEPS = [
     phase: "Vào Giống Gà",
     tag: "Trọng yếu",
     tagColor: "bg-blue-100 text-blue-800",
-    title: "Đón Đàn Gà Giống Lạc Sơn (3T & 1T) & Kích Hoạt Thóc Mầm",
+    title: "Đón Gà Giống Lạc Sơn (3T & 1T @ 12k) & Kích Hoạt Thóc Mầm",
     highlights: [
-      "Đón gà 3 tháng (vỗ béo Tết) và gà 1 tháng (gối đầu), bổ sung Gluco-K-C + điện giải chống sốc nhiệt ngày đầu.",
+      "Đón gà 3 tháng (vỗ béo Tết) và gà giống 1 tháng (giá tối ưu 12k/con để gối đầu), bổ sung Gluco-K-C + điện giải.",
       "Thắp bóng sưởi ban đêm kiểm soát nhiệt độ nghiêm ngặt cho đàn 1 tháng tuổi.",
-      "Ngâm 4 thùng phuy ủ thóc mầm theo công thức luân phiên, chuẩn bị nguồn đạm sạch tự nhiên."
+      "Ngâm 4 thùng phuy ủ thóc mầm theo công thức luân phiên làm nguồn đạm sạch tự nhiên."
     ],
     riskTip: "Thời tiết miền Bắc chuyển rét đột ngột: đêm phải kéo kín bạt quây, giữ nền trấu khô ráo."
   },
   {
     week: "Tuần 3 - 4",
-    phase: "Vào Giống Lợn & Ủ Thức Ăn",
+    phase: "Vào Giống Lợn & Ủ Cám",
     tag: "Tận dụng tài nguyên",
     tagColor: "bg-amber-100 text-amber-800",
     title: "Đón Lợn Bản Nhỡ & Chế Biến Thân Chuối Men Vi Sinh",
     highlights: [
-      "Đón lợn bản giống nhỡ (12 - 15kg/con), thả khu vực thung lũng 2 có nguồn nước tắm tự nhiên.",
-      "Chặt thân chuối có sẵn trong vườn, băm nhỏ trộn cám ngô + chế phẩm men vi sinh ủ yếm khí 24-48h.",
-      "Cắt giảm trực tiếp 40 - 50% chi phí cám viên thương nghiệp nhờ thức ăn lên men giàu lợi khuẩn."
+      "Đón lợn bản giống nhỡ (12 - 15kg/con), thả khu thung lũng 2 có vũng tắm tự nhiên.",
+      "Chặt thân chuối vườn băm nhỏ, trộn cám ngô + men vi sinh ủ yếm khí 24-48h.",
+      "Cắt giảm 40 - 50% chi phí cám thương nghiệp nhờ thức ăn lên men giàu vi sinh vật có lợi."
     ],
     riskTip: "Lợn bản thích nghi nhanh nhưng cần tiêm phòng đủ vắc xin dịch tả lợn và tụ huyết trùng."
   },
@@ -118,23 +118,23 @@ export const ROADMAP_STEPS = [
     phase: "Chăm Sóc & Vỗ Béo Đồi",
     tag: "Tăng trưởng",
     tagColor: "bg-teal-100 text-teal-800",
-    title: "Nuôi Thả Tự Nhiên & Hoàn Thiện Chất Lượng Thịt Thơm Ngon",
+    title: "Nuôi Thả Tự Nhiên & Hoàn Thiện Thịt Thơm Ngon",
     highlights: [
-      "Đàn gà 3T thả tự do leo dốc từ 9h sáng, bới tìm sâu bọ sườn đồi, tạo thớ thịt săn chắc, da giòn vàng.",
+      "Gà 3T thả tự do leo dốc từ 9h sáng, bới tìm sâu bọ sườn đồi, tạo thớ thịt săn chắc, da giòn vàng.",
       "Bữa chiều cho ăn thóc mầm ủ men giúp tiêu hóa tốt, tăng cân đều đặn nhưng không tích mỡ thừa.",
-      "Đàn gà 1 tháng bước vào giai đoạn gà giò hoàn chỉnh, đề kháng vững vàng với sương muối mùa đông."
+      "Đàn gà 1 tháng vào giai đoạn gà giò hoàn chỉnh, đề kháng vững vàng với sương muối mùa đông."
     ],
     riskTip: "Kiểm tra gà hàng tuần, loại bỏ kịp thời các con chậm lớn, phân loại trống mái cho vụ Tết."
   },
   {
     week: "Tháng 3 (Cận Tết)",
-    phase: "Xuất Bán & Thu Hồi Vốn",
+    phase: "Xuất Bán & Thu Tiền",
     tag: "Thu tiền mặt",
     tagColor: "bg-red-100 text-red-800",
     title: "15 - 28 Chạp: Xuất Bán Thần Tốc, Vét Đàn 3T & Giữ Gà Gối Đầu",
     highlights: [
-      "15 - 20 Chạp: Chọn lọc gà trống mã đẹp mào cờ làm gà cúng Tết / giỏ quà biếu giá cao (220k - 250k/con).",
-      "21 - 28 Chạp: Xuất bán toàn bộ lợn bản đạt trọng lượng chuẩn 30kg (thịt thơm, da mỏng) và vét sạch đàn gà 3T.",
+      "15 - 20 Chạp: Chọn gà trống mã đẹp mào cờ làm gà cúng Tết / giỏ quà biếu giá cao (220k - 250k/con).",
+      "21 - 28 Chạp: Xuất bán toàn bộ lợn bản đạt chuẩn 30kg và vét sạch đàn gà 3T.",
       "Thu hồi toàn bộ tiền mặt vụ 1 (87M - 229M).",
       "GIỮ NGUYÊN 100% đàn gà 1T (lúc này đã 4.5 tháng tuổi) gối rằm tháng Giêng, né hoàn toàn bẫy sụt giá sau Tết."
     ],
@@ -148,8 +148,8 @@ export const EXECUTIVE_INSIGHTS = [
     content: "Với quy mô 650 gà 3T, 300 gà 1T và 6 lợn bản, gói 130M khai thác vừa vặn 100% công suất của nhóm 4 người trong 100 ngày. Bạn thu về ngay 147 triệu tiền mặt trước 28 Tết (dôi dư 17 triệu tiền mặt sau khi hoàn vốn gốc), đồng thời sở hữu nguyên vẹn đàn 285 gà giò và 32 triệu tài sản hạ tầng cho chu kỳ tiếp theo."
   },
   {
-    title: "Bản chất khác biệt giữa 'Dòng Tiền Mặt' và 'Lợi Nhuận Kinh Tế'",
-    content: "Dòng tiền mặt chỉ tính số tiền thực thu tại ngày 28 Tết trừ đi vốn ban đầu. Trong khi Lợi nhuận ròng kinh tế tính đầy đủ cả Giá trị đàn gà gối đầu (thịt thơm, đã qua thời kỳ rủi ro nhất) và Giá trị sử dụng lâu dài của hệ sinh thái hạ tầng (điều hòa, máy bơm, 2km ống nước, máy cắt cỏ). Đây là nền tảng biến trang trại thành cỗ máy sinh lời bền vững."
+    title: "Lợi ích đột phá khi giống gà 1 tháng chỉ 12.000đ",
+    content: "Giá con giống 1 tháng tuổi 12.000đ/con giúp chi phí giống gối đầu giảm tới gần 70% (chỉ tốn 2.4M - 4.8M). Khoản tiết kiệm này được chuyển thành quỹ dự phòng thức ăn và thuốc thú y, giúp trang trại có sức chịu tải tài chính cực kỳ vững vàng trước biến động thị trường."
   },
   {
     title: "Chiến thuật né 'Bẫy Sụt Giá Ra Giêng'",

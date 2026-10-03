@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import confetti from "canvas-confetti";
 import { Header } from "./components/Header";
 import { ScenarioSelector } from "./components/ScenarioSelector";
 import { KPICards } from "./components/KPICards";
-import { FinancialCharts } from "./components/FinancialCharts";
-import { ProfitSimulator } from "./components/ProfitSimulator";
 import { PLReport } from "./components/PLReport";
 import { OperationalRoadmap } from "./components/OperationalRoadmap";
+import { ProfitSimulator } from "./components/ProfitSimulator";
+import { FinancialCharts } from "./components/FinancialCharts";
 import { CapexChecklist } from "./components/CapexChecklist";
 import { ExecutiveSummary } from "./components/ExecutiveSummary";
 import { GlossaryModal } from "./components/GlossaryModal";
@@ -74,9 +74,9 @@ export default function App() {
         onOpenGlossary={() => setIsGlossaryOpen(true)}
       />
 
-      {/* Main Content Dashboard */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* 1. Scenario Selector */}
+      {/* Main Content Dashboard with User-prioritized Flow */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-6">
+        {/* Ưu tiên 1: Chọn Kịch Bản Vốn Ban Đầu */}
         <ScenarioSelector
           currentScenarioId={scenarioId}
           onSelectScenario={handleSelectScenario}
@@ -84,48 +84,57 @@ export default function App() {
           onResetCustom={handleResetDefaults}
         />
 
-        {/* 2. Top Metric Cards (KPIs) */}
+        {/* Ưu tiên 2: Với kịch bản vốn đó thì lợi nhuận thế nào */}
         <KPICards data={data} />
 
-        {/* 3. Charts & Profit Simulator Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-          <ProfitSimulator
-            chickenPrice={chickenPrice}
-            onChickenPriceChange={setChickenPrice}
-            pigPrice={pigPrice}
-            onPigPriceChange={setPigPrice}
-            feedSavingRate={feedSavingRate}
-            onFeedSavingRateChange={setFeedSavingRate}
-            chickenSurvRate={chickenSurvRate}
-            onChickenSurvRateChange={setChickenSurvRate}
-            onResetDefaults={handleResetDefaults}
-            data={data}
-            basePreset={currentScenario}
-          />
+        {/* Ưu tiên 3: Với vốn đó thì chi phí cho từng hạng mục như thế nào */}
+        <PLReport data={data} />
 
-          <FinancialCharts
-            currentData={data}
-            chickenPrice={chickenPrice}
-            pigPrice={pigPrice}
-            feedSavingRate={feedSavingRate}
-            chickenSurvRate={chickenSurvRate}
-          />
-        </div>
+        {/* Ưu tiên 4: Lộ trình triển khai */}
+        <OperationalRoadmap />
 
-        {/* 4. Financial P&L Statement Report */}
-        <PLReport
-          data={data}
-          onOpenGlossary={() => setIsGlossaryOpen(true)}
-        />
+        {/* Ưu tiên 5: Mô phỏng và phân tích biểu đồ (đặt phía dưới) */}
+        <section className="space-y-3 pt-2">
+          <div className="border-t border-slate-200/80 pt-4 px-1">
+            <h2 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+              5. Công Cụ Mô Phỏng Nhạy Cảm & Đồ Thị Phân Tích
+            </h2>
+            <p className="text-[11px] sm:text-xs text-slate-500">
+              Kéo thanh trượt để thử nghiệm kịch bản giá bán biến động và đối chiếu cơ cấu chi phí
+            </p>
+          </div>
 
-        {/* 5. Operations: Roadmap & Capex Checklist */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-          <OperationalRoadmap />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+            <ProfitSimulator
+              chickenPrice={chickenPrice}
+              onChickenPriceChange={setChickenPrice}
+              pigPrice={pigPrice}
+              onPigPriceChange={setPigPrice}
+              feedSavingRate={feedSavingRate}
+              onFeedSavingRateChange={setFeedSavingRate}
+              chickenSurvRate={chickenSurvRate}
+              onChickenSurvRateChange={setChickenSurvRate}
+              onResetDefaults={handleResetDefaults}
+              data={data}
+              basePreset={currentScenario}
+            />
+
+            <FinancialCharts
+              currentData={data}
+              chickenPrice={chickenPrice}
+              pigPrice={pigPrice}
+              feedSavingRate={feedSavingRate}
+              chickenSurvRate={chickenSurvRate}
+            />
+          </div>
+        </section>
+
+        {/* Thông tin bổ sung: Checklist 40M & Chiến lược điều hành */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start pt-2">
           <CapexChecklist />
-        </div>
-
-        {/* 6. Executive Strategic Insights & Golden Ratio Explainer */}
-        <ExecutiveSummary />
+          <ExecutiveSummary />
+        </section>
       </main>
 
       {/* Footer */}
