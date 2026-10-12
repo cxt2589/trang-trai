@@ -13,11 +13,12 @@ import { GlossaryModal } from "./components/GlossaryModal";
 import { Footer } from "./components/Footer";
 import { LivingCostTab } from "./components/LivingCostTab";
 import { ActionPlanTab } from "./components/ActionPlanTab";
+import { CashFlow12MTab } from "./components/CashFlow12MTab";
 import { PRESET_SCENARIOS } from "./data/farmData";
 import { calculateFinancials } from "./utils/calculator";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("financial"); // "financial", "action_plan", "living_cost"
+  const [activeTab, setActiveTab] = useState("financial"); // "financial", "action_plan", "living_cost", "cash_flow_12m"
   const [scenarioId, setScenarioId] = useState(130);
   const [chickenPrice, setChickenPrice] = useState(200000);
   const [pigPrice, setPigPrice] = useState(130000);
@@ -125,15 +126,33 @@ export default function App() {
                 Tiết kiệm ~15M
               </span>
             </button>
+
+            {/* Tab 4: 12-Month Cash Flow & Debt Simulation */}
+            <button
+              onClick={() => setActiveTab("cash_flow_12m")}
+              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                activeTab === "cash_flow_12m"
+                  ? "bg-indigo-700 text-white shadow-sm ring-2 ring-indigo-600/30 font-black"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${activeTab === "cash_flow_12m" ? "bg-indigo-300 animate-pulse" : "bg-slate-400"}`}></span>
+              <span>4. Dòng Tiền 12 Tháng & Vay Nợ</span>
+              <span className="bg-indigo-500 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full ml-0.5">
+                Mới • 3.7 ha
+              </span>
+            </button>
           </div>
 
           <div className="hidden sm:flex items-center text-xs text-slate-400 font-medium">
             <span>
               {activeTab === "financial"
-                ? "Gói " + scenarioId + "M"
+                ? "Vụ Tết: Gói " + scenarioId + "M"
                 : activeTab === "action_plan"
                 ? "5 Giai đoạn • 14 Ngày vàng"
-                : "4–5 Người • 100 ngày"}
+                : activeTab === "living_cost"
+                ? "4–5 Người • 100 ngày"
+                : "12 Tháng • 4 Phân khu 3.7 ha"}
             </span>
           </div>
         </div>
@@ -222,6 +241,14 @@ export default function App() {
         {activeTab === "living_cost" && (
           <LivingCostTab
             onSwitchToFinancialTab={() => setActiveTab("financial")}
+          />
+        )}
+
+        {/* Tab 4: Dòng tiền 12 tháng & Mô phỏng nợ vay 3.7 ha */}
+        {activeTab === "cash_flow_12m" && (
+          <CashFlow12MTab
+            onSwitchToFinancialTab={() => setActiveTab("financial")}
+            onSwitchToActionPlanTab={() => setActiveTab("action_plan")}
           />
         )}
       </main>
