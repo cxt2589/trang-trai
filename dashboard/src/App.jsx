@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
+import { DollarSign, Calendar, Utensils, Layers } from "lucide-react";
 import { Header } from "./components/Header";
 import { ScenarioSelector } from "./components/ScenarioSelector";
 import { KPICards } from "./components/KPICards";
@@ -78,82 +79,76 @@ export default function App() {
         onOpenGlossary={() => setIsGlossaryOpen(true)}
       />
 
-      {/* Main Navigation Tabs - Sticky On Top When Scrolling */}
-      <nav aria-label="Chuyển đổi phân hệ" className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm no-print">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 overflow-x-auto py-2">
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Tab 1 */}
+      {/* Main Navigation Tabs - Segmented Control 4 Cột Vừa Khít Mọi Màn Hình (Không Trượt Ngang) */}
+      <nav aria-label="Chuyển đổi phân hệ" className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-xs no-print">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-1.5 sm:py-2">
+          <div className="grid grid-cols-4 gap-1 sm:gap-2 bg-slate-100/90 p-1 rounded-xl sm:rounded-2xl border border-slate-200/80">
+            {/* Tab 1: Vốn & P&L Vụ Tết */}
             <button
               onClick={() => setActiveTab("financial")}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              className={`py-1.5 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer select-none ${
                 activeTab === "financial"
-                  ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                  ? "bg-white text-emerald-800 shadow-xs ring-1 ring-emerald-500/30 font-black"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${activeTab === "financial" ? "bg-emerald-300 animate-pulse" : "bg-slate-400"}`}></span>
-              <span>1. Kế Hoạch Đầu Tư & P&L</span>
+              <DollarSign className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "financial" ? "text-emerald-600" : "text-slate-400"}`} />
+              <div className="leading-tight">
+                <span className="block sm:hidden text-[10px] sm:text-xs">1. P&L Tết</span>
+                <span className="hidden sm:inline text-xs sm:text-sm">1. Đầu Tư & P&L</span>
+              </div>
             </button>
 
-            {/* Tab 2: Action Plan */}
+            {/* Tab 2: Kế hoạch tác chiến */}
             <button
               onClick={() => setActiveTab("action_plan")}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              className={`py-1.5 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer select-none ${
                 activeTab === "action_plan"
-                  ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                  ? "bg-white text-blue-800 shadow-xs ring-1 ring-blue-500/30 font-black"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${activeTab === "action_plan" ? "bg-blue-300 animate-pulse" : "bg-slate-400"}`}></span>
-              <span>2. Kế Hoạch Hành Động (Từng Ngày/Tuần)</span>
-              <span className="bg-blue-500 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full ml-0.5">
-                Chi tiết
-              </span>
+              <Calendar className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "action_plan" ? "text-blue-600" : "text-slate-400"}`} />
+              <div className="leading-tight">
+                <span className="block sm:hidden text-[10px] sm:text-xs">2. Tác Chiến</span>
+                <span className="hidden sm:inline text-xs sm:text-sm">2. Kế Hoạch Tuần</span>
+              </div>
             </button>
 
-            {/* Tab 3: Living Cost */}
+            {/* Tab 3: Bếp ăn & Trực Tết */}
             <button
               onClick={() => setActiveTab("living_cost")}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              className={`py-1.5 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer select-none ${
                 activeTab === "living_cost"
-                  ? "bg-emerald-700 text-white shadow-sm ring-2 ring-emerald-600/30 font-black"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                  ? "bg-white text-amber-800 shadow-xs ring-1 ring-amber-500/30 font-black"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${activeTab === "living_cost" ? "bg-amber-300 animate-pulse" : "bg-slate-400"}`}></span>
-              <span>3. Bếp Ăn & Trực Tết (Tự Cấp)</span>
-              <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.2 rounded-full ml-0.5">
-                Tiết kiệm ~15M
-              </span>
+              <Utensils className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "living_cost" ? "text-amber-600" : "text-slate-400"}`} />
+              <div className="leading-tight">
+                <span className="block sm:hidden text-[10px] sm:text-xs">3. Bếp Ăn</span>
+                <span className="hidden sm:inline text-xs sm:text-sm">3. Bếp & Trực Tết</span>
+              </div>
             </button>
 
-            {/* Tab 4: 12-Month Cash Flow & Debt Simulation */}
+            {/* Tab 4: Dòng tiền 12 tháng */}
             <button
               onClick={() => setActiveTab("cash_flow_12m")}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              className={`py-1.5 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer select-none relative ${
                 activeTab === "cash_flow_12m"
-                  ? "bg-indigo-700 text-white shadow-sm ring-2 ring-indigo-600/30 font-black"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                  ? "bg-white text-indigo-800 shadow-xs ring-1 ring-indigo-500/30 font-black"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${activeTab === "cash_flow_12m" ? "bg-indigo-300 animate-pulse" : "bg-slate-400"}`}></span>
-              <span>4. Dòng Tiền 12 Tháng & Vay Nợ</span>
-              <span className="bg-indigo-500 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full ml-0.5">
-                Mới • 3.7 ha
-              </span>
+              <Layers className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "cash_flow_12m" ? "text-indigo-600" : "text-slate-400"}`} />
+              <div className="leading-tight flex items-center justify-center gap-1">
+                <span className="block sm:hidden text-[10px] sm:text-xs">4. 12 Tháng</span>
+                <span className="hidden sm:inline text-xs sm:text-sm">4. Dòng Tiền 12T</span>
+                <span className="hidden lg:inline bg-indigo-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">
+                  3.7ha
+                </span>
+              </div>
             </button>
-          </div>
-
-          <div className="hidden sm:flex items-center text-xs text-slate-400 font-medium">
-            <span>
-              {activeTab === "financial"
-                ? "Vụ Tết: Gói " + scenarioId + "M"
-                : activeTab === "action_plan"
-                ? "5 Giai đoạn • 14 Ngày vàng"
-                : activeTab === "living_cost"
-                ? "4–5 Người • 100 ngày"
-                : "12 Tháng • 4 Phân khu 3.7 ha"}
-            </span>
           </div>
         </div>
       </nav>
