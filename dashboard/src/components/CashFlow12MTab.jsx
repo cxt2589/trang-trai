@@ -592,10 +592,15 @@ export function CashFlow12MTab({
         {/* Chú thích thực tế xả cám về 0 cho gà đặc sản */}
         <div className="bg-emerald-50/90 border border-emerald-200/90 rounded-xl p-3 flex items-start gap-2.5 text-xs text-emerald-950">
           <Sparkles className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-          <div className="space-y-0.5">
-            <span className="font-bold text-emerald-900">Chiến lược chăn nuôi gà đặc sản ("Xả cám về 0%"):</span>
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-bold text-emerald-900">Chiến lược chăn nuôi gà đặc sản ("Xả cám về 0%"):</span>
+              <span className="bg-emerald-200 text-emerald-900 font-extrabold text-[10px] px-1.5 py-0.2 rounded">
+                Định mức chuẩn: 4,2 kg thức ăn / con
+              </span>
+            </div>
             <p className="text-slate-600 leading-relaxed text-[11px]">
-              Gà được úm và phát triển khung xương trong 2 tháng đầu bằng cám công nghiệp. Từ tháng thứ 3 bắt đầu giảm dần cám và sang tháng thứ 4 (trước khi xuất bán 30 ngày) cắt hoàn toàn 100% cám công nghiệp — chuyển sang ăn <strong>Ngô hạt (8k) + Thóc mầm (6k) + Chuối ủ men vi sinh & rau đồi</strong>. Cách này giúp thớ thịt săn chắc, thơm ngọt, da giòn sần sật, không còn mùi cám công nghiệp, bán được giá đặc sản <strong>180.000 – 250.000 đ/kg</strong>. Quy trình này tương đương mức tiết kiệm chi phí thức ăn bình quân <strong>25% – 35%</strong> cả vòng đời.
+              Nuôi 4 tháng đạt trọng lượng xuất chuồng bình quân <strong>1,15 kg</strong> với tổng định mức <strong>4,2 kg thức ăn/con</strong> (FCR ~ 3.65). Trong 2 tháng đầu dùng cám công nghiệp tạo khung xương, từ tháng 3 giảm dần và tháng 4 cắt hoàn toàn 100% cám — thay bằng <strong>Ngô hạt (8k) + Thóc mầm (6k) + Chuối men & rau đồi</strong>. Chi phí thức ăn giảm từ ~54.600 đ xuống chỉ còn <strong>~38.100 đ/con</strong> (tiết kiệm ~16.500 đ/con, tương ứng mức giảm cám bình quân <strong>30%</strong>). Thịt thơm giòn, thớ săn chắc, da vàng giòn, bán được giá đặc sản <strong>180.000 – 250.000 đ/kg</strong>.
             </p>
           </div>
         </div>
