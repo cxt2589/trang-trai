@@ -17,7 +17,8 @@ import {
   ShieldCheck,
   Zap,
   Building2,
-  HelpCircle
+  HelpCircle,
+  Sparkles
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -36,21 +37,25 @@ import {
 import { CAPITAL_PRESETS, FARM_MODULES_INFO } from "../data/cashFlow12mData";
 import { calculate12MonthCashFlow } from "../utils/cashFlow12mEngine";
 
-export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab }) {
-  // State kịch bản vốn
-  const [selectedCapitalPreset, setSelectedCapitalPreset] = useState(100);
-  const [customEquity, setCustomEquity] = useState(100000000);
+export function CashFlow12MTab({
+  selectedCapital = 130,
+  onSelectCapital,
+  onSwitchToFinancialTab,
+  onSwitchToActionPlanTab
+}) {
+  // Local state for custom capital slider
+  const [customEquity, setCustomEquity] = useState(selectedCapital * 1000000);
   const [isCustomCapital, setIsCustomCapital] = useState(false);
 
   // State năng suất nhân công (người dùng yêu cầu 2.000 vs 3.000 con/người)
   const [birdsPerWorker, setBirdsPerWorker] = useState(3000); // 3000 = công nghiệp, 2000 = truyền thống
   const [workerSalary, setWorkerSalary] = useState(7000000);
 
-  // State các biến số thị trường (What-If sensitivity)
-  const [sellingPrice, setSellingPrice] = useState(180000); // VNĐ/kg
-  const [chickPrice, setChickPrice] = useState(14000); // VNĐ/con 1 ngày tuổi
-  const [feedPrice, setFeedPrice] = useState(10000); // VNĐ/kg cám
-  const [feedSavingRate, setFeedSavingRate] = useState(0.0); // 0% - 30%
+  // State các biến số thị trường (What-If sensitivity) - Hỗ trợ giá gà đến 250k, giảm cám đến 70%
+  const [sellingPrice, setSellingPrice] = useState(180000); // 150.000 - 250.000 VNĐ/kg
+  const [chickPrice, setChickPrice] = useState(14000); // 10.000 - 20.000 VNĐ/con 1 ngày tuổi
+  const [feedPrice, setFeedPrice] = useState(10000); // 8.000 - 13.000 VNĐ/kg cám
+  const [feedSavingRate, setFeedSavingRate] = useState(0.0); // 0% - 70%
 
   // Tab biểu đồ
   const [activeChartTab, setActiveChartTab] = useState("cash_flow"); // "cash_flow", "debt_waterfall", "flock_labor"
@@ -66,14 +71,13 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
     setCollapsedGroups((prev) => ({ ...prev, [groupKey]: !prev[groupKey] }));
   };
 
-  // Xác định số vốn ban đầu đang áp dụng
+  // Xác định số vốn ban đầu đang áp dụng (đồng bộ với toàn hệ thống)
   const effectiveInitialEquity = useMemo(() => {
     if (isCustomCapital) return customEquity;
-    const preset = CAPITAL_PRESETS.find((p) => p.id === selectedCapitalPreset);
-    return preset ? preset.equity : 100000000;
-  }, [isCustomCapital, customEquity, selectedCapitalPreset]);
+    return selectedCapital * 1000000;
+  }, [isCustomCapital, customEquity, selectedCapital]);
 
-  // Chạy lõi tính toán tài chính 12 tháng (tối ưu hóa bằng useMemo)
+  // Chạy lõi tính toán tài chính 12 tháng (useMemo tối ưu)
   const financialData = useMemo(() => {
     return calculate12MonthCashFlow({
       initialEquity: effectiveInitialEquity,
@@ -97,16 +101,17 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
 
   const { monthlyResults, annualTotal, kpis } = financialData;
 
-  // Format tiền tệ VNĐ (triệu đồng hoặc đầy đủ)
+  // Format tiền tệ VNĐ
   const fmtVND = (num) => new Intl.NumberFormat("vi-VN").format(Math.round(num));
   const fmtM = (num) => (num / 1000000).toFixed(1) + "M";
 
-  // Xử lý chọn kịch bản vốn nhanh
+  // Xử lý chọn kịch bản vốn nhanh đồng bộ
   const handleSelectPreset = (presetId) => {
-    setSelectedCapitalPreset(presetId);
     setIsCustomCapital(false);
-    const p = CAPITAL_PRESETS.find((item) => item.id === presetId);
-    if (p) setCustomEquity(p.equity);
+    setCustomEquity(presetId * 1000000);
+    if (onSelectCapital) {
+      onSelectCapital(presetId);
+    }
   };
 
   // Xuất file CSV báo cáo dòng tiền chuẩn UTF-8
@@ -197,7 +202,7 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
     link.href = url;
     link.setAttribute(
       "download",
-      `Dong_Tien_12_Thang_Trang_Trai_Lac_Son_${selectedCapitalPreset}M.csv`
+      `Dong_Tien_12_Thang_Trang_Trai_Lac_Son_${selectedCapital}M.csv`
     );
     document.body.appendChild(link);
     link.click();
@@ -233,6 +238,9 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
               <span className="text-indigo-300 text-xs font-semibold">
                 Chu kỳ 10/2026 – 09/2027 • Quy mô 3.7 ha
               </span>
+              <span className="bg-indigo-600/60 text-white border border-indigo-400/40 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                Đồng bộ vốn: Gói {selectedCapital} Triệu
+              </span>
             </div>
             <h2 className="text-lg sm:text-2xl font-black tracking-tight text-white">
               Quản Lý Dòng Tiền & Mô Phỏng Vay Nợ (Xoay Vòng 4 Phân Khu)
@@ -262,57 +270,61 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
         </div>
       </div>
 
-      {/* 2. COMPONENT 0: BỘ CHỌN KỊCH BẢN VỐN BAN ĐẦU */}
+      {/* 2. COMPONENT 1: BỘ CHỌN KỊCH BẢN VỐN BAN ĐẦU (ĐỒNG BỘ 1 CHẠM VỚI TOÀN HỆ THỐNG) */}
       <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
           <div>
             <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
               <DollarSign className="w-4 h-4 text-emerald-600" />
-              1. Chọn Kịch Bản Vốn Tự Có Ban Đầu (Tháng 10/2026)
+              1. Chọn Kịch Bản Vốn Ban Đầu (Đồng Bộ 1 Lần Duy Nhất)
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-500">
-              Số vốn này được rót vào tháng đầu tiên. Toàn bộ áp lực vay vốn, đỉnh nợ và tháng sạch nợ sẽ tự động tính lại.
+              Chọn mức vốn tại đây sẽ tự động cập nhật sang cả Tab 1 (Vụ Tết) và Tab 4 (12 Tháng). Bạn không cần chọn lại lần thứ 2!
             </p>
           </div>
           {isCustomCapital && (
-            <span className="text-[11px] bg-amber-100 text-amber-800 border border-amber-300 font-bold px-2 py-0.5 rounded-full self-start sm:self-auto">
+            <span className="text-[11px] bg-amber-100 text-amber-800 border border-amber-300 font-bold px-2.5 py-0.5 rounded-full self-start sm:self-auto">
               Đang tùy chỉnh: {fmtVND(effectiveInitialEquity)} đ
             </span>
           )}
         </div>
 
-        {/* 4 Preset Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* Preset Cards Grid - Đồng bộ 6 mốc vốn */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
           {CAPITAL_PRESETS.map((p) => {
-            const isSelected = !isCustomCapital && selectedCapitalPreset === p.id;
+            const isSelected = !isCustomCapital && selectedCapital === p.id;
             return (
               <div
                 key={p.id}
                 onClick={() => handleSelectPreset(p.id)}
-                className={`p-3.5 rounded-xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${
+                className={`p-3 rounded-xl border-2 transition-all cursor-pointer relative flex flex-col justify-between select-none ${
                   isSelected
-                    ? "border-emerald-600 bg-emerald-50/50 shadow-md ring-2 ring-emerald-500/20"
-                    : "border-slate-200 hover:border-slate-300 bg-slate-50/50"
+                    ? "border-emerald-600 bg-emerald-50/60 shadow-md ring-2 ring-emerald-500/20"
+                    : "border-slate-200 hover:border-slate-300 bg-slate-50/50 hover:bg-white"
                 }`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-black text-slate-900">{p.name}</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${p.badgeColor}`}>
-                      {p.badge}
-                    </span>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[11px] font-bold text-slate-700">{p.name}</span>
+                    {p.id === 130 && (
+                      <span className="text-[9px] bg-emerald-600 text-white font-black px-1 rounded">
+                        ★
+                      </span>
+                    )}
                   </div>
-                  <div className="text-base font-black text-emerald-700">
-                    {fmtVND(p.equity)} đ
+                  <div className="text-base font-black text-slate-900 leading-tight">
+                    {p.id} Tr
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-1 leading-snug">{p.desc}</p>
+                  <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border inline-block mt-1 ${p.badgeColor}`}>
+                    {p.badge}
+                  </span>
                 </div>
 
-                <div className="mt-3 pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
+                <div className="mt-2.5 pt-1.5 border-t border-slate-200/60 flex items-center justify-between text-[10px]">
                   <span className={isSelected ? "text-emerald-700 font-bold" : "text-slate-400"}>
-                    {isSelected ? "Đang áp dụng" : "Nhấp để chọn"}
+                    {isSelected ? "Đang chọn" : "Chọn gói"}
                   </span>
-                  {isSelected && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                  {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
                 </div>
               </div>
             );
@@ -324,7 +336,7 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-slate-600" />
             <span className="text-xs font-bold text-slate-800">
-              Tùy chỉnh vốn theo thực tế:
+              Hoặc tùy chỉnh vốn linh hoạt:
             </span>
           </div>
 
@@ -336,8 +348,12 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
               step="5000000"
               value={customEquity}
               onChange={(e) => {
-                setCustomEquity(Number(e.target.value));
+                const val = Number(e.target.value);
+                setCustomEquity(val);
                 setIsCustomCapital(true);
+                if (onSelectCapital) {
+                  onSelectCapital(Math.round(val / 1000000));
+                }
               }}
               className="w-full accent-emerald-600 cursor-pointer"
             />
@@ -348,7 +364,7 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
         </div>
       </section>
 
-      {/* 3. BỘ ĐIỀU CHỈNH NĂNG SUẤT NHÂN CÔNG (THEO YÊU CẦU CỦA NGƯỜI DÙNG) */}
+      {/* 3. COMPONENT 2: BỘ ĐIỀU CHỈNH NĂNG SUẤT NHÂN CÔNG */}
       <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
           <div>
@@ -368,7 +384,7 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-          {/* Card 1: Chọn chế độ 2000 vs 3000 */}
+          {/* Chọn chế độ 2000 vs 3000 */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-slate-700 block">
               Chế độ vận hành lao động:
@@ -415,7 +431,7 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
             </div>
           </div>
 
-          {/* Card 2: Lương và Slider chi tiết */}
+          {/* Lương và Slider chi tiết */}
           <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2.5">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-700">Mức lương bình quân:</span>
@@ -447,7 +463,134 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
         </div>
       </section>
 
-      {/* 4. COMPONENT 1: TOP KPI CARDS HEADER (ĐỘNG 100%) */}
+      {/* 4. COMPONENT 3: BỘ MÔ PHỎNG ĐỘ NHẠY THỊ TRƯỜNG ("WHAT-IF") - ĐÃ ĐƯA LÊN TRÊN THEO YÊU CẦU */}
+      <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+          <div>
+            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-emerald-600" />
+              3. Bộ Mô Phỏng Độ Nhạy Thị Trường ("What-If" Sensitivity Simulator)
+            </h3>
+            <p className="text-[11px] sm:text-xs text-slate-500">
+              Thử nghiệm kịch bản giá bán gà (lên tới 250k) và giảm chi phí cám nhờ chuối men/rau cỏ (lên tới 70%)
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setSellingPrice(180000);
+              setChickPrice(14000);
+              setFeedPrice(10000);
+              setFeedSavingRate(0.0);
+              setBirdsPerWorker(3000);
+            }}
+            className="text-xs text-emerald-700 hover:text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg font-bold transition self-start sm:self-auto cursor-pointer"
+          >
+            Đặt lại thông số chuẩn
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Slider 1: Giá bán gà (lên tới 250.000đ/kg) */}
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-semibold text-slate-700">Giá bán gà thịt:</span>
+              <span className="font-black text-emerald-700 bg-white px-2 py-0.5 rounded border border-slate-200">
+                {sellingPrice.toLocaleString()} đ/kg
+              </span>
+            </div>
+            <input
+              type="range"
+              min="150000"
+              max="250000"
+              step="5000"
+              value={sellingPrice}
+              onChange={(e) => setSellingPrice(Number(e.target.value))}
+              className="w-full accent-emerald-600 cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] text-slate-400">
+              <span>150k</span>
+              <span>180k (Chuẩn)</span>
+              <span>220k</span>
+              <span className="font-bold text-emerald-600">250k</span>
+            </div>
+          </div>
+
+          {/* Slider 2: Tiết kiệm cám nhờ chuối men/rau đồi (lên tới 70%) */}
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-semibold text-slate-700">Giảm cám (Chuối men):</span>
+              <span className="font-black text-emerald-700 bg-white px-2 py-0.5 rounded border border-slate-200">
+                {Math.round(feedSavingRate * 100)}%
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="0.70"
+              step="0.05"
+              value={feedSavingRate}
+              onChange={(e) => setFeedSavingRate(Number(e.target.value))}
+              className="w-full accent-emerald-600 cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] text-slate-400">
+              <span>0% (Cám 100%)</span>
+              <span>25%</span>
+              <span>50%</span>
+              <span className="font-bold text-emerald-600">70% (Tối đa)</span>
+            </div>
+          </div>
+
+          {/* Slider 3: Giá cám */}
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-semibold text-slate-700">Giá thức ăn / cám:</span>
+              <span className="font-black text-rose-700 bg-white px-2 py-0.5 rounded border border-slate-200">
+                {feedPrice.toLocaleString()} đ/kg
+              </span>
+            </div>
+            <input
+              type="range"
+              min="8000"
+              max="13000"
+              step="500"
+              value={feedPrice}
+              onChange={(e) => setFeedPrice(Number(e.target.value))}
+              className="w-full accent-rose-600 cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] text-slate-400">
+              <span>8k</span>
+              <span>10k (Chuẩn)</span>
+              <span>13k</span>
+            </div>
+          </div>
+
+          {/* Slider 4: Giá giống */}
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-semibold text-slate-700">Giá giống (1 ngày):</span>
+              <span className="font-black text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200">
+                {chickPrice.toLocaleString()} đ/con
+              </span>
+            </div>
+            <input
+              type="range"
+              min="10000"
+              max="20000"
+              step="1000"
+              value={chickPrice}
+              onChange={(e) => setChickPrice(Number(e.target.value))}
+              className="w-full accent-slate-600 cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] text-slate-400">
+              <span>10k</span>
+              <span>14k (Chuẩn)</span>
+              <span>20k</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. COMPONENT 4: TOP KPI CARDS HEADER (ĐỘNG THEO THÔNG SỐ VỪA ĐIỀU CHỈNH) */}
       <section className="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
         {/* KPI 1 */}
         <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between">
@@ -461,7 +604,7 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
             {fmtM(effectiveInitialEquity)}
           </div>
           <div className="text-[11px] text-slate-500 mt-1">
-            Két tối thiểu: <span className="font-bold text-slate-700">20.0M</span>
+            Két an toàn: <span className="font-bold text-slate-700">20.0M</span>
           </div>
         </div>
 
@@ -530,13 +673,13 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
         </div>
       </section>
 
-      {/* 5. COMPONENT 2: INTERACTIVE CHARTS VIEW (TOGGLE TABS) */}
+      {/* 6. COMPONENT 5: INTERACTIVE CHARTS VIEW */}
       <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div>
             <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-emerald-600" />
-              3. Phân Tích Biểu Đồ Dòng Tiền & Chu Trình Nợ Vay
+              5. Phân Tích Biểu Đồ Dòng Tiền & Chu Trình Nợ Vay
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-500">
               Trực quan hóa lộ trình tài chính qua 12 tháng xoay vòng đàn
@@ -563,7 +706,7 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Thác Nợ Lũy Kế (Debt Waterfall)
+              Thác Nợ Lũy Kế
             </button>
             <button
               onClick={() => setActiveChartTab("flock_labor")}
@@ -676,16 +819,16 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
         )}
       </section>
 
-      {/* 6. COMPONENT 3: CHI TIẾT BẢNG DÒNG TIỀN 12 THÁNG (COLLAPSIBLE & STICKY HORIZONTAL) */}
+      {/* 7. COMPONENT 6: BẢNG DÒNG TIỀN 12 THÁNG - SỬA LỖI STICKY VÀ ĐỤC 100% TRÁNH MỜ/CHỒNG CHỮ */}
       <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
           <div>
             <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
               <Calendar className="w-4 h-4 text-emerald-600" />
-              4. Bảng Kế Hoạch Dòng Tiền 12 Tháng Chi Tiết (VNĐ)
+              6. Bảng Kế Hoạch Dòng Tiền 12 Tháng Chi Tiết (VNĐ)
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-500">
-              Có thể cuộn ngang trên điện thoại (cố định cột chỉ tiêu). Bấm vào các mục để mở rộng/thu gọn.
+              Cột Khoản mục được khóa cố định 100% trên điện thoại và máy tính, nền màu đặc che kín nội dung cuộn bên dưới
             </p>
           </div>
           <button
@@ -698,74 +841,78 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
         </div>
 
         {/* Table Wrapper */}
-        <div className="overflow-x-auto border border-slate-200 rounded-xl max-h-[550px] shadow-2xs">
+        <div className="overflow-x-auto border border-slate-300 rounded-xl max-h-[550px] shadow-2xs relative">
           <table className="w-full text-xs text-left border-collapse">
             <thead className="bg-slate-100 text-slate-700 font-bold sticky top-0 z-20 shadow-2xs">
               <tr>
-                <th className="p-2.5 sm:p-3 sticky left-0 bg-slate-100 z-30 min-w-[200px] border-r border-slate-200">
+                <th className="p-2.5 sm:p-3 sticky left-0 bg-slate-200 text-slate-900 z-30 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                   Khoản Mục Dòng Tiền
                 </th>
                 {monthlyResults.map((m) => (
-                  <th key={m.key} className="p-2 sm:p-2.5 text-right whitespace-nowrap min-w-[95px] border-r border-slate-200/60 font-black">
+                  <th key={m.key} className="p-2 sm:p-2.5 text-right whitespace-nowrap min-w-[95px] border-r border-slate-200 font-black">
                     {m.key}
                   </th>
                 ))}
-                <th className="p-2.5 sm:p-3 text-right whitespace-nowrap min-w-[110px] bg-emerald-100/70 text-emerald-950 font-black">
+                <th className="p-2.5 sm:p-3 text-right whitespace-nowrap min-w-[110px] bg-emerald-100 text-emerald-950 font-black">
                   Tổng Cả Năm
                 </th>
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-200">
               {/* 1. Tiền mặt đầu kỳ */}
-              <tr className="bg-slate-50/70 font-semibold">
-                <td className="p-2.5 sm:p-3 sticky left-0 bg-slate-50 border-r border-slate-200 text-slate-900">
+              <tr className="bg-slate-50 font-semibold">
+                <td className="p-2.5 sm:p-3 sticky left-0 bg-slate-100 text-slate-900 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                   1. Tiền mặt đầu kỳ
                 </td>
                 {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200/50 font-mono text-slate-700">
+                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-slate-700">
                     {fmtVND(m.startingCash)}
                   </td>
                 ))}
-                <td className="p-2.5 text-right bg-emerald-50/40 font-mono font-bold text-slate-800">
+                <td className="p-2.5 text-right bg-emerald-50 font-mono font-bold text-slate-800">
                   {fmtVND(monthlyResults[0].startingCash)}
                 </td>
               </tr>
 
               {/* 2. Doanh thu bán gà */}
-              <tr className="bg-emerald-50/40 font-bold text-emerald-950">
-                <td className="p-2.5 sm:p-3 sticky left-0 bg-emerald-50 border-r border-emerald-200 flex items-center justify-between">
-                  <span>2. Doanh thu bán gà</span>
-                  <span className="text-[10px] bg-emerald-200 text-emerald-900 px-1 py-0.2 rounded font-black">Vào</span>
+              <tr className="bg-emerald-50/50 font-bold text-emerald-950">
+                <td className="p-2.5 sm:p-3 sticky left-0 bg-emerald-100 text-emerald-950 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                  <div className="flex items-center justify-between">
+                    <span>2. Doanh thu bán gà</span>
+                    <span className="text-[10px] bg-emerald-200 text-emerald-900 px-1.5 py-0.2 rounded font-black">Vào</span>
+                  </div>
                 </td>
                 {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200/50 font-mono text-emerald-700">
+                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-emerald-700">
                     {m.revenue > 0 ? fmtVND(m.revenue) : "-"}
                   </td>
                 ))}
-                <td className="p-2.5 text-right bg-emerald-100/50 font-mono font-black text-emerald-800">
+                <td className="p-2.5 text-right bg-emerald-100 font-mono font-black text-emerald-800">
                   {fmtVND(annualTotal.revenue)}
                 </td>
               </tr>
 
               {/* 3. OPEX Header */}
-              <tr className="bg-rose-50/30 font-bold text-rose-950">
+              <tr className="bg-rose-50/50 font-bold text-rose-950">
                 <td
                   onClick={() => toggleGroup("opex")}
-                  className="p-2.5 sm:p-3 sticky left-0 bg-rose-50/80 border-r border-slate-200 cursor-pointer flex items-center justify-between hover:bg-rose-100/80 transition"
+                  className="p-2.5 sm:p-3 sticky left-0 bg-rose-100 text-rose-950 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)] cursor-pointer hover:bg-rose-200 transition select-none"
                 >
-                  <span className="flex items-center gap-1">
-                    {collapsedGroups.opex ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
-                    3. Chi phí vận hành (OPEX)
-                  </span>
-                  <span className="text-[10px] text-rose-700">Chi</span>
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      {collapsedGroups.opex ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
+                      3. Chi phí vận hành (OPEX)
+                    </span>
+                    <span className="text-[10px] bg-rose-200 text-rose-900 px-1.5 py-0.2 rounded font-bold">Chi</span>
+                  </div>
                 </td>
                 {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200/50 font-mono text-rose-700">
+                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-rose-700">
                     ({fmtVND(m.opexCost)})
                   </td>
                 ))}
-                <td className="p-2.5 text-right bg-rose-100/40 font-mono font-black text-rose-800">
+                <td className="p-2.5 text-right bg-rose-100 font-mono font-black text-rose-800">
                   ({fmtVND(annualTotal.opexCost)})
                 </td>
               </tr>
@@ -773,105 +920,107 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
               {/* OPEX Sub-rows */}
               {!collapsedGroups.opex && (
                 <>
-                  <tr className="text-[11px] text-slate-600">
-                    <td className="p-2 pl-6 sticky left-0 bg-white border-r border-slate-200">
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                       • Con giống nhập đàn
                     </td>
                     {monthlyResults.map((m) => (
-                      <td key={m.key} className="p-2 text-right border-r border-slate-200/40 font-mono">
+                      <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono">
                         {fmtVND(m.chickCost)}
                       </td>
                     ))}
-                    <td className="p-2 text-right bg-slate-50 font-mono">{fmtVND(annualTotal.chickCost)}</td>
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold">{fmtVND(annualTotal.chickCost)}</td>
                   </tr>
 
-                  <tr className="text-[11px] text-slate-600">
-                    <td className="p-2 pl-6 sticky left-0 bg-white border-r border-slate-200">
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                       • Thức ăn & cám ({feedPrice.toLocaleString()}đ/kg)
                     </td>
                     {monthlyResults.map((m) => (
-                      <td key={m.key} className="p-2 text-right border-r border-slate-200/40 font-mono">
+                      <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono">
                         {fmtVND(m.feedCost)}
                       </td>
                     ))}
-                    <td className="p-2 text-right bg-slate-50 font-mono">{fmtVND(annualTotal.feedCost)}</td>
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold">{fmtVND(annualTotal.feedCost)}</td>
                   </tr>
 
-                  <tr className="text-[11px] text-slate-600">
-                    <td className="p-2 pl-6 sticky left-0 bg-white border-r border-slate-200">
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                       • Lương nhân sự ({birdsPerWorker.toLocaleString()} con/người)
                     </td>
                     {monthlyResults.map((m) => (
-                      <td key={m.key} className="p-2 text-right border-r border-slate-200/40 font-mono">
+                      <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono">
                         {fmtVND(m.laborCost)} <span className="text-[10px] text-slate-400">({m.headcount}ng)</span>
                       </td>
                     ))}
-                    <td className="p-2 text-right bg-slate-50 font-mono">{fmtVND(annualTotal.laborCost)}</td>
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold">{fmtVND(annualTotal.laborCost)}</td>
                   </tr>
 
-                  <tr className="text-[11px] text-slate-600">
-                    <td className="p-2 pl-6 sticky left-0 bg-white border-r border-slate-200">
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                       • Thú y, vắc-xin, điện nước
                     </td>
                     {monthlyResults.map((m) => (
-                      <td key={m.key} className="p-2 text-right border-r border-slate-200/40 font-mono">
+                      <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono">
                         {fmtVND(m.vetOpCost)}
                       </td>
                     ))}
-                    <td className="p-2 text-right bg-slate-50 font-mono">{fmtVND(annualTotal.vetOpCost)}</td>
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold">{fmtVND(annualTotal.vetOpCost)}</td>
                   </tr>
                 </>
               )}
 
               {/* 4. CAPEX Header */}
-              <tr className="bg-amber-50/30 font-bold text-amber-950">
+              <tr className="bg-amber-50/50 font-bold text-amber-950">
                 <td
                   onClick={() => toggleGroup("capex")}
-                  className="p-2.5 sm:p-3 sticky left-0 bg-amber-50/80 border-r border-slate-200 cursor-pointer flex items-center justify-between hover:bg-amber-100/80 transition"
+                  className="p-2.5 sm:p-3 sticky left-0 bg-amber-100 text-amber-950 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)] cursor-pointer hover:bg-amber-200 transition select-none"
                 >
-                  <span className="flex items-center gap-1">
-                    {collapsedGroups.capex ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
-                    4. Đầu tư chuồng trại (CAPEX)
-                  </span>
-                  <span className="text-[10px] text-amber-700">Cơ bản</span>
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      {collapsedGroups.capex ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
+                      4. Đầu tư chuồng trại (CAPEX)
+                    </span>
+                    <span className="text-[10px] bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded font-bold">Cơ bản</span>
+                  </div>
                 </td>
                 {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200/50 font-mono text-amber-800">
+                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-800">
                     {m.capexCost > 0 ? `(${fmtVND(m.capexCost)})` : "-"}
                   </td>
                 ))}
-                <td className="p-2.5 text-right bg-amber-100/40 font-mono font-black text-amber-900">
+                <td className="p-2.5 text-right bg-amber-100 font-mono font-black text-amber-900">
                   ({fmtVND(annualTotal.capexCost)})
                 </td>
               </tr>
 
-              {/* 5. Cân đối Dòng Tiền & Vay Nợ */}
-              <tr className="bg-indigo-50/40 font-bold text-indigo-950">
-                <td className="p-2.5 sm:p-3 sticky left-0 bg-indigo-50 border-r border-slate-200">
+              {/* 5. Cân đối Dòng Tiền */}
+              <tr className="bg-indigo-50/60 font-bold text-indigo-950">
+                <td className="p-2.5 sm:p-3 sticky left-0 bg-indigo-100 text-indigo-950 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                   5. Dòng tiền thuần hoạt động
                 </td>
                 {monthlyResults.map((m) => (
                   <td
                     key={m.key}
-                    className={`p-2 text-right border-r border-slate-200/50 font-mono ${
+                    className={`p-2 text-right border-r border-slate-200 font-mono font-bold ${
                       m.netOperatingFlow >= 0 ? "text-emerald-700" : "text-rose-700"
                     }`}
                   >
                     {fmtVND(m.netOperatingFlow)}
                   </td>
                 ))}
-                <td className="p-2.5 text-right bg-indigo-100/40 font-mono font-black text-indigo-950">
+                <td className="p-2.5 text-right bg-indigo-100 font-mono font-black text-indigo-950">
                   {fmtVND(annualTotal.netOperatingFlow)}
                 </td>
               </tr>
 
               {/* Vay mới */}
-              <tr className="text-amber-800 font-semibold bg-white">
-                <td className="p-2 pl-6 sticky left-0 bg-white border-r border-slate-200">
+              <tr className="text-amber-900 font-semibold bg-white">
+                <td className="p-2 pl-6 sticky left-0 bg-white text-amber-900 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                   + Nhu cầu vay mới trong tháng
                 </td>
                 {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200/40 font-mono text-amber-700">
+                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-700">
                     {m.borrowNeed > 0 ? `+${fmtVND(m.borrowNeed)}` : "-"}
                   </td>
                 ))}
@@ -881,12 +1030,12 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
               </tr>
 
               {/* Trả nợ */}
-              <tr className="text-emerald-800 font-semibold bg-white">
-                <td className="p-2 pl-6 sticky left-0 bg-white border-r border-slate-200">
+              <tr className="text-emerald-900 font-semibold bg-white">
+                <td className="p-2 pl-6 sticky left-0 bg-white text-emerald-900 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                   - Trả nợ gốc trong tháng
                 </td>
                 {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200/40 font-mono text-emerald-700">
+                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-emerald-700">
                     {m.repayment > 0 ? `-${fmtVND(m.repayment)}` : "-"}
                   </td>
                 ))}
@@ -896,31 +1045,31 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
               </tr>
 
               {/* 6. Tiền tồn két cuối kỳ */}
-              <tr className="bg-blue-50/50 font-bold text-blue-950 border-t-2 border-slate-300">
-                <td className="p-2.5 sm:p-3 sticky left-0 bg-blue-50 border-r border-slate-200">
+              <tr className="bg-blue-50 font-bold text-blue-950 border-t-2 border-slate-300">
+                <td className="p-2.5 sm:p-3 sticky left-0 bg-blue-100 text-blue-950 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                   6. Tiền mặt tồn két cuối kỳ
                 </td>
                 {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200/50 font-mono text-blue-800">
+                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-blue-800">
                     {fmtVND(m.endingCash)}
                   </td>
                 ))}
-                <td className="p-2.5 text-right bg-blue-100/60 font-mono font-black text-blue-900">
+                <td className="p-2.5 text-right bg-blue-100 font-mono font-black text-blue-900">
                   {fmtVND(kpis.lastEndingCash)}
                 </td>
               </tr>
 
               {/* 7. Dư nợ vay còn lại */}
-              <tr className="bg-red-50/50 font-bold text-red-950">
-                <td className="p-2.5 sm:p-3 sticky left-0 bg-red-50 border-r border-slate-200">
+              <tr className="bg-red-50 font-bold text-red-950">
+                <td className="p-2.5 sm:p-3 sticky left-0 bg-red-100 text-red-950 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
                   7. Dư nợ vay lũy kế còn lại
                 </td>
                 {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200/50 font-mono text-red-700">
+                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-red-700">
                     {m.debtBalance > 0 ? fmtVND(m.debtBalance) : "0 đ (Sạch nợ)"}
                   </td>
                 ))}
-                <td className="p-2.5 text-right bg-red-100/60 font-mono font-black text-red-900">
+                <td className="p-2.5 text-right bg-red-100 font-mono font-black text-red-900">
                   {fmtVND(monthlyResults[monthlyResults.length - 1].debtBalance)}
                 </td>
               </tr>
@@ -929,138 +1078,13 @@ export function CashFlow12MTab({ onSwitchToFinancialTab, onSwitchToActionPlanTab
         </div>
       </section>
 
-      {/* 7. COMPONENT 4: BỘ MÔ PHỎNG ĐỘ NHẠY THỊ TRƯỜNG ("WHAT-IF") */}
-      <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-          <div>
-            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-emerald-600" />
-              5. Bộ Mô Phỏng Độ Nhạy Thị Trường ("What-If" Sensitivity Simulator)
-            </h3>
-            <p className="text-[11px] sm:text-xs text-slate-500">
-              Kiểm tra khả năng chịu tải của trang trại khi giá gà, giá cám biến động ngoài dự kiến
-            </p>
-          </div>
-          <button
-            onClick={() => {
-              setSellingPrice(180000);
-              setChickPrice(14000);
-              setFeedPrice(10000);
-              setFeedSavingRate(0.0);
-              setBirdsPerWorker(3000);
-            }}
-            className="text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer"
-          >
-            Đặt lại mặc định
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Slider 1: Giá bán */}
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-700">Giá bán gà:</span>
-              <span className="font-black text-emerald-700 bg-white px-2 py-0.5 rounded border border-slate-200">
-                {sellingPrice.toLocaleString()} đ/kg
-              </span>
-            </div>
-            <input
-              type="range"
-              min="150000"
-              max="200000"
-              step="5000"
-              value={sellingPrice}
-              onChange={(e) => setSellingPrice(Number(e.target.value))}
-              className="w-full accent-emerald-600 cursor-pointer"
-            />
-            <div className="flex justify-between text-[10px] text-slate-400">
-              <span>150k</span>
-              <span>180k (Chuẩn)</span>
-              <span>200k</span>
-            </div>
-          </div>
-
-          {/* Slider 2: Giá giống */}
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-700">Giá giống (1 ngày):</span>
-              <span className="font-black text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200">
-                {chickPrice.toLocaleString()} đ/con
-              </span>
-            </div>
-            <input
-              type="range"
-              min="10000"
-              max="20000"
-              step="1000"
-              value={chickPrice}
-              onChange={(e) => setChickPrice(Number(e.target.value))}
-              className="w-full accent-slate-600 cursor-pointer"
-            />
-            <div className="flex justify-between text-[10px] text-slate-400">
-              <span>10k</span>
-              <span>14k (Chuẩn)</span>
-              <span>20k</span>
-            </div>
-          </div>
-
-          {/* Slider 3: Giá cám */}
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-700">Giá thức ăn:</span>
-              <span className="font-black text-rose-700 bg-white px-2 py-0.5 rounded border border-slate-200">
-                {feedPrice.toLocaleString()} đ/kg
-              </span>
-            </div>
-            <input
-              type="range"
-              min="8000"
-              max="13000"
-              step="500"
-              value={feedPrice}
-              onChange={(e) => setFeedPrice(Number(e.target.value))}
-              className="w-full accent-rose-600 cursor-pointer"
-            />
-            <div className="flex justify-between text-[10px] text-slate-400">
-              <span>8k</span>
-              <span>10k (Chuẩn)</span>
-              <span>13k</span>
-            </div>
-          </div>
-
-          {/* Slider 4: Tiết kiệm cám nhờ chuối men */}
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-700">Giảm cám (Chuối men):</span>
-              <span className="font-black text-emerald-700 bg-white px-2 py-0.5 rounded border border-slate-200">
-                {Math.round(feedSavingRate * 100)}%
-              </span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="0.30"
-              step="0.05"
-              value={feedSavingRate}
-              onChange={(e) => setFeedSavingRate(Number(e.target.value))}
-              className="w-full accent-emerald-600 cursor-pointer"
-            />
-            <div className="flex justify-between text-[10px] text-slate-400">
-              <span>0% (Cám 100%)</span>
-              <span>15%</span>
-              <span>30% (Ủ chuối)</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. COMPONENT 5: SƠ ĐỒ QUY HOẠCH 4 PHÂN KHU (3.7 HA) */}
+      {/* 8. COMPONENT 7: SƠ ĐỒ QUY HOẠCH 4 PHÂN KHU (3.7 HA) */}
       <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-3.5">
         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <div>
             <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
               <Building2 className="w-4 h-4 text-emerald-600" />
-              6. Quy Hoạch 4 Phân Khu Chuồng Trại & Xoay Vòng All-In All-Out (3.7 ha)
+              7. Quy Hoạch 4 Phân Khu Chuồng Trại & Xoay Vòng All-In All-Out (3.7 ha)
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-500">
               Tận dụng 3.7 ha rào B40 có sẵn (0đ) và phân kỳ chuồng tre nứa sàn đậu để tránh áp lực vốn

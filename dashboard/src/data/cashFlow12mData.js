@@ -17,11 +17,20 @@ export const CAPITAL_PRESETS = [
   {
     id: 100,
     name: "Gói 100 Triệu",
-    label: "Vốn Tiêu Chuẩn (Mặc Định)",
+    label: "Vốn Tiêu Chuẩn",
     equity: 100000000,
-    badge: "Cân Bằng Chuẩn",
-    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
-    desc: "Kịch bản gốc: Cân đối hoàn hảo giữa vốn đối ứng và khả năng trả nợ sau 12 tháng."
+    badge: "Tiêu Chuẩn",
+    badgeColor: "bg-slate-100 text-slate-800 border-slate-300",
+    desc: "Khởi động an toàn, vốn vừa phải, thu hồi nhanh."
+  },
+  {
+    id: 130,
+    name: "Gói 130 Triệu",
+    label: "Khuyên Dùng",
+    equity: 130000000,
+    badge: "Cân Bằng Vàng",
+    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-300 ring-2 ring-emerald-500/20",
+    desc: "Điểm cân bằng vàng giữa vốn, công suất 4 người & an toàn dòng tiền."
   },
   {
     id: 150,
@@ -31,6 +40,15 @@ export const CAPITAL_PRESETS = [
     badge: "Giảm Áp Lực Vay",
     badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
     desc: "Hạ thấp đỉnh nợ, giảm mạnh áp lực tiền mặt trước Tết và sạch nợ sớm."
+  },
+  {
+    id: 170,
+    name: "Gói 170 Triệu",
+    label: "Tối Đa Công Suất",
+    equity: 170000000,
+    badge: "Công Suất Lớn",
+    badgeColor: "bg-amber-100 text-amber-900 border-amber-300",
+    desc: "Khai thác tối đa mặt bằng & nhân công, lợi nhuận lớn."
   },
   {
     id: 200,

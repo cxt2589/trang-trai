@@ -242,6 +242,8 @@ export default function App() {
         {/* Tab 4: Dòng tiền 12 tháng & Mô phỏng nợ vay 3.7 ha */}
         {activeTab === "cash_flow_12m" && (
           <CashFlow12MTab
+            selectedCapital={scenarioId}
+            onSelectCapital={handleSelectScenario}
             onSwitchToFinancialTab={() => setActiveTab("financial")}
             onSwitchToActionPlanTab={() => setActiveTab("action_plan")}
           />

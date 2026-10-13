@@ -38,7 +38,7 @@ export function ScenarioSelector({ currentScenarioId, onSelectScenario, isCustom
       </div>
 
       {/* Preset Cards Grid - Fully Mobile Friendly */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5">
         {Object.values(PRESET_SCENARIOS).map((preset) => {
           const isSelected = currentScenarioId === preset.id;
           return (
