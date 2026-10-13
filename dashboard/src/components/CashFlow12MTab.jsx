@@ -515,10 +515,10 @@ export function CashFlow12MTab({
             </div>
           </div>
 
-          {/* Slider 2: Tiết kiệm cám nhờ chuối men/rau đồi (lên tới 70%) */}
+          {/* Slider 2: Tự chủ thức ăn / Giảm cám (lên tới 70%) */}
           <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-700">Giảm cám (Chuối men):</span>
+              <span className="font-semibold text-slate-700">Tự chủ thức ăn / Giảm cám:</span>
               <span className="font-black text-emerald-700 bg-white px-2 py-0.5 rounded border border-slate-200">
                 {Math.round(feedSavingRate * 100)}%
               </span>
@@ -533,17 +533,17 @@ export function CashFlow12MTab({
               className="w-full accent-emerald-600 cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-slate-400">
-              <span>0% (Cám 100%)</span>
-              <span>25%</span>
+              <span>0% (Mua 100% cám)</span>
+              <span className="font-bold text-emerald-700">30% (Chuẩn xả cám)</span>
               <span>50%</span>
-              <span className="font-bold text-emerald-600">70% (Tối đa)</span>
+              <span className="font-bold text-emerald-600">70%</span>
             </div>
           </div>
 
           {/* Slider 3: Giá cám */}
           <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-700">Giá thức ăn / cám:</span>
+              <span className="font-semibold text-slate-700">Giá cám công nghiệp:</span>
               <span className="font-black text-rose-700 bg-white px-2 py-0.5 rounded border border-slate-200">
                 {feedPrice.toLocaleString()} đ/kg
               </span>
@@ -551,7 +551,7 @@ export function CashFlow12MTab({
             <input
               type="range"
               min="8000"
-              max="13000"
+              max="15000"
               step="500"
               value={feedPrice}
               onChange={(e) => setFeedPrice(Number(e.target.value))}
@@ -559,8 +559,9 @@ export function CashFlow12MTab({
             />
             <div className="flex justify-between text-[10px] text-slate-400">
               <span>8k</span>
-              <span>10k (Chuẩn)</span>
-              <span>13k</span>
+              <span>10k</span>
+              <span className="font-bold text-rose-700">13k (Chuẩn TT)</span>
+              <span>15k</span>
             </div>
           </div>
 
