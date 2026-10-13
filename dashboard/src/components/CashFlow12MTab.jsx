@@ -36,13 +36,13 @@ import {
 } from "recharts";
 import { CAPITAL_PRESETS, FARM_MODULES_INFO, CONSTRUCTION_ROADMAP_SCHEDULE } from "../data/cashFlow12mData";
 import { calculate12MonthCashFlow } from "../utils/cashFlow12mEngine";
-import { EquityGovernanceSection } from "./EquityGovernanceSection";
 
 export function CashFlow12MTab({
   selectedCapital = 130,
   onSelectCapital,
   onSwitchToFinancialTab,
-  onSwitchToActionPlanTab
+  onSwitchToActionPlanTab,
+  onSwitchToEquityTab
 }) {
   // Local state for custom capital slider
   const [customEquity, setCustomEquity] = useState(selectedCapital * 1000000);
@@ -257,16 +257,15 @@ export function CashFlow12MTab({
           </div>
 
           <div className="flex items-center gap-2 self-start lg:self-auto flex-wrap">
-            <button
-              onClick={() => {
-                const el = document.getElementById("section-equity-governance");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="px-3 py-2 bg-purple-700 hover:bg-purple-600 text-white border border-purple-500/80 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
-            >
-              <Users className="w-3.5 h-3.5" />
-              <span>Cổ Phần & Quản Trị (Mục 8)</span>
-            </button>
+            {onSwitchToEquityTab && (
+              <button
+                onClick={onSwitchToEquityTab}
+                className="px-3 py-2 bg-purple-700 hover:bg-purple-600 text-white border border-purple-500/80 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>Xem Cổ Phần (Tab 5)</span>
+              </button>
+            )}
             <button
               onClick={handleExportCSV}
               className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
@@ -1477,12 +1476,35 @@ export function CashFlow12MTab({
         </div>
       </section>
 
-      {/* 8. Cơ Cấu Cổ Phần & Quản Trị 3 Bên (T, TA, H) */}
-      <EquityGovernanceSection
-        onSwitchToCashFlowTab={() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-      />
+      {/* Chuyển hướng sang Phân hệ Tab 5: Cổ Phần & Quản Trị */}
+      <div className="bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 border border-purple-800/60 rounded-2xl p-4 sm:p-6 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="space-y-1.5 max-w-2xl">
+          <div className="flex items-center gap-2">
+            <span className="bg-purple-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              Phân hệ độc lập
+            </span>
+            <span className="text-purple-300 text-xs font-semibold">
+              Đã tách thành Tab 5 trên Menu chính
+            </span>
+          </div>
+          <h4 className="text-base sm:text-xl font-black text-white">
+            5. Cơ Cấu Cổ Phần, Quyền Lực & Lợi Tức 3 Bên (T, TA, H)
+          </h4>
+          <p className="text-xs sm:text-sm text-purple-100/80 leading-relaxed">
+            Mô phỏng phân chia cổ phần 35% – 25% – 20% – 20%, 2 phương án đóng góp của TA (tiền mặt vs góp công cấn nợ 130M), lịch chi trả 50% tháng / 50% quý và quy chế thoái vốn an toàn.
+          </p>
+        </div>
+        {onSwitchToEquityTab && (
+          <button
+            onClick={onSwitchToEquityTab}
+            className="px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs sm:text-sm rounded-xl transition flex items-center gap-2 shadow-lg cursor-pointer whitespace-nowrap self-stretch md:self-auto justify-center"
+          >
+            <Users className="w-4 h-4" />
+            <span>Chuyển Sang Tab 5: Cổ Phần</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

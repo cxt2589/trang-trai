@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
-import { DollarSign, Calendar, Utensils, Layers } from "lucide-react";
+import { DollarSign, Calendar, Utensils, Layers, Users } from "lucide-react";
 import { Header } from "./components/Header";
 import { ScenarioSelector } from "./components/ScenarioSelector";
 import { KPICards } from "./components/KPICards";
@@ -15,11 +15,12 @@ import { Footer } from "./components/Footer";
 import { LivingCostTab } from "./components/LivingCostTab";
 import { ActionPlanTab } from "./components/ActionPlanTab";
 import { CashFlow12MTab } from "./components/CashFlow12MTab";
+import { EquityGovernanceSection } from "./components/EquityGovernanceSection";
 import { PRESET_SCENARIOS } from "./data/farmData";
 import { calculateFinancials } from "./utils/calculator";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("financial"); // "financial", "action_plan", "living_cost", "cash_flow_12m"
+  const [activeTab, setActiveTab] = useState("financial"); // "financial", "action_plan", "living_cost", "cash_flow_12m", "equity_governance"
   const [scenarioId, setScenarioId] = useState(130);
   const [chickenPrice, setChickenPrice] = useState(200000);
   const [pigPrice, setPigPrice] = useState(130000);
@@ -79,14 +80,14 @@ export default function App() {
         onOpenGlossary={() => setIsGlossaryOpen(true)}
       />
 
-      {/* Main Navigation Tabs - Segmented Control 4 Cột Vừa Khít Mọi Màn Hình (Không Trượt Ngang) */}
+      {/* Main Navigation Tabs - Segmented Control 5 Cột Vừa Khít Mọi Màn Hình */}
       <nav aria-label="Chuyển đổi phân hệ" className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-xs no-print">
-        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-1.5 sm:py-2">
-          <div className="grid grid-cols-4 gap-1 sm:gap-2 bg-slate-100/90 p-1 rounded-xl sm:rounded-2xl border border-slate-200/80">
+        <div className="max-w-7xl mx-auto px-1.5 sm:px-6 lg:px-8 py-1.5 sm:py-2">
+          <div className="grid grid-cols-5 gap-1 sm:gap-2 bg-slate-100/90 p-1 rounded-xl sm:rounded-2xl border border-slate-200/80">
             {/* Tab 1: Vốn & P&L Vụ Tết */}
             <button
               onClick={() => setActiveTab("financial")}
-              className={`py-1.5 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer select-none ${
+              className={`py-1.5 sm:py-2 px-0.5 sm:px-2 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 cursor-pointer select-none ${
                 activeTab === "financial"
                   ? "bg-white text-emerald-800 shadow-xs ring-1 ring-emerald-500/30 font-black"
                   : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
@@ -94,15 +95,15 @@ export default function App() {
             >
               <DollarSign className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "financial" ? "text-emerald-600" : "text-slate-400"}`} />
               <div className="leading-tight">
-                <span className="block sm:hidden text-[10px] sm:text-xs">1. P&L Tết</span>
-                <span className="hidden sm:inline text-xs sm:text-sm">1. Đầu Tư & P&L</span>
+                <span className="block sm:hidden text-[9px]">1. P&L</span>
+                <span className="hidden sm:inline text-xs sm:text-sm">1. Vốn & P&L</span>
               </div>
             </button>
 
             {/* Tab 2: Kế hoạch tác chiến */}
             <button
               onClick={() => setActiveTab("action_plan")}
-              className={`py-1.5 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer select-none ${
+              className={`py-1.5 sm:py-2 px-0.5 sm:px-2 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 cursor-pointer select-none ${
                 activeTab === "action_plan"
                   ? "bg-white text-blue-800 shadow-xs ring-1 ring-blue-500/30 font-black"
                   : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
@@ -110,7 +111,7 @@ export default function App() {
             >
               <Calendar className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "action_plan" ? "text-blue-600" : "text-slate-400"}`} />
               <div className="leading-tight">
-                <span className="block sm:hidden text-[10px] sm:text-xs">2. Tác Chiến</span>
+                <span className="block sm:hidden text-[9px]">2. Tuần</span>
                 <span className="hidden sm:inline text-xs sm:text-sm">2. Kế Hoạch Tuần</span>
               </div>
             </button>
@@ -118,7 +119,7 @@ export default function App() {
             {/* Tab 3: Bếp ăn & Trực Tết */}
             <button
               onClick={() => setActiveTab("living_cost")}
-              className={`py-1.5 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer select-none ${
+              className={`py-1.5 sm:py-2 px-0.5 sm:px-2 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 cursor-pointer select-none ${
                 activeTab === "living_cost"
                   ? "bg-white text-amber-800 shadow-xs ring-1 ring-amber-500/30 font-black"
                   : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
@@ -126,7 +127,7 @@ export default function App() {
             >
               <Utensils className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "living_cost" ? "text-amber-600" : "text-slate-400"}`} />
               <div className="leading-tight">
-                <span className="block sm:hidden text-[10px] sm:text-xs">3. Bếp Ăn</span>
+                <span className="block sm:hidden text-[9px]">3. Bếp Ăn</span>
                 <span className="hidden sm:inline text-xs sm:text-sm">3. Bếp & Trực Tết</span>
               </div>
             </button>
@@ -134,7 +135,7 @@ export default function App() {
             {/* Tab 4: Dòng tiền 12 tháng */}
             <button
               onClick={() => setActiveTab("cash_flow_12m")}
-              className={`py-1.5 sm:py-2 px-1 sm:px-3 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 cursor-pointer select-none relative ${
+              className={`py-1.5 sm:py-2 px-0.5 sm:px-2 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 cursor-pointer select-none relative ${
                 activeTab === "cash_flow_12m"
                   ? "bg-white text-indigo-800 shadow-xs ring-1 ring-indigo-500/30 font-black"
                   : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
@@ -142,10 +143,29 @@ export default function App() {
             >
               <Layers className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "cash_flow_12m" ? "text-indigo-600" : "text-slate-400"}`} />
               <div className="leading-tight flex items-center justify-center gap-1">
-                <span className="block sm:hidden text-[10px] sm:text-xs">4. Cổ Phần & 12T</span>
-                <span className="hidden sm:inline text-xs sm:text-sm">4. Dòng Tiền & Cổ Phần</span>
-                <span className="hidden lg:inline bg-indigo-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">
+                <span className="block sm:hidden text-[9px]">4. Dòng Tiền</span>
+                <span className="hidden sm:inline text-xs sm:text-sm">4. Dòng Tiền 12T</span>
+                <span className="hidden xl:inline bg-indigo-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">
                   2.0ha
+                </span>
+              </div>
+            </button>
+
+            {/* Tab 5: Cổ phần & Quản trị 3 bên */}
+            <button
+              onClick={() => setActiveTab("equity_governance")}
+              className={`py-1.5 sm:py-2 px-0.5 sm:px-2 rounded-lg sm:rounded-xl text-center transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 cursor-pointer select-none relative ${
+                activeTab === "equity_governance"
+                  ? "bg-white text-purple-800 shadow-xs ring-1 ring-purple-500/30 font-black"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold"
+              }`}
+            >
+              <Users className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "equity_governance" ? "text-purple-600" : "text-slate-400"}`} />
+              <div className="leading-tight flex items-center justify-center gap-1">
+                <span className="block sm:hidden text-[9px]">5. Cổ Phần</span>
+                <span className="hidden sm:inline text-xs sm:text-sm">5. Cổ Phần & Quản Trị</span>
+                <span className="hidden xl:inline bg-purple-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">
+                  T-TA-H
                 </span>
               </div>
             </button>
@@ -246,6 +266,14 @@ export default function App() {
             onSelectCapital={handleSelectScenario}
             onSwitchToFinancialTab={() => setActiveTab("financial")}
             onSwitchToActionPlanTab={() => setActiveTab("action_plan")}
+            onSwitchToEquityTab={() => setActiveTab("equity_governance")}
+          />
+        )}
+
+        {/* Tab 5: Cơ cấu cổ phần & Quản trị 3 bên (T, TA, H) */}
+        {activeTab === "equity_governance" && (
+          <EquityGovernanceSection
+            onSwitchToCashFlowTab={() => setActiveTab("cash_flow_12m")}
           />
         )}
       </main>

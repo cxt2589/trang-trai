@@ -77,17 +77,26 @@ export function EquityGovernanceSection({
             </span>
           </div>
           <h3 className="text-base sm:text-xl font-extrabold text-slate-900 mt-1 flex items-center gap-2">
-            8. Cơ Cấu Cổ Phần, Quyền Lực & Chính Sách Phân Phối Lợi Tức (T, TA, H)
+            5. Cơ Cấu Cổ Phần, Quyền Lực & Chính Sách Phân Phối Lợi Tức (T, TA, H)
           </h3>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             Cơ chế phân quyền chuẩn startup nông nghiệp: bảo vệ quyền điều hành của Chủ tịch (T), tôn trọng quyền sử dụng đất của Chủ đất (H), và kích hoạt tối đa động lực cống hiến của Giám đốc Vận hành (TA).
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start lg:self-auto">
-          <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-extrabold px-3 py-1 rounded-xl">
+        <div className="flex items-center gap-2 self-start lg:self-auto flex-wrap">
+          <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-extrabold px-3 py-1.5 rounded-xl">
             Sạch nợ từ T09/2027 • Kích hoạt chia lãi từ T10/2027
           </span>
+          {onSwitchToCashFlowTab && (
+            <button
+              onClick={onSwitchToCashFlowTab}
+              className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+            >
+              <span>Xem Dòng Tiền 12T (Tab 4)</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
