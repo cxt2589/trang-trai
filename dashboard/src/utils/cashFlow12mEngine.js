@@ -13,6 +13,7 @@ export function calculate12MonthCashFlow({
   chickPrice = 14000,
   feedPrice = 10000,
   feedSavingRate = 0.0, // 0.0 đến 0.30
+  cullRate = 0.05, // Tỷ lệ loại đàn (chết hoặc loại thải) 0.05 đến 0.10 (5% - 10%)
   birdWeight = 1.2, // Trọng lượng bình quân 1.2 kg / con chu kỳ 5 tháng
   minCashReserve = 20000000
 } = {}) {
@@ -75,8 +76,35 @@ export function calculate12MonthCashFlow({
     // Tổng chi dòng tiền ra
     const totalOutflow = opexCost + capexCost;
 
-    // 5. Doanh thu bán gà (Cân nặng bình quân 1.2 kg / con cho chu kỳ nuôi 5 tháng)
-    const revenue = Math.round(m.soldBirds * birdWeight * sellingPrice);
+    // 5. Doanh thu bán gà (Động theo tỷ lệ loại đàn cullRate & cân nặng chuẩn 1.2 kg)
+    let batchSize = 0;
+    let batchLabel = "";
+    if (m.monthIdx === 5) {
+      batchSize = 500;
+      batchLabel = "Gà Tết (bán trước 28 Tết)";
+    } else if (m.monthIdx === 7) {
+      batchSize = 300;
+      batchLabel = "Gà TP1 xuất chuồng (nuôi đủ 5 tháng)";
+    } else if (m.monthIdx === 8) {
+      batchSize = 500;
+      batchLabel = "Gà TP2 xuất chuồng (nuôi đủ 5 tháng)";
+    } else if (m.monthIdx === 9) {
+      batchSize = 800;
+      batchLabel = "Gà TP3 xuất chuồng (nuôi đủ 5 tháng)";
+    } else if (m.monthIdx === 10) {
+      batchSize = 1200;
+      batchLabel = "Gà TP4 xuất chuồng (nuôi đủ 5 tháng)";
+    } else if (m.monthIdx === 11) {
+      batchSize = 2000;
+      batchLabel = "Gà TP5 xuất chuồng (nuôi đủ 5 tháng)";
+    } else if (m.monthIdx === 12) {
+      batchSize = 3160;
+      batchLabel = "Gà TP6 xuất chuồng (Quy mô ổn định)";
+    }
+
+    const soldBirds = batchSize > 0 ? Math.round(batchSize * (1 - cullRate)) : 0;
+    const soldType = batchSize > 0 ? `${soldBirds.toLocaleString()} ${batchLabel}` : "";
+    const revenue = Math.round(soldBirds * birdWeight * sellingPrice);
 
     // Dòng tiền thuần từ vận hành (chưa tính tài trợ)
     const netOperatingFlow = revenue - totalOutflow;
@@ -125,6 +153,8 @@ export function calculate12MonthCashFlow({
 
     return {
       ...m,
+      soldBirds,
+      soldType,
       headcount,
       benchmarkHeadcount,
       laborRoleNote,
@@ -200,7 +230,10 @@ export function calculate12MonthCashFlow({
       totalLaborCostActual,
       totalLaborCostBenchmark,
       peakHeadcount: Math.max(...monthlyResults.map((m) => m.headcount)),
-      peakBenchmarkHeadcount: Math.max(...monthlyResults.map((m) => m.benchmarkHeadcount))
+      peakBenchmarkHeadcount: Math.max(...monthlyResults.map((m) => m.benchmarkHeadcount)),
+      cullRate,
+      survivalRate: 1 - cullRate,
+      steadyMonthlySoldBirds: lastMonth.soldBirds
     }
   };
 }

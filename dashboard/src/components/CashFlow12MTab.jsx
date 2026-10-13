@@ -34,7 +34,7 @@ import {
   Tooltip,
   Legend
 } from "recharts";
-import { CAPITAL_PRESETS, FARM_MODULES_INFO } from "../data/cashFlow12mData";
+import { CAPITAL_PRESETS, FARM_MODULES_INFO, CONSTRUCTION_ROADMAP_SCHEDULE } from "../data/cashFlow12mData";
 import { calculate12MonthCashFlow } from "../utils/cashFlow12mEngine";
 
 export function CashFlow12MTab({
@@ -56,6 +56,7 @@ export function CashFlow12MTab({
   const [chickPrice, setChickPrice] = useState(14000); // 10.000 - 20.000 VNĐ/con 1 ngày tuổi
   const [feedPrice, setFeedPrice] = useState(10000); // 8.000 - 13.000 VNĐ/kg cám
   const [feedSavingRate, setFeedSavingRate] = useState(0.0); // 0% - 70%
+  const [cullRate, setCullRate] = useState(0.05); // 0.05 - 0.10 (Tỷ lệ loại đàn 5% - 10%)
 
   // Tab biểu đồ
   const [activeChartTab, setActiveChartTab] = useState("cash_flow"); // "cash_flow", "debt_waterfall", "flock_labor"
@@ -87,6 +88,8 @@ export function CashFlow12MTab({
       chickPrice,
       feedPrice,
       feedSavingRate,
+      cullRate,
+      birdWeight: 1.2,
       minCashReserve: 20000000
     });
   }, [
@@ -96,7 +99,8 @@ export function CashFlow12MTab({
     sellingPrice,
     chickPrice,
     feedPrice,
-    feedSavingRate
+    feedSavingRate,
+    cullRate
   ]);
 
   const { monthlyResults, annualTotal, kpis } = financialData;
@@ -236,7 +240,7 @@ export function CashFlow12MTab({
                 Mô Hình 12 Tháng Chuẩn Hoá
               </span>
               <span className="text-indigo-300 text-xs font-semibold">
-                Chu kỳ 10/2026 – 09/2027 • Quy mô 3.7 ha
+                Chu kỳ 10/2026 – 09/2027 • Quy mô 2.0 ha
               </span>
               <span className="bg-indigo-600/60 text-white border border-indigo-400/40 text-[10px] font-bold px-2 py-0.5 rounded-full">
                 Đồng bộ vốn: Gói {selectedCapital} Triệu
@@ -472,7 +476,7 @@ export function CashFlow12MTab({
               3. Bộ Mô Phỏng Độ Nhạy Thị Trường ("What-If" Sensitivity Simulator)
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-500">
-              Thử nghiệm kịch bản giá bán gà (lên tới 250k) và giảm chi phí cám nhờ chuối men/rau cỏ (lên tới 70%)
+              Thử nghiệm kịch bản giá bán gà (đến 250k), giảm cám (đến 70%) và tỷ lệ loại đàn / hao hụt (5% – 10%)
             </p>
           </div>
           <button
@@ -482,6 +486,7 @@ export function CashFlow12MTab({
               setFeedPrice(10000);
               setFeedSavingRate(0.0);
               setBirdsPerWorker(3000);
+              setCullRate(0.05);
             }}
             className="text-xs text-emerald-700 hover:text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg font-bold transition self-start sm:self-auto cursor-pointer"
           >
@@ -489,9 +494,9 @@ export function CashFlow12MTab({
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
           {/* Slider 1: Giá bán gà (lên tới 250.000đ/kg) */}
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5 flex flex-col justify-between">
             <div className="flex justify-between items-center text-xs">
               <span className="font-semibold text-slate-700">Giá bán gà thịt:</span>
               <span className="font-black text-emerald-700 bg-white px-2 py-0.5 rounded border border-slate-200">
@@ -516,9 +521,9 @@ export function CashFlow12MTab({
           </div>
 
           {/* Slider 2: Tự chủ thức ăn / Giảm cám (lên tới 70%) */}
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5 flex flex-col justify-between">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-700">Tự chủ thức ăn / Giảm cám:</span>
+              <span className="font-semibold text-slate-700">Tự chủ / Giảm cám:</span>
               <span className="font-black text-emerald-700 bg-white px-2 py-0.5 rounded border border-slate-200">
                 {Math.round(feedSavingRate * 100)}%
               </span>
@@ -533,15 +538,60 @@ export function CashFlow12MTab({
               className="w-full accent-emerald-600 cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-slate-400">
-              <span>0% (Mua 100% cám)</span>
-              <span className="font-bold text-emerald-700">30% (Chuẩn xả cám)</span>
+              <span>0% (Cám)</span>
+              <span className="font-bold text-emerald-700">30% (Xả cám)</span>
               <span>50%</span>
               <span className="font-bold text-emerald-600">70%</span>
             </div>
           </div>
 
-          {/* Slider 3: Giá cám */}
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
+          {/* Slider 3: Tỷ lệ loại đàn / Hao hụt (5% - 10%) */}
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5 flex flex-col justify-between">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-semibold text-slate-700">Tỷ lệ loại đàn:</span>
+              <span className={`font-black px-2 py-0.5 rounded border text-[11px] ${
+                cullRate <= 0.05
+                  ? "text-emerald-700 bg-white border-emerald-200"
+                  : cullRate <= 0.075
+                  ? "text-amber-700 bg-white border-amber-200"
+                  : "text-rose-700 bg-white border-rose-200"
+              }`}>
+                {(cullRate * 100).toFixed(1)}% (Sống {Math.round((1 - cullRate) * 100)}%)
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0.05"
+              max="0.10"
+              step="0.005"
+              value={cullRate}
+              onChange={(e) => setCullRate(Number(e.target.value))}
+              className="w-full accent-amber-600 cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] text-slate-400">
+              <span className="font-bold text-emerald-700">5.0% (Chuẩn)</span>
+              <span>7.5%</span>
+              <span className="font-bold text-rose-700">10.0% (Rủi ro)</span>
+            </div>
+            <div className="flex gap-1 pt-0.5">
+              {[0.05, 0.07, 0.10].map((rate) => (
+                <button
+                  key={rate}
+                  onClick={() => setCullRate(rate)}
+                  className={`text-[10px] py-0.5 rounded font-bold transition flex-1 cursor-pointer border ${
+                    Math.abs(cullRate - rate) < 0.002
+                      ? "bg-amber-600 text-white border-amber-600"
+                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100"
+                  }`}
+                >
+                  {(rate * 100)}%
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Slider 4: Giá cám */}
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5 flex flex-col justify-between">
             <div className="flex justify-between items-center text-xs">
               <span className="font-semibold text-slate-700">Giá cám công nghiệp:</span>
               <span className="font-black text-rose-700 bg-white px-2 py-0.5 rounded border border-slate-200">
@@ -560,13 +610,13 @@ export function CashFlow12MTab({
             <div className="flex justify-between text-[10px] text-slate-400">
               <span>8k</span>
               <span>10k</span>
-              <span className="font-bold text-rose-700">13k (Chuẩn TT)</span>
+              <span className="font-bold text-rose-700">13k (TT)</span>
               <span>15k</span>
             </div>
           </div>
 
-          {/* Slider 4: Giá giống */}
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5">
+          {/* Slider 5: Giá giống */}
+          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-1.5 flex flex-col justify-between">
             <div className="flex justify-between items-center text-xs">
               <span className="font-semibold text-slate-700">Giá giống (1 ngày):</span>
               <span className="font-black text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200">
@@ -1261,23 +1311,29 @@ export function CashFlow12MTab({
         </div>
       </section>
 
-      {/* 8. COMPONENT 7: SƠ ĐỒ QUY HOẠCH 4 PHÂN KHU (3.7 HA) */}
-      <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-3.5">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+      {/* 8. COMPONENT 7: SƠ ĐỒ QUY HOẠCH 64 CHUỒNG TRẠI NHỎ & LỘ TRÌNH THI CÔNG (2.0 HA) */}
+      <section className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/90 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
           <div>
             <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
               <Building2 className="w-4 h-4 text-emerald-600" />
-              7. Quy Hoạch Chuồng Trại Nhỏ 300m² & Xoay Vòng All-In All-Out (3.7 ha)
+              7. Quy Hoạch 64 Chuồng Trại Nhỏ 300m² & Xoay Vòng All-In All-Out (2.0 ha)
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-500">
-              Mô hình chuồng nhỏ 300m² (mái fibro 30m², 150 con/chuồng) giúp cách ly dịch bệnh và dễ nâng cấp. Tháng 11 xong 4–6 chuồng.
+              Mô hình 64 chuồng nhỏ 300m² (mái fibro 30m², 150–195 con/chuồng) chia làm 4 Cụm xoay vòng trên quỹ đất 2 ha. Tháng 11 xong 4–6 chuồng đầu tiên.
             </p>
           </div>
-          <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold hidden sm:inline-block">
-            Tổng CAPEX: 141.4 Triệu
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded font-bold hidden sm:inline-block">
+              Quỹ đất: 2.0 ha (20.000 m²)
+            </span>
+            <span className="text-[11px] bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded font-bold hidden sm:inline-block">
+              Tổng CAPEX: 141.4 Triệu
+            </span>
+          </div>
         </div>
 
+        {/* 4 Cụm Module chăn nuôi */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {FARM_MODULES_INFO.map((mod) => (
             <div
@@ -1307,11 +1363,105 @@ export function CashFlow12MTab({
           ))}
         </div>
 
+        {/* Lộ Trình Thi Công 64 Chuồng Nhỏ Cuốn Chiếu (10/2026 – 04/2027) */}
+        <div className="space-y-2.5 pt-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-t border-slate-100 pt-3">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <h4 className="text-xs sm:text-sm font-extrabold text-slate-900">
+                Lộ Trình Thi Công 64 Chuồng Nhỏ Cuốn Chiếu (10/2026 – 04/2027)
+              </h4>
+            </div>
+            <span className="text-[11px] text-slate-500">
+              Đội 3 thợ tre (1 chặt, 2 khiêng): tiến độ 4–5 ngày / chuồng (5–6 chuồng/tháng)
+            </span>
+          </div>
+
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-[11px]">
+                <tr>
+                  <th className="p-2.5 min-w-[110px]">Mốc Thời Gian</th>
+                  <th className="p-2.5 text-center min-w-[80px]">Xây Mới</th>
+                  <th className="p-2.5 text-center min-w-[100px]">Lũy Kế (300m²)</th>
+                  <th className="p-2.5 min-w-[240px]">Hạng Mục Hạ Tầng & Thi Công</th>
+                  <th className="p-2.5 min-w-[200px]">Đàn Gà Tiếp Nhận</th>
+                  <th className="p-2.5 text-right min-w-[100px]">CAPEX Tháng</th>
+                  <th className="p-2.5 text-center min-w-[120px]">Trạng Thái</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-[11px]">
+                {CONSTRUCTION_ROADMAP_SCHEDULE.map((item, idx) => (
+                  <tr key={idx} className={item.newBarns === 0 ? "bg-emerald-50/40" : "hover:bg-slate-50/80"}>
+                    <td className="p-2.5 font-bold text-slate-900 whitespace-nowrap">{item.month}</td>
+                    <td className="p-2.5 text-center font-bold">
+                      {item.newBarns > 0 ? (
+                        <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[10px]">
+                          +{item.newBarns} chuồng
+                        </span>
+                      ) : (
+                        <span className="text-slate-400 font-normal">-</span>
+                      )}
+                    </td>
+                    <td className="p-2.5 text-center font-extrabold text-indigo-700 font-mono">
+                      {item.cumBarns} / 64
+                    </td>
+                    <td className="p-2.5 text-slate-700">{item.keyTasks}</td>
+                    <td className="p-2.5 text-slate-600 font-medium">{item.flockServed}</td>
+                    <td className="p-2.5 text-right font-mono font-semibold text-amber-900">
+                      {item.capex > 0 ? fmtVND(item.capex) : "-"}
+                    </td>
+                    <td className="p-2.5 text-center">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        item.newBarns === 0
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-slate-100 text-slate-700"
+                      }`}>
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* 3 Thẻ tóm tắt thông số mấu chốt */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+          <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 text-xs space-y-1">
+            <div className="font-bold text-amber-900 flex items-center gap-1.5">
+              <span>💰</span> Chi phí vật tư ~3.400.000 đ / chuồng
+            </div>
+            <p className="text-amber-800 text-[11px] leading-relaxed">
+              Nhờ tận dụng tre nứa tự chặt trên đồi (0đ), chỉ mua: 15 tấm fibro xi măng (1.125k) + lưới cước rào 270m² (975k) + máng núm tự động (600k) + đinh vít & bạt cuốn (700k).
+            </p>
+          </div>
+
+          <div className="bg-indigo-50/70 border border-indigo-200 rounded-xl p-3 text-xs space-y-1">
+            <div className="font-bold text-indigo-900 flex items-center gap-1.5">
+              <span>🔨</span> Năng suất Đội 3 thợ tre
+            </div>
+            <p className="text-indigo-800 text-[11px] leading-relaxed">
+              1 chặt tre hạ đồi, 2 khiêng vác dựng khung: hoàn thiện 1 chuồng nhỏ trong 4–5 ngày (5–6 chuồng/tháng). Sau Tết kết hợp tiền bán gà Tết thuê thêm thợ để đẩy tốc độ lên 12–22 chuồng/tháng.
+            </p>
+          </div>
+
+          <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 text-xs space-y-1">
+            <div className="font-bold text-emerald-900 flex items-center gap-1.5">
+              <span>🛡️</span> Cách ly dịch bệnh & An toàn 2 ha
+            </div>
+            <p className="text-emerald-800 text-[11px] leading-relaxed">
+              Mỗi ô 300m² chỉ nuôi 150–195 con (sân đồi 1,4 m²/con, chỗ ngủ 6,5 con/m²). Nếu có gà ốm chỉ khoanh vùng xử lý đúng 1 ô, không lây chéo, sau bán để trống sát trùng 20–30 ngày.
+            </p>
+          </div>
+        </div>
+
         {/* Bio-security banner */}
         <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-950 flex items-start gap-2.5">
           <ShieldCheck className="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" />
           <div className="leading-relaxed">
-            <strong>Nguyên tắc xoay vòng All-in All-out:</strong> Mỗi phân khu sau khi xuất bán hết lứa gà được để trống, rắc vôi bột và phun sát trùng 20–30 ngày. Điều này giúp cắt đứt hoàn toàn mầm bệnh, giữ tỷ lệ sống ổn định 95% mà không lo dịch bệnh lây lan chéo.
+            <strong>Nguyên tắc xoay vòng All-in All-out trên 2 ha:</strong> Mỗi ô chuồng sau khi xuất bán hết lứa gà được để trống, rắc vôi bột và phun sát trùng 20–30 ngày. Điều này giúp cắt đứt hoàn toàn mầm bệnh, giữ tỷ lệ nuôi sống đạt 90–95% an toàn tuyệt đối.
           </div>
         </div>
       </section>

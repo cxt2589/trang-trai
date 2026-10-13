@@ -239,7 +239,7 @@ export default function App() {
           />
         )}
 
-        {/* Tab 4: Dòng tiền 12 tháng & Mô phỏng nợ vay 3.7 ha */}
+        {/* Tab 4: Dòng tiền 12 tháng & Mô phỏng nợ vay 2.0 ha */}
         {activeTab === "cash_flow_12m" && (
           <CashFlow12MTab
             selectedCapital={scenarioId}

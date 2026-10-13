@@ -1,7 +1,7 @@
 /**
  * cashFlow12mData.js
  * Dữ liệu nền tảng cho mô hình Quản lý Dòng tiền 12 Tháng (10/2026 - 09/2027)
- * Trang trại gà thả đồi Lạc Sơn (3.7 ha, 4 phân khu xoay vòng)
+ * Trang trại gà thả đồi Lạc Sơn (2.0 ha, 64 chuồng nhỏ xoay vòng All-in All-out)
  */
 
 export const CAPITAL_PRESETS = [
@@ -286,7 +286,7 @@ export const FARM_MODULES_INFO = [
     shelterArea: "160 – 200 m² sàn tre kín gió",
     yardArea: "Quây úm ấm có đèn sưởi hồng ngoại",
     capacity: "3.160 con gà 1 ngày tuổi / tháng",
-    purpose: "Chuyên trách Tháng 1 (0–30 ngày tuổi): Úm tập trung toàn bộ đàn gà con mới nhập về, sưởi ấm, đệm lót sinh học, kiểm soát dịch bệnh và vắc-xin ban đầu đạt tỷ lệ sống > 95%.",
+    purpose: "Chuyên trách Tháng 1 (0–30 ngày tuổi): Úm tập trung toàn bộ đàn gà con mới nhập về, sưởi ấm, đệm lót sinh học, kiểm soát dịch bệnh và vắc-xin ban đầu đạt tỷ lệ sống 90–95%.",
     status: "Đầu mối tiếp nhận giống"
   },
   {
@@ -295,28 +295,119 @@ export const FARM_MODULES_INFO = [
     phase: "Xong trong Tháng 11/2026",
     shelterArea: "30 m² mái fibro xi măng / chuồng",
     yardArea: "270 m² sân đồi rào tre lưới / chuồng",
-    capacity: "150 con giống / chuồng (Tổng 600–900 con)",
+    capacity: "150–195 con giống / chuồng (Tổng 600–900 con)",
     purpose: "Đón gà sau khi úm xong ở Tháng 1, đưa vào nuôi cố định tại đây suốt 4 tháng tiếp theo đến khi xuất bán lúc 5 tháng tuổi (1,20 kg). Đón 500 gà Tết và đàn TP1.",
     status: "Hoàn thiện 4–6 chuồng T11"
   },
   {
     id: 3,
-    name: "Cụm 2 & 3: Mở Rộng Chuồng Cố Định (T02–T03/2027)",
+    name: "Cụm 2 & 3: Mở Rộng Sau Tết (T02–T03/2027)",
     phase: "Mở rộng sau Tết (Tháng 02 – 03/2027)",
     shelterArea: "30 m² mái fibro xi măng / chuồng",
     yardArea: "270 m² sân đồi / chuồng",
-    capacity: "150–180 con giống / chuồng",
-    purpose: "Lấy doanh thu bán gà Tết tái đầu tư; nhân rộng các chuồng nhỏ cố định trên quỹ đất 2 ha. Nuôi liên tục từ tháng 2 đến tháng 5, áp dụng quy trình xả cám về 0% trong 2 tháng cuối.",
+    capacity: "Lũy kế 42 chuồng nhỏ (sức chứa ~8.000 con)",
+    purpose: "Lấy doanh thu 102.6M bán gà Tết tái đầu tư; nhân rộng các chuồng nhỏ cố định trên quỹ đất 2 ha. Nuôi liên tục từ tháng 2 đến tháng 5, áp dụng quy trình xả cám về 0% trong 2 tháng cuối.",
     status: "Tài trợ bằng tiền bán gà Tết"
   },
   {
     id: 4,
     name: "Cụm 4: Khép Kín Hệ Thống Xoay Vòng (T04/2027)",
     phase: "Hoàn thiện Tháng 04/2027",
-    shelterArea: "Chuẩn hóa 60–64 chuồng nhỏ cố định",
-    yardArea: "Bãi đồi 2 ha All-in All-out",
-    capacity: "Ổn định 3.002 con xuất chuồng/tháng (1,2 kg/con)",
-    purpose: "Khép kín chu trình xoay vòng 5 lứa: Tháng 1 ở Nhà Úm, Tháng 2–5 ở Chuồng Cố Định xuất chuồng 1,2kg. Mỗi chuồng xuất bán xong được nghỉ sát trùng 20–30 ngày độc lập.",
+    shelterArea: "Chuẩn hóa 64 chuồng nhỏ cố định",
+    yardArea: "Bãi đồi 2.0 ha All-in All-out",
+    capacity: "Ổn định 3.000 con xuất chuồng/tháng (1,2 kg/con)",
+    purpose: "Khép kín chu trình xoay vòng 5 lứa trên 2 ha: Tháng 1 ở Nhà Úm, Tháng 2–5 ở 64 Chuồng Cố Định xuất chuồng 1,2kg. Mỗi chuồng xuất bán xong được nghỉ sát trùng 20–30 ngày độc lập.",
     status: "Khép kín 100% trang trại"
+  }
+];
+
+export const CONSTRUCTION_ROADMAP_SCHEDULE = [
+  {
+    monthIdx: 1,
+    key: "10/26",
+    month: "Tháng 10/2026",
+    newBarns: 3,
+    cumBarns: 3,
+    keyTasks: "Máy xúc mở đường, nước mó 2000L, lán ở, điện, vườn rau tự cấp, quây úm & 3 chuồng tre đầu tiên",
+    flockServed: "Chưa nhập gà (Chuẩn bị mặt bằng & vật tư)",
+    capex: 43800000,
+    status: "Khởi tạo hạ tầng"
+  },
+  {
+    monthIdx: 2,
+    key: "11/26",
+    month: "Tháng 11/2026",
+    newBarns: 3,
+    cumBarns: 6,
+    keyTasks: "Hoàn thiện mái fibro xi măng + lưới cước đủ 6 chuồng nhỏ (300m²/chuồng)",
+    flockServed: "Đón 500 Gà Tết + 20 bố mẹ + 300 gà TP1 (nhà úm)",
+    capex: 5000000,
+    status: "Xong 6 chuồng đầu"
+  },
+  {
+    monthIdx: 3,
+    key: "12/26",
+    month: "Tháng 12/2026",
+    newBarns: 4,
+    cumBarns: 10,
+    keyTasks: "Chôn cọc tre, đóng giàn đậu, lắp núm uống tự động, bổ sung đèn sưởi rét",
+    flockServed: "Đưa TP1 ra đồi; đón 500 TP2 vào nhà úm",
+    capex: 3000000,
+    status: "Mở rộng mùa đông"
+  },
+  {
+    monthIdx: 4,
+    key: "01/27",
+    month: "Tháng 01/2027",
+    newBarns: 5,
+    cumBarns: 15,
+    keyTasks: "Gia cố bạt chắn gió giáp Tết, quây lưới phân khu giáp hạt, tiêm phòng",
+    flockServed: "Đưa TP2 ra đồi; đón 800 TP3 vào nhà úm",
+    capex: 3000000,
+    status: "Chuẩn bị bán Tết"
+  },
+  {
+    monthIdx: 5,
+    key: "02/27",
+    month: "Tháng 02/2027 (Tết)",
+    newBarns: 12,
+    cumBarns: 27,
+    keyTasks: "Bán gà Tết thu 102.6M; mua vật tư lớn; thuê thêm thợ dựng 12 chuồng",
+    flockServed: "Bán 475 Gà Tết; đón 1.200 TP4 vào nhà úm",
+    capex: 31000000,
+    status: "Tái đầu tư từ bán Tết"
+  },
+  {
+    monthIdx: 6,
+    key: "03/27",
+    month: "Tháng 03/2027",
+    newBarns: 15,
+    cumBarns: 42,
+    keyTasks: "Mở rộng sàn tre nhà úm 200m²; dựng 15 chuồng đón lứa gà lớn",
+    flockServed: "Đón 2.000 TP5 vào nhà úm; TP1 vỗ béo xả cám",
+    capex: 37600000,
+    status: "Tăng tốc thi công"
+  },
+  {
+    monthIdx: 7,
+    key: "04/27",
+    month: "Tháng 04/2027",
+    newBarns: 22,
+    cumBarns: 64,
+    keyTasks: "Hoàn thiện nốt 22 chuồng nhỏ + Hố ủ phân compost vi sinh cuối hướng gió",
+    flockServed: "Bán TP1; đón 3.160 TP6 đỉnh công suất",
+    capex: 18000000,
+    status: "Khép kín 100% 2 ha"
+  },
+  {
+    monthIdx: 8,
+    key: "05/27",
+    month: "Từ Tháng 05/2027",
+    newBarns: 0,
+    cumBarns: 64,
+    keyTasks: "Chuẩn hóa 64 chuồng nhỏ cố định xoay vòng All-in All-out độc lập",
+    flockServed: "Xuất bán ổn định 3.000 con/tháng; dọn khử trùng độc lập từng ô",
+    capex: 0,
+    status: "Vận hành ổn định"
   }
 ];
