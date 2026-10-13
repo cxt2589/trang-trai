@@ -1162,10 +1162,21 @@ export function CashFlow12MTab({
                 </>
               )}
 
-              {/* 5. Cân đối Dòng Tiền */}
+              {/* 5. Cân đối Dòng Tiền & Vay/Trả nợ */}
               <tr className="bg-indigo-50/60 font-bold text-indigo-950">
-                <td className="p-2.5 sm:p-3 sticky left-0 bg-indigo-100 text-indigo-950 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
-                  5. Dòng tiền thuần hoạt động
+                <td
+                  onClick={() => toggleGroup("financing")}
+                  className="p-2.5 sm:p-3 sticky left-0 bg-indigo-100 text-indigo-950 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)] cursor-pointer hover:bg-indigo-200 transition select-none"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      {collapsedGroups.financing ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
+                      5. Dòng tiền thuần hoạt động
+                    </span>
+                    <span className="text-[10px] bg-indigo-200 text-indigo-900 px-1.5 py-0.2 rounded font-bold">
+                      {collapsedGroups.financing ? "Bấm mở chi tiết" : "2 khoản mục"}
+                    </span>
+                  </div>
                 </td>
                 {monthlyResults.map((m) => (
                   <td
@@ -1182,35 +1193,39 @@ export function CashFlow12MTab({
                 </td>
               </tr>
 
-              {/* Vay mới */}
-              <tr className="text-amber-900 font-semibold bg-white">
-                <td className="p-2 pl-6 sticky left-0 bg-white text-amber-900 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
-                  + Nhu cầu vay mới trong tháng
-                </td>
-                {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-700">
-                    {m.borrowNeed > 0 ? `+${fmtVND(m.borrowNeed)}` : "-"}
-                  </td>
-                ))}
-                <td className="p-2 text-right bg-slate-50 font-mono font-bold text-amber-800">
-                  +{fmtVND(annualTotal.borrowNeed)}
-                </td>
-              </tr>
+              {!collapsedGroups.financing && (
+                <>
+                  {/* Vay mới */}
+                  <tr className="text-[11px] text-amber-900 font-semibold bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-amber-900 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                      • Nhu cầu vay mới trong tháng
+                    </td>
+                    {monthlyResults.map((m) => (
+                      <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-700">
+                        {m.borrowNeed > 0 ? `+${fmtVND(m.borrowNeed)}` : "-"}
+                      </td>
+                    ))}
+                    <td className="p-2 text-right bg-slate-50 font-mono font-bold text-amber-800">
+                      +{fmtVND(annualTotal.borrowNeed)}
+                    </td>
+                  </tr>
 
-              {/* Trả nợ */}
-              <tr className="text-emerald-900 font-semibold bg-white">
-                <td className="p-2 pl-6 sticky left-0 bg-white text-emerald-900 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
-                  - Trả nợ gốc trong tháng
-                </td>
-                {monthlyResults.map((m) => (
-                  <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-emerald-700">
-                    {m.repayment > 0 ? `-${fmtVND(m.repayment)}` : "-"}
-                  </td>
-                ))}
-                <td className="p-2 text-right bg-slate-50 font-mono font-bold text-emerald-800">
-                  -{fmtVND(annualTotal.repayment)}
-                </td>
-              </tr>
+                  {/* Trả nợ */}
+                  <tr className="text-[11px] text-emerald-900 font-semibold bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-emerald-900 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                      • Trả nợ gốc trong tháng
+                    </td>
+                    {monthlyResults.map((m) => (
+                      <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-emerald-700">
+                        {m.repayment > 0 ? `-${fmtVND(m.repayment)}` : "-"}
+                      </td>
+                    ))}
+                    <td className="p-2 text-right bg-slate-50 font-mono font-bold text-emerald-800">
+                      -{fmtVND(annualTotal.repayment)}
+                    </td>
+                  </tr>
+                </>
+              )}
 
               {/* 6. Tiền tồn két cuối kỳ */}
               <tr className="bg-blue-50 font-bold text-blue-950 border-t-2 border-slate-300">
