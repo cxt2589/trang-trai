@@ -72,8 +72,9 @@ export function calculate12MonthCashFlow({
     // Tổng chi dòng tiền ra
     const totalOutflow = opexCost + capexCost;
 
-    // 5. Doanh thu bán gà
-    const revenue = Math.round(m.soldBirds * 1.15 * sellingPrice);
+    // 5. Doanh thu bán gà (Gà Tết bán sớm 4 tháng = 1.15 kg; Gà thương phẩm nuôi đủ 5 tháng = 1.30 kg)
+    const birdWeight = m.monthIdx === 5 ? 1.15 : 1.30;
+    const revenue = Math.round(m.soldBirds * birdWeight * sellingPrice);
 
     // Dòng tiền thuần từ vận hành (chưa tính tài trợ)
     const netOperatingFlow = revenue - totalOutflow;

@@ -283,42 +283,42 @@ export const MONTHLY_BASE_SCHEDULE = [
 export const FARM_MODULES_INFO = [
   {
     id: 1,
-    name: "Cụm 1: 4–6 Chuồng Nhỏ (Xong T11/2026)",
+    name: "Khu Nhà Úm Tập Trung (Tháng 1)",
+    phase: "Vận hành thường trực hàng tháng",
+    shelterArea: "160 – 200 m² sàn tre kín gió",
+    yardArea: "Quây úm ấm có đèn sưởi hồng ngoại",
+    capacity: "3.160 con gà 1 ngày tuổi / tháng",
+    purpose: "Chuyên trách Tháng 1 (0–30 ngày tuổi): Úm tập trung toàn bộ đàn gà con mới nhập về, sưởi ấm, đệm lót sinh học, kiểm soát dịch bệnh và vắc-xin ban đầu đạt tỷ lệ sống > 95%.",
+    status: "Đầu mối tiếp nhận giống"
+  },
+  {
+    id: 2,
+    name: "Cụm 1: 4–6 Chuồng Cố Định (Xong T11/2026)",
     phase: "Xong trong Tháng 11/2026",
     shelterArea: "30 m² mái fibro xi măng / chuồng",
     yardArea: "270 m² sân đồi rào tre lưới / chuồng",
     capacity: "150 con giống / chuồng (Tổng 600–900 con)",
-    purpose: "Chuồng nhỏ 300m² gồm 30m² chỗ ngủ lợp fibro xi măng chống mưa rét + 270m² sân thả. Đón 500 gà Tết, 20 gà bố mẹ và 300 gà TP1. Từng ô 150 con độc lập giúp cách ly dịch bệnh và khử trùng cực tốt.",
-    status: "Xong 4–6 chuồng trong T11"
-  },
-  {
-    id: 2,
-    name: "Cụm 2: Mở Rộng 6–8 Chuồng Nhỏ (T02/2027)",
-    phase: "Xây sau Tết (Tháng 02/2027)",
-    shelterArea: "30 m² mái fibro xi măng / chuồng",
-    yardArea: "270 m² sân đồi / chuồng",
-    capacity: "150 con giống / chuồng (Tổng 900–1.200 con)",
-    purpose: "Lấy doanh thu bán gà Tết tái đầu tư; nhân rộng các chuồng nhỏ 300m² đón đàn giống TP5 và gối vụ an toàn sinh học.",
-    status: "Tài trợ bằng tiền bán gà Tết"
+    purpose: "Đón gà sau khi úm xong ở Tháng 1, đưa vào nuôi cố định tại đây suốt 4 tháng tiếp theo đến khi xuất bán lúc 5 tháng tuổi (1,30 kg). Đón 500 gà Tết và đàn TP1.",
+    status: "Hoàn thiện 4–6 chuồng T11"
   },
   {
     id: 3,
-    name: "Cụm 3: Khu Úm Tre Nứa & 10 Chuồng Nhỏ (T03/2027)",
-    phase: "Xây Tháng 03/2027",
-    shelterArea: "Mở rộng khu úm 110m² + 30m² fibro/chuồng",
+    name: "Cụm 2 & 3: Mở Rộng Chuồng Cố Định (T02–T03/2027)",
+    phase: "Mở rộng sau Tết (Tháng 02 – 03/2027)",
+    shelterArea: "30 m² mái fibro xi măng / chuồng",
     yardArea: "270 m² sân đồi / chuồng",
-    capacity: "150 con giống / chuồng",
-    purpose: "Tiếp nhận đợt gà lớn 3.160 con/tháng. Thiết kế chia nhỏ 150 con/chuồng tiếp tục phát huy tác dụng cách ly dịch bệnh tuyệt đối.",
-    status: "Mở rộng quy mô lớn"
+    capacity: "150–180 con giống / chuồng",
+    purpose: "Lấy doanh thu bán gà Tết tái đầu tư; nhân rộng các chuồng nhỏ cố định trên quỹ đất 2 ha. Nuôi liên tục từ tháng 2 đến tháng 5, áp dụng quy trình xả cám về 0% trong 2 tháng cuối.",
+    status: "Tài trợ bằng tiền bán gà Tết"
   },
   {
     id: 4,
     name: "Cụm 4: Khép Kín Hệ Thống Xoay Vòng (T04/2027)",
     phase: "Hoàn thiện Tháng 04/2027",
-    shelterArea: "Chuẩn hóa toàn bộ các cụm chuồng 300m²",
-    yardArea: "Sân đồi xoay vòng 4 phân khu",
-    capacity: "Ổn định 3.002 con xuất chuồng/tháng",
-    purpose: "Khép kín chu trình All-in All-out: mỗi chuồng nhỏ sau khi xuất bán được nghỉ 20–30 ngày, rắc vôi khử trùng độc lập mà không ảnh hưởng cả đàn.",
+    shelterArea: "Chuẩn hóa 60–64 chuồng nhỏ cố định",
+    yardArea: "Bãi đồi 2 ha All-in All-out",
+    capacity: "Ổn định 3.002 con xuất chuồng/tháng (1,3 kg/con)",
+    purpose: "Khép kín chu trình xoay vòng 5 lứa: Tháng 1 ở Nhà Úm, Tháng 2–5 ở Chuồng Cố Định xuất chuồng 1,3kg. Mỗi chuồng xuất bán xong được nghỉ sát trùng 20–30 ngày độc lập.",
     status: "Khép kín 100% trang trại"
   }
 ];
