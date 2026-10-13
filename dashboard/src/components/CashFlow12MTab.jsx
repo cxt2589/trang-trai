@@ -36,6 +36,7 @@ import {
 } from "recharts";
 import { CAPITAL_PRESETS, FARM_MODULES_INFO, CONSTRUCTION_ROADMAP_SCHEDULE } from "../data/cashFlow12mData";
 import { calculate12MonthCashFlow } from "../utils/cashFlow12mEngine";
+import { EquityGovernanceSection } from "./EquityGovernanceSection";
 
 export function CashFlow12MTab({
   selectedCapital = 130,
@@ -256,6 +257,16 @@ export function CashFlow12MTab({
           </div>
 
           <div className="flex items-center gap-2 self-start lg:self-auto flex-wrap">
+            <button
+              onClick={() => {
+                const el = document.getElementById("section-equity-governance");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="px-3 py-2 bg-purple-700 hover:bg-purple-600 text-white border border-purple-500/80 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+            >
+              <Users className="w-3.5 h-3.5" />
+              <span>Cổ Phần & Quản Trị (Mục 8)</span>
+            </button>
             <button
               onClick={handleExportCSV}
               className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
@@ -1465,6 +1476,13 @@ export function CashFlow12MTab({
           </div>
         </div>
       </section>
+
+      {/* 8. Cơ Cấu Cổ Phần & Quản Trị 3 Bên (T, TA, H) */}
+      <EquityGovernanceSection
+        onSwitchToCashFlowTab={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
     </div>
   );
 }

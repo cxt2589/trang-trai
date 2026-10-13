@@ -142,10 +142,10 @@ export default function App() {
             >
               <Layers className={`w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 ${activeTab === "cash_flow_12m" ? "text-indigo-600" : "text-slate-400"}`} />
               <div className="leading-tight flex items-center justify-center gap-1">
-                <span className="block sm:hidden text-[10px] sm:text-xs">4. 12 Tháng</span>
-                <span className="hidden sm:inline text-xs sm:text-sm">4. Dòng Tiền 12T</span>
+                <span className="block sm:hidden text-[10px] sm:text-xs">4. Cổ Phần & 12T</span>
+                <span className="hidden sm:inline text-xs sm:text-sm">4. Dòng Tiền & Cổ Phần</span>
                 <span className="hidden lg:inline bg-indigo-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">
-                  3.7ha
+                  2.0ha
                 </span>
               </div>
             </button>
