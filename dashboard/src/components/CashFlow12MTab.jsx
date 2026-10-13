@@ -588,6 +588,17 @@ export function CashFlow12MTab({
             </div>
           </div>
         </div>
+
+        {/* Chú thích thực tế xả cám về 0 cho gà đặc sản */}
+        <div className="bg-emerald-50/90 border border-emerald-200/90 rounded-xl p-3 flex items-start gap-2.5 text-xs text-emerald-950">
+          <Sparkles className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <span className="font-bold text-emerald-900">Chiến lược chăn nuôi gà đặc sản ("Xả cám về 0%"):</span>
+            <p className="text-slate-600 leading-relaxed text-[11px]">
+              Gà được úm và phát triển khung xương trong 2 tháng đầu bằng cám công nghiệp. Từ tháng thứ 3 bắt đầu giảm dần cám và sang tháng thứ 4 (trước khi xuất bán 30 ngày) cắt hoàn toàn 100% cám công nghiệp — chuyển sang ăn <strong>Ngô hạt (8k) + Thóc mầm (6k) + Chuối ủ men vi sinh & rau đồi</strong>. Cách này giúp thớ thịt săn chắc, thơm ngọt, da giòn sần sật, không còn mùi cám công nghiệp, bán được giá đặc sản <strong>180.000 – 250.000 đ/kg</strong>. Quy trình này tương đương mức tiết kiệm chi phí thức ăn bình quân <strong>25% – 35%</strong> cả vòng đời.
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* 5. COMPONENT 4: TOP KPI CARDS HEADER (ĐỘNG THEO THÔNG SỐ VỪA ĐIỀU CHỈNH) */}
