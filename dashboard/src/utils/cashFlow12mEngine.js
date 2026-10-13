@@ -3,7 +3,7 @@
  * Lõi tính toán dòng tiền 12 tháng, nợ vay, năng suất lao động và độ nhạy tài chính
  */
 
-import { MONTHLY_BASE_SCHEDULE } from "../data/cashFlow12mData";
+import { MONTHLY_BASE_SCHEDULE } from "../data/cashFlow12mData.js";
 
 export function calculate12MonthCashFlow({
   initialEquity = 100000000,
@@ -13,6 +13,7 @@ export function calculate12MonthCashFlow({
   chickPrice = 14000,
   feedPrice = 10000,
   feedSavingRate = 0.0, // 0.0 đến 0.30
+  birdWeight = 1.2, // Trọng lượng bình quân 1.2 kg / con chu kỳ 5 tháng
   minCashReserve = 20000000
 } = {}) {
   let currentCash = initialEquity;
@@ -27,10 +28,12 @@ export function calculate12MonthCashFlow({
   let totalLaborCostBenchmark = 0;
 
   const monthlyResults = MONTHLY_BASE_SCHEDULE.map((m) => {
-    // 1. Tính toán con giống
+    // 1. Tính toán con giống (Bắt đầu nhập từ Tháng 11/2026; Tháng 10/2026 chỉ làm hạ tầng)
     let chickCost = 0;
     if (m.monthIdx === 1) {
-      // Tháng 10/26: 300 gà TP1 (giá 1 ngày tuổi) + 500 gà Tết 2 tháng (35M) + 20 bố mẹ 3 tháng (5M)
+      chickCost = 0;
+    } else if (m.monthIdx === 2) {
+      // Tháng 11/26: Bắt đầu nhập giống - 300 gà TP1 (giá 1 ngày tuổi) + 500 gà Tết 2 tháng (35M) + 20 bố mẹ 3 tháng (5M)
       chickCost = 300 * chickPrice + 35000000 + 5000000;
     } else {
       chickCost = m.totalImportCount * chickPrice;
@@ -49,7 +52,7 @@ export function calculate12MonthCashFlow({
       benchmarkHeadcount = 4;
       laborRoleNote = m.monthIdx === 1
         ? "4 người (3 chặt tre làm chuồng: 1 chặt 2 khiêng; 1 trồng rau, điện nước, ăn uống)"
-        : "4 người (3 hoàn thiện 4–6 chuồng nhỏ 300m², 1 trồng rau & hậu cần)";
+        : "4 người (3 hoàn thiện 4–6 chuồng nhỏ 300m², 1 trồng rau & chăm sóc gà đợt 1)";
     } else {
       headcount = Math.max(2, Math.ceil(m.activeFlockCount / birdsPerWorker));
       benchmarkHeadcount = Math.max(2, Math.ceil(m.activeFlockCount / 2000));
@@ -72,8 +75,7 @@ export function calculate12MonthCashFlow({
     // Tổng chi dòng tiền ra
     const totalOutflow = opexCost + capexCost;
 
-    // 5. Doanh thu bán gà (Gà Tết bán sớm 4 tháng = 1.15 kg; Gà thương phẩm nuôi đủ 5 tháng = 1.30 kg)
-    const birdWeight = m.monthIdx === 5 ? 1.15 : 1.30;
+    // 5. Doanh thu bán gà (Cân nặng bình quân 1.2 kg / con cho chu kỳ nuôi 5 tháng)
     const revenue = Math.round(m.soldBirds * birdWeight * sellingPrice);
 
     // Dòng tiền thuần từ vận hành (chưa tính tài trợ)

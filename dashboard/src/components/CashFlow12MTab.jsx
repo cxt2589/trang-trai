@@ -601,7 +601,7 @@ export function CashFlow12MTab({
               </span>
             </div>
             <p className="text-slate-600 leading-relaxed text-[11px]">
-              Nuôi 4 tháng đạt trọng lượng xuất chuồng bình quân <strong>1,15 kg</strong> với tổng định mức <strong>4,2 kg thức ăn/con</strong> (FCR ~ 3.65). Trong 2 tháng đầu dùng cám công nghiệp tạo khung xương, từ tháng 3 giảm dần và tháng 4 cắt hoàn toàn 100% cám — thay bằng <strong>Ngô hạt (8k) + Thóc mầm (6k) + Chuối men & rau đồi</strong>. Chi phí thức ăn giảm từ ~54.600 đ xuống chỉ còn <strong>~38.100 đ/con</strong> (tiết kiệm ~16.500 đ/con, tương ứng mức giảm cám bình quân <strong>30%</strong>). Thịt thơm giòn, thớ săn chắc, da vàng giòn, bán được giá đặc sản <strong>180.000 – 250.000 đ/kg</strong>.
+              Nuôi đủ 5 tháng đạt trọng lượng xuất chuồng bình quân <strong>1,20 kg</strong> với tổng định mức <strong>4,2 kg thức ăn/con</strong> (FCR ~ 3.50). Trong 2–3 tháng đầu dùng cám công nghiệp tạo khung xương, từ tháng 4 giảm dần và tháng 5 cắt hoàn toàn 100% cám — thay bằng <strong>Ngô hạt (8k) + Thóc mầm (6k) + Chuối men & rau đồi</strong>. Chi phí thức ăn giảm từ ~54.600 đ xuống chỉ còn <strong>~38.100 đ/con</strong> (tiết kiệm ~16.500 đ/con, tương ứng mức giảm cám bình quân <strong>30%</strong>). Thịt thơm giòn, thớ săn chắc, da vàng giòn, bán được giá đặc sản <strong>180.000 – 250.000 đ/kg</strong>.
             </p>
           </div>
         </div>
@@ -790,7 +790,7 @@ export function CashFlow12MTab({
               </ResponsiveContainer>
             </div>
             <p className="text-[11px] text-slate-500 text-center italic">
-              Đỉnh nợ {fmtVND(kpis.peakDebt)} đ đạt tại {kpis.peakDebtMonth}, sau đó giảm dốc đứng khi xuất bán gà thương phẩm liên tục từ Tháng 07/2027.
+              Đỉnh nợ {fmtVND(kpis.peakDebt)} đ đạt tại {kpis.peakDebtMonth}, sau đó giảm dốc đứng khi xuất bán gà thương phẩm liên tục từ Tháng 04/2027.
             </p>
           </div>
         )}
@@ -943,7 +943,7 @@ export function CashFlow12MTab({
                     </td>
                     {monthlyResults.map((m) => (
                       <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono">
-                        {fmtVND(m.chickCost)}
+                        {m.chickCost > 0 ? fmtVND(m.chickCost) : "-"}
                       </td>
                     ))}
                     <td className="p-2 text-right bg-slate-50 font-mono font-semibold">{fmtVND(annualTotal.chickCost)}</td>
@@ -955,7 +955,7 @@ export function CashFlow12MTab({
                     </td>
                     {monthlyResults.map((m) => (
                       <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono">
-                        {fmtVND(m.feedCost)}
+                        {m.feedCost > 0 ? fmtVND(m.feedCost) : "-"}
                       </td>
                     ))}
                     <td className="p-2 text-right bg-slate-50 font-mono font-semibold">{fmtVND(annualTotal.feedCost)}</td>
