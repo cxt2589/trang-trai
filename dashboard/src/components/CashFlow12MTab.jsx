@@ -456,8 +456,8 @@ export function CashFlow12MTab({
               />
             </div>
 
-            <p className="text-[11px] text-indigo-900 bg-indigo-50/80 p-2 rounded border border-indigo-100">
-              💡 <strong>Lợi thế:</strong> Khi đàn đạt 15.820 con, mức 3.000 con/người chỉ cần 6 thợ (thay vì 8 thợ), giúp giảm 14M/tháng chi phí vận hành.
+            <p className="text-[11px] text-indigo-900 bg-indigo-50/80 p-2 rounded border border-indigo-100 leading-relaxed">
+              💡 <strong>Lưu ý 2 tháng đầu (T10 & T11/2026):</strong> Cố định <strong>4 nhân công</strong> (3 người chặt tre làm chuồng: 1 chặt 2 khiêng; 1 người lo trồng rau tự chủ sinh hoạt & điện nước ăn uống) để hoàn thiện 4–6 chuồng nhỏ 300m² trước mùa đông rét buốt. Từ tháng thứ 3 trở đi, nhân sự tự động co giãn theo quy mô đàn ({birdsPerWorker.toLocaleString()} con/người).
             </p>
           </div>
         </div>
@@ -1101,10 +1101,10 @@ export function CashFlow12MTab({
           <div>
             <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
               <Building2 className="w-4 h-4 text-emerald-600" />
-              7. Quy Hoạch 4 Phân Khu Chuồng Trại & Xoay Vòng All-In All-Out (3.7 ha)
+              7. Quy Hoạch Chuồng Trại Nhỏ 300m² & Xoay Vòng All-In All-Out (3.7 ha)
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-500">
-              Tận dụng 3.7 ha rào B40 có sẵn (0đ) và phân kỳ chuồng tre nứa sàn đậu để tránh áp lực vốn
+              Mô hình chuồng nhỏ 300m² (mái fibro 30m², 150 con/chuồng) giúp cách ly dịch bệnh và dễ nâng cấp. Tháng 11 xong 4–6 chuồng.
             </p>
           </div>
           <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold hidden sm:inline-block">

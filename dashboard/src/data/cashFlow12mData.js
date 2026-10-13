@@ -79,10 +79,10 @@ export const MONTHLY_BASE_SCHEDULE = [
     baseVetOpCost: 2450000,
     capexBreakdown: [
       { item: "Cải tạo quây úm 20m²", cost: 2500000 },
-      { item: "Hệ thống nước mó suối 2000L + bơm", cost: 15000000 },
-      { item: "Chuồng Module 1 (120m² tre sàn)", cost: 10300000 },
-      { item: "Máng ăn & núm uống tự động đợt 1", cost: 7000000 },
-      { item: "Khử trùng Benkocid, vôi bột & sửa chữa lán", cost: 5000000 },
+      { item: "Hệ thống nước mó suối 2000L + bơm tăng áp", cost: 15000000 },
+      { item: "Khung tre tự chặt (0đ) + mái fibro xi măng 30m² cho 3 chuồng nhỏ đầu tiên", cost: 10300000 },
+      { item: "Máng ăn, núm uống tự động & lưới cước quây 300m²/chuồng", cost: 7000000 },
+      { item: "Khử trùng Benkocid, vôi bột, sửa lán & điều hòa", cost: 5000000 },
       { item: "Dự phòng hạ tầng", cost: 4000000 }
     ],
     capexCost: 43800000
@@ -101,7 +101,7 @@ export const MONTHLY_BASE_SCHEDULE = [
     baseFeedKg: 570,
     baseVetOpCost: 3750000,
     capexBreakdown: [
-      { item: "Mở rộng đường ống cấp nước phụ & máng bổ sung", cost: 5000000 }
+      { item: "Mái fibro xi măng + lưới cước hoàn thiện đủ 4–6 chuồng nhỏ (300m²/chuồng)", cost: 5000000 }
     ],
     capexCost: 5000000
   },
@@ -283,42 +283,42 @@ export const MONTHLY_BASE_SCHEDULE = [
 export const FARM_MODULES_INFO = [
   {
     id: 1,
-    name: "Module 1",
-    phase: "Xây trước Tết (Tháng 10/2026)",
-    shelterArea: "120 m²",
-    yardArea: "4.880 m²",
-    capacity: "2.000 – 3.000 con",
-    purpose: "Úm gà giống ban đầu & đón đàn gà Tết 500 con, đàn TP1, TP2.",
-    status: "Hoàn thiện ngay tháng đầu"
+    name: "Cụm 1: 4–6 Chuồng Nhỏ (Xong T11/2026)",
+    phase: "Xong trong Tháng 11/2026",
+    shelterArea: "30 m² mái fibro xi măng / chuồng",
+    yardArea: "270 m² sân đồi rào tre lưới / chuồng",
+    capacity: "150 con giống / chuồng (Tổng 600–900 con)",
+    purpose: "Chuồng nhỏ 300m² gồm 30m² chỗ ngủ lợp fibro xi măng chống mưa rét + 270m² sân thả. Đón 500 gà Tết, 20 gà bố mẹ và 300 gà TP1. Từng ô 150 con độc lập giúp cách ly dịch bệnh và khử trùng cực tốt.",
+    status: "Xong 4–6 chuồng trong T11"
   },
   {
     id: 2,
-    name: "Module 2",
+    name: "Cụm 2: Mở Rộng 6–8 Chuồng Nhỏ (T02/2027)",
     phase: "Xây sau Tết (Tháng 02/2027)",
-    shelterArea: "160 m²",
-    yardArea: "4.840 m²",
-    capacity: "3.000 – 3.500 con",
-    purpose: "Lấy doanh thu bán gà Tết tái đầu tư; đón đàn giống TP5 và gối vụ.",
+    shelterArea: "30 m² mái fibro xi măng / chuồng",
+    yardArea: "270 m² sân đồi / chuồng",
+    capacity: "150 con giống / chuồng (Tổng 900–1.200 con)",
+    purpose: "Lấy doanh thu bán gà Tết tái đầu tư; nhân rộng các chuồng nhỏ 300m² đón đàn giống TP5 và gối vụ an toàn sinh học.",
     status: "Tài trợ bằng tiền bán gà Tết"
   },
   {
     id: 3,
-    name: "Module 3",
+    name: "Cụm 3: Khu Úm Tre Nứa & 10 Chuồng Nhỏ (T03/2027)",
     phase: "Xây Tháng 03/2027",
-    shelterArea: "160 m²",
-    yardArea: "4.840 m²",
-    capacity: "3.000 – 3.500 con",
-    purpose: "Kèm mở rộng khu úm tre nứa 110m²; chuẩn bị tiếp nhận đợt gà lớn 3.160 con/tháng.",
+    shelterArea: "Mở rộng khu úm 110m² + 30m² fibro/chuồng",
+    yardArea: "270 m² sân đồi / chuồng",
+    capacity: "150 con giống / chuồng",
+    purpose: "Tiếp nhận đợt gà lớn 3.160 con/tháng. Thiết kế chia nhỏ 150 con/chuồng tiếp tục phát huy tác dụng cách ly dịch bệnh tuyệt đối.",
     status: "Mở rộng quy mô lớn"
   },
   {
     id: 4,
-    name: "Module 4",
+    name: "Cụm 4: Khép Kín Hệ Thống Xoay Vòng (T04/2027)",
     phase: "Hoàn thiện Tháng 04/2027",
-    shelterArea: "160 m²",
-    yardArea: "4.840 m²",
-    capacity: "3.000 – 3.500 con",
-    purpose: "Khép kín chu trình xoay vòng 4 khu (All-in All-out); có hố ủ phân vi sinh hữu cơ.",
+    shelterArea: "Chuẩn hóa toàn bộ các cụm chuồng 300m²",
+    yardArea: "Sân đồi xoay vòng 4 phân khu",
+    capacity: "Ổn định 3.002 con xuất chuồng/tháng",
+    purpose: "Khép kín chu trình All-in All-out: mỗi chuồng nhỏ sau khi xuất bán được nghỉ 20–30 ngày, rắc vôi khử trùng độc lập mà không ảnh hưởng cả đàn.",
     status: "Khép kín 100% trang trại"
   }
 ];

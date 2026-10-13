@@ -71,77 +71,77 @@ export function ActionPlanTab({ onSwitchToFinancialTab, onSwitchToLivingCostTab 
     {
       id: 2,
       timeline: "Ngày 4 – 6",
-      title: "Kéo Điện, Lắp 2 Điều Hòa, Giường Chiếu & Nước Mó",
-      badge: "An Cư Cho 4-5 Người",
+      title: "Hậu Cần (1 Người): Điện Nước Mó, 2 Điều Hòa, Giường Chiếu & Bếp Ăn",
+      badge: "An Cư Cho 4 Người",
       badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
       icon: Zap,
       tasks: [
         {
           id: "2-1",
-          role: "Người 2, 3 (Cơ điện)",
-          text: "Kéo đường dây điện từ công tơ vào lán; đấu nối tủ điện an toàn có aptomat chống giật; lắp ổ cắm cho máy móc."
+          role: "Người 4 (Cơ điện)",
+          text: "Kéo đường dây điện từ công tơ vào lán; đấu nối tủ điện an toàn có aptomat chống giật; lắp ổ cắm cho máy móc và đèn chiếu sáng."
         },
         {
           id: "2-2",
-          role: "Người 2 & Thợ điều hòa",
-          text: "Lắp đặt 2 điều hòa 2 chiều cho khu lán sinh hoạt của nhóm 4–5 người (sưởi ấm mùa đông rét mướt vùng cao)."
+          role: "Người 4 & Thợ điều hòa",
+          text: "Lắp đặt 2 điều hòa 2 chiều cho khu lán sinh hoạt của đội 4 người (đảm bảo sưởi ấm mùa đông rét mướt vùng cao)."
         },
         {
           id: "2-3",
-          role: "Người 4, 5 (Chỗ ở)",
+          role: "Người 4 (Chỗ ăn nghỉ)",
           text: "Kê giường gấp, phản nằm, trải chiếu, mắc màn chống muỗi vắt; lắp 2 đèn LED năng lượng mặt trời và thiết bị phát 4G."
         },
         {
           id: "2-4",
-          role: "Người 2, 3 (Đường nước)",
-          text: "Kéo 2km ống PE phi 25 từ mó suối về bể lắng lọc; lắp phao cơ tự động, lọc cát sỏi sinh thái và máy bơm tăng áp."
+          role: "Người 4 (Đường nước mó)",
+          text: "Kéo 2km ống PE phi 25 từ mó suối về bể lắng lọc 2.000L; lắp phao cơ tự động, lọc cát sỏi sinh thái và máy bơm tăng áp."
         }
       ],
-      caution: "Kiểm tra kỹ nguồn nước mó suối và hệ thống aptomat điện trước khi đóng điện sinh hoạt."
+      caution: "1 người phụ trách khép kín toàn bộ điện nước, sinh hoạt để giải phóng 3 người kia chuyên tâm làm chuồng."
     },
     {
       id: 3,
-      timeline: "Ngày 7 – 9",
-      title: "Chặt Tre Làm Chuồng (Thuê 2-3 Người Thời Vụ) & Sát Trùng",
-      badge: "Xây Dựng Chuồng Trại",
+      timeline: "Ngày 7 – 12",
+      title: "Đội 3 Người Chặt Tre Làm Chuồng (1 Chặt, 2 Khiêng) & Dựng 4–6 Chuồng Nhỏ 300m²",
+      badge: "Hạ Tầng Cách Ly Dịch Bệnh",
       badgeColor: "bg-amber-100 text-amber-800 border-amber-200",
       icon: Hammer,
       tasks: [
         {
           id: "3-1",
-          role: "Thuê 2–3 người thời vụ",
-          text: "Thuê 2–3 lao động bản địa trong 3 ngày: cùng anh em chặt tre nứa trên đồi, vót cọc, chôn cột dựng khung chuồng tự nhiên (tiết kiệm 100% sắt thép)."
+          role: "Đội 3 người làm chuồng",
+          text: "Phân công nhịp nhàng: 1 người chọn tre già chặt hạ trên đồi, 2 người khiêng vác tập kết về khu đất, róc cành và vót cọc chôn cột dựng khung."
         },
         {
           id: "3-2",
-          role: "Người 2, 3 + Nhân công",
-          text: "Căng lưới cước B40 quây 2.000m² sườn đồi; lợp mái bạt dứa 2 lớp chống mưa rét; ngăn riêng 2 ô chuồng (ô gà 3T và ô gà 1T)."
+          role: "Đội 3 người làm chuồng",
+          text: "Xây dựng các chuồng nhỏ 300m²/chuồng (150 con giống/chuồng): trong đó chỗ ngủ có lợp mái fibro xi măng tầm 30m² kiên cố chống mưa rét; 270m² sân đồi rào cọc tre và lưới cước."
         },
         {
           id: "3-3",
-          role: "Người 1 (Kỹ thuật)",
-          text: "Rải vôi bột khử trùng toàn bộ nền chuồng và bán kính 20m xung quanh; phun thuốc sát trùng Benkocid, để trống 48–72h."
+          role: "Tiến độ Tháng 11",
+          text: "Mục tiêu trong Tháng 11 phải xong được 4–6 chuồng nhỏ (tổng sức chứa 600–900 con), đảm bảo đón 500 gà Tết, 20 gà bố mẹ và 300 gà TP1."
         },
         {
           id: "3-4",
-          role: "Người 1, 4",
-          text: "Rải lớp trấu đệm lót sinh học dày 12cm, rắc men ủ vi sinh Balasa khử mùi hôi và giữ ấm chân gà."
+          role: "Kỹ thuật sát trùng",
+          text: "Rải vôi bột khử trùng toàn bộ nền chuồng và bán kính 20m xung quanh; phun thuốc sát trùng Benkocid, để trống 48–72h; trải trấu đệm lót sinh học 12cm có rắc men Balasa."
         }
       ],
-      caution: "Chuồng tre phải lợp bạt dốc thoát nước tốt, quây bạt chắn hướng gió bấc để tránh gà bị cảm lạnh."
+      caution: "Thiết kế mỗi chuồng nhỏ 150 con giúp cách ly dịch bệnh tối ưu: nếu phát hiện gà ốm chỉ cần khoanh vùng xử lý đúng 1 ô, không lây lan cả đàn, đồng thời rất dễ nâng cấp/sửa chữa từng ô."
     },
     {
       id: 4,
-      timeline: "Ngày 10 – 12",
-      title: "Kích Hoạt Bếp Ăn 0Đ Siêu Tốc & Đàn Vật Nuôi Tự Cấp",
-      badge: "Tự Cung Tự Cấp",
+      timeline: "Song song Tháng 10–11",
+      title: "Người Thứ 4: Trồng Rau Tự Chủ Sinh Hoạt & Bếp Ăn 0Đ",
+      badge: "Tự Chủ Ăn Uống Cho 4 Người",
       badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
       icon: UtensilsCrossed,
       tasks: [
         {
           id: "4-1",
-          role: "Người 4, 5 (Vườn rau siêu tốc)",
-          text: "Cuốc 4 luống đất cạnh chuồng gà. Gieo hạt rau ăn lá ngắn ngày (cải mơ, cải ngọt tỉa non, rau dền, muống cạn - 15–20 ngày có ăn)."
+          role: "Người 4 (Vườn rau ngắn ngày)",
+          text: "Cuốc 4 luống đất cạnh khu lán trại. Gieo hạt rau ăn lá ngắn ngày (cải mơ, cải ngọt tỉa non, rau dền, muống cạn - 15–20 ngày có ăn), tưới nước mó ngày 2 lần."
         },
         {
           id: "4-2",
@@ -151,15 +151,15 @@ export function ActionPlanTab({ onSwitchToFinancialTab, onSwitchToLivingCostTab 
         {
           id: "4-3",
           role: "Người 4 (Đàn gà đẻ trứng)",
-          text: "Mua 12–15 con gà/vịt hậu bị đẻ trứng thải (~50k/con = 750k). Quây góc vườn cho ăn thóc ngâm và cơm thừa -> thu 8–10 trứng/ngày."
+          text: "Mua 12–15 con gà/vịt hậu bị đẻ trứng thải (~50k/con = 750k). Quây góc vườn cho ăn thóc ngâm và cơm thừa -> thu 8–10 trứng tươi mỗi ngày cho 4 anh em."
         },
         {
           id: "4-4",
-          role: "Người 4, 5 (Bếp củi & Chuối)",
-          text: "Thu gom củi khô đồi rừng nhóm bếp củi đun nước, kho hầm thức ăn (giảm 75% tiền gas). Hái bắp hoa chuối làm nộm và canh chua."
+          role: "Người 4 (Bếp củi & hậu cần)",
+          text: "Thu gom củi khô đồi rừng đun nước, nấu cơm canh chuối phục vụ đội 3 người chặt tre làm chuồng (tiết kiệm 75% tiền gas và chi phí sinh hoạt)."
         }
       ],
-      caution: "Bón lót luống rau bằng phân trấu hoai mục và tưới nước giữ ẩm ngày 2 lần để hạt nảy mầm đều."
+      caution: "Bón lót luống rau bằng phân trấu hoai mục và tưới nước giữ ẩm ngày 2 lần để đảm bảo nguồn rau sạch tự cấp liên tục."
     },
     {
       id: 5,
@@ -181,7 +181,7 @@ export function ActionPlanTab({ onSwitchToFinancialTab, onSwitchToLivingCostTab 
         },
         {
           id: "5-3",
-          role: "Người 4, 5 (Băm chuối men)",
+          role: "Người 4 (Băm chuối men)",
           text: "Chạy thử máy băm chuối: băm thân chuối vườn trộn cám ngô + men ủ vi sinh + chút muối, đóng bao ủ kín 48h tập ăn dặm."
         },
         {
@@ -201,8 +201,8 @@ export function ActionPlanTab({ onSwitchToFinancialTab, onSwitchToLivingCostTab 
       timeline: "Tuần 1 – 2 (14 Ngày Vàng)",
       tag: "Trọng Yếu • Khởi Động",
       tagColor: "bg-red-100 text-red-800 border-red-200",
-      title: "Máy Xúc Mở Đường, Hạ Tầng, Bếp Ăn 0đ & Đón Giống Đợt 1",
-      desc: "Ưu tiên số 1: Máy xúc 3 ngày mở đường để có lối đi. Sau đó cho người vào kéo điện nước, lắp 2 điều hòa, thuê 2-3 người chặt tre làm chuồng, kích hoạt bếp ăn 0đ và đón gà 3T + lợn F1.",
+      title: "Máy Xúc Mở Đường, 4 Người (3 Chặt Tre Làm Chuồng, 1 Trồng Rau Điện Nước)",
+      desc: "Ưu tiên số 1: Máy xúc 3 ngày mở đường để có lối đi. 2 tháng đầu duy trì 4 người: 3 người chặt tre làm chuồng (1 chặt 2 khiêng), 1 người lo trồng rau tự chủ sinh hoạt + điện, nước, ăn uống. Mục tiêu xong 4–6 chuồng nhỏ 300m² (mái fibro xi măng 30m², 150 con/chuồng) trong tháng 11.",
       hasSubStages: true
     },
     {

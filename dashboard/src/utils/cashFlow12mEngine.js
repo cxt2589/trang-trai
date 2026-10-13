@@ -39,13 +39,25 @@ export function calculate12MonthCashFlow({
     // 2. Tính toán thức ăn & cám (động theo giá cám & tỷ lệ tiết kiệm)
     const feedCost = Math.round(m.baseFeedKg * feedPrice * (1 - feedSavingRate));
 
-    // 3. Tính toán nhân công & lương theo năng suất (2.000 vs 3.000 con/người)
-    const headcount = Math.max(1, Math.ceil(m.activeFlockCount / birdsPerWorker));
+    // 3. Tính toán nhân công & lương: 2 tháng đầu cố định 4 người (3 chặt tre làm chuồng: 1 chặt 2 khiêng; 1 trồng rau, điện nước, ăn uống)
+    let headcount = 0;
+    let benchmarkHeadcount = 0;
+    let laborRoleNote = "";
+
+    if (m.monthIdx === 1 || m.monthIdx === 2) {
+      headcount = 4;
+      benchmarkHeadcount = 4;
+      laborRoleNote = m.monthIdx === 1
+        ? "4 người (3 chặt tre làm chuồng: 1 chặt 2 khiêng; 1 trồng rau, điện nước, ăn uống)"
+        : "4 người (3 hoàn thiện 4–6 chuồng nhỏ 300m², 1 trồng rau & hậu cần)";
+    } else {
+      headcount = Math.max(2, Math.ceil(m.activeFlockCount / birdsPerWorker));
+      benchmarkHeadcount = Math.max(2, Math.ceil(m.activeFlockCount / 2000));
+      laborRoleNote = `${headcount} người chăn nuôi theo quy mô đàn`;
+    }
+
     const laborCost = headcount * workerSalary;
     totalLaborCostActual += laborCost;
-
-    // Benchmark 2.000 con/người
-    const benchmarkHeadcount = Math.max(1, Math.ceil(m.activeFlockCount / 2000));
     totalLaborCostBenchmark += benchmarkHeadcount * workerSalary;
 
     // 4. Thú y, vắc-xin, điện nước
@@ -112,6 +124,7 @@ export function calculate12MonthCashFlow({
       ...m,
       headcount,
       benchmarkHeadcount,
+      laborRoleNote,
       chickCost,
       feedCost,
       laborCost,
