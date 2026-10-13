@@ -998,7 +998,9 @@ export function CashFlow12MTab({
                       {collapsedGroups.capex ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
                       4. Đầu tư chuồng trại (CAPEX)
                     </span>
-                    <span className="text-[10px] bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded font-bold">Cơ bản</span>
+                    <span className="text-[10px] bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded font-bold">
+                      {collapsedGroups.capex ? "Bấm mở chi tiết" : "6 khoản mục"}
+                    </span>
                   </div>
                 </td>
                 {monthlyResults.map((m) => (
@@ -1010,6 +1012,155 @@ export function CashFlow12MTab({
                   ({fmtVND(annualTotal.capexCost)})
                 </td>
               </tr>
+
+              {/* Chi tiết từng khoản mục CAPEX khi mở */}
+              {!collapsedGroups.capex && (
+                <>
+                  {/* Khoản mục 1: Chuồng trại & mái fibro xi măng */}
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                      • Chuồng nhỏ 300m² & mái fibro xi măng
+                    </td>
+                    {monthlyResults.map((m) => {
+                      let val = 0;
+                      if (m.monthIdx === 1) val = 10300000;
+                      else if (m.monthIdx === 2) val = 5000000;
+                      else if (m.monthIdx === 5) val = 23200000;
+                      else if (m.monthIdx === 6) val = 37600000;
+                      else if (m.monthIdx === 7) val = 12000000;
+                      return (
+                        <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-900">
+                          {val > 0 ? fmtVND(val) : "-"}
+                        </td>
+                      );
+                    })}
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold text-amber-950">
+                      {fmtVND(88100000)}
+                    </td>
+                  </tr>
+
+                  {/* Khoản mục 2: Nước mó suối & máy bơm */}
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                      • Nước mó suối 2.000L & bơm tăng áp
+                    </td>
+                    {monthlyResults.map((m) => {
+                      const val = m.monthIdx === 1 ? 15000000 : 0;
+                      return (
+                        <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-900">
+                          {val > 0 ? fmtVND(val) : "-"}
+                        </td>
+                      );
+                    })}
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold text-amber-950">
+                      {fmtVND(15000000)}
+                    </td>
+                  </tr>
+
+                  {/* Khoản mục 3: Máng ăn núm uống & bóng sưởi */}
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                      • Máng ăn núm uống tự động & bóng sưởi
+                    </td>
+                    {monthlyResults.map((m) => {
+                      let val = 0;
+                      if (m.monthIdx === 1) val = 7000000;
+                      else if (m.monthIdx === 3) val = 3000000;
+                      else if (m.monthIdx === 4) val = 3000000;
+                      else if (m.monthIdx === 5) val = 7800000;
+                      else if (m.monthIdx === 7) val = 3000000;
+                      return (
+                        <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-900">
+                          {val > 0 ? fmtVND(val) : "-"}
+                        </td>
+                      );
+                    })}
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold text-amber-950">
+                      {fmtVND(23800000)}
+                    </td>
+                  </tr>
+
+                  {/* Khoản mục 4: Cải tạo quây úm, sát trùng & sửa lán */}
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                      • Cải tạo quây úm 20m², sát trùng & sửa lán
+                    </td>
+                    {monthlyResults.map((m) => {
+                      const val = m.monthIdx === 1 ? 7500000 : 0;
+                      return (
+                        <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-900">
+                          {val > 0 ? fmtVND(val) : "-"}
+                        </td>
+                      );
+                    })}
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold text-amber-950">
+                      {fmtVND(7500000)}
+                    </td>
+                  </tr>
+
+                  {/* Khoản mục 5: Hố ủ phân vi sinh */}
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                      • Hố ủ phân vi sinh hữu cơ
+                    </td>
+                    {monthlyResults.map((m) => {
+                      const val = m.monthIdx === 7 ? 3000000 : 0;
+                      return (
+                        <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-900">
+                          {val > 0 ? fmtVND(val) : "-"}
+                        </td>
+                      );
+                    })}
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold text-amber-950">
+                      {fmtVND(3000000)}
+                    </td>
+                  </tr>
+
+                  {/* Khoản mục 6: Dự phòng phát sinh */}
+                  <tr className="text-[11px] text-slate-700 bg-white">
+                    <td className="p-2 pl-6 sticky left-0 bg-white text-slate-700 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)]">
+                      • Dự phòng hạ tầng ban đầu
+                    </td>
+                    {monthlyResults.map((m) => {
+                      const val = m.monthIdx === 1 ? 4000000 : 0;
+                      return (
+                        <td key={m.key} className="p-2 text-right border-r border-slate-200 font-mono text-amber-900">
+                          {val > 0 ? fmtVND(val) : "-"}
+                        </td>
+                      );
+                    })}
+                    <td className="p-2 text-right bg-slate-50 font-mono font-semibold text-amber-950">
+                      {fmtVND(4000000)}
+                    </td>
+                  </tr>
+
+                  {/* Dòng tóm tắt hạng mục chi tiết từng tháng */}
+                  <tr className="text-[10px] text-slate-500 bg-amber-50/30">
+                    <td className="p-2 pl-6 sticky left-0 bg-amber-50 text-slate-800 z-10 min-w-[210px] sm:min-w-[240px] border-r-2 border-slate-300 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.12)] font-bold">
+                      📋 Hạng mục thi công cụ thể
+                    </td>
+                    {monthlyResults.map((m) => (
+                      <td key={m.key} className="p-2 text-left border-r border-slate-200 align-top">
+                        {m.capexBreakdown && m.capexBreakdown.length > 0 ? (
+                          <div className="space-y-1">
+                            {m.capexBreakdown.map((item, idx) => (
+                              <div key={idx} className="leading-tight text-[10px]">
+                                <span className="text-slate-700 font-medium">• {item.item}</span>:{" "}
+                                <span className="font-bold text-amber-900 font-mono">{fmtVND(item.cost)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-slate-300 italic text-center block">-</span>
+                        )}
+                      </td>
+                    ))}
+                    <td className="p-2 text-center bg-slate-50 font-bold text-emerald-700 font-mono">
+                      141.400.000 đ
+                    </td>
+                  </tr>
+                </>
+              )}
 
               {/* 5. Cân đối Dòng Tiền */}
               <tr className="bg-indigo-50/60 font-bold text-indigo-950">
